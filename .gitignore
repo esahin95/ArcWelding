@@ -1,0 +1,10 @@
+# match compilation directories
+platforms/
+linux64*/
+.vscode/
+
+# match runtime directories excluding initial directories
+processor*/
+\d+*/
+!0/
+!0.orig/
