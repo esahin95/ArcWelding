@@ -1,0 +1,123 @@
+/*---------------------------------------------------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  10
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+Build  : 10-c4cf895ad8fa
+Exec   : miniFoam
+Date   : Aug 05 2025
+Time   : 10:39:58
+Host   : "Erazer"
+PID    : 36135
+I/O    : uncollated
+Case   : /home/sahin/OpenFOAM/sahin-10/run/miniTest
+nProcs : 1
+sigFpe : Enabling floating point exception trapping (FOAM_SIGFPE).
+fileModificationChecking : Monitoring run-time modified files using timeStampMaster (fileModificationSkew 10)
+allowSystemOperations : Allowing user-supplied system call operations
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+Create time
+
+Create mesh for time = 0
+
+
+PIMPLE: No convergence criteria found
+
+
+PIMPLE: Operating solver in transient mode with 1 outer corrector
+PIMPLE: Operating solver in PISO mode
+
+
+Reading field T
+
+Reading field U
+
+0 : (1 0 0)
+0 : (1 0 0)
+0 : (1 0 0)
+0 : (1 0 0)
+0 : (1 0 0)
+1 : (1 0 0)
+1 : (1 0 0)
+1 : (1 0 0)
+1 : (1 0 0)
+1 : (1 0 0)
+2 : (1 0 0)
+2 : (1 0 0)
+2 : (1 0 0)
+2 : (1 0 0)
+2 : (1 0 0)
+3 : (1 0 0)
+3 : (1 0 0)
+3 : (1 0 0)
+3 : (1 0 0)
+3 : (1 0 0)
+Reading diffusivity k
+
+k = k [0 2 -1 0 0 0 0] 0.001
+
+Starting time loop
+
+1 , 0.5 , 1 , 0 , 0
+Time = 0.0001s
+
+In outer corrector loop
+
+    In corrector loop
+
+        In nonorthogonal corrector loop
+
+        Is correctPhi relevant? 0
+
+    In corrector loop
+
+        In nonorthogonal corrector loop
+
+        Is correctPhi relevant? 0
+
+
+Coefficients for Matrix TEqn
+
+0.004 -0.001 0 0 0 -0.001 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.4
+-0.001 0.003 -0.001 0 0 0 -0.001 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 -0.001 0.003 -0.001 0 0 0 -0.001 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 -0.001 0.003 -0.001 0 0 0 -0.001 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 -0.001 0.004 0 0 0 0 -0.001 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.6
+-0.001 0 0 0 0 0.005 -0.001 0 0 0 -0.001 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.4
+0 -0.001 0 0 0 -0.001 0.004 -0.001 0 0 0 -0.001 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 -0.001 0 0 0 -0.001 0.004 -0.001 0 0 0 -0.001 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 -0.001 0 0 0 -0.001 0.004 -0.001 0 0 0 -0.001 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 -0.001 0 0 0 -0.001 0.005 0 0 0 0 -0.001 0 0 0 0 0 0 0 0 0 0 0.6
+0 0 0 0 0 -0.001 0 0 0 0 0.005 -0.001 0 0 0 -0.001 0 0 0 0 0 0 0 0 0 0.4
+0 0 0 0 0 0 -0.001 0 0 0 -0.001 0.004 -0.001 0 0 0 -0.001 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 -0.001 0 0 0 -0.001 0.004 -0.001 0 0 0 -0.001 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 -0.001 0 0 0 -0.001 0.004 -0.001 0 0 0 -0.001 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 -0.001 0 0 0 -0.001 0.005 0 0 0 0 -0.001 0 0 0 0 0 0.6
+0 0 0 0 0 0 0 0 0 0 -0.001 0 0 0 0 0.005 -0.001 0 0 0 -0.001 0 0 0 0 0.4
+0 0 0 0 0 0 0 0 0 0 0 -0.001 0 0 0 -0.001 0.004 -0.001 0 0 0 -0.001 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 -0.001 0 0 0 -0.001 0.004 -0.001 0 0 0 -0.001 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 -0.001 0 0 0 -0.001 0.004 -0.001 0 0 0 -0.001 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 -0.001 0 0 0 -0.001 0.005 0 0 0 0 -0.001 0.6
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -0.001 0 0 0 0 0.004 -0.001 0 0 0 0.4
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -0.001 0 0 0 -0.001 0.003 -0.001 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -0.001 0 0 0 -0.001 0.003 -0.001 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -0.001 0 0 0 -0.001 0.003 -0.001 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -0.001 0 0 0 -0.001 0.004 0.6
+
+Solution: DILUPBiCGStab:  Solving for T, Initial residual = 1, Final residual = 1.59265e-07, No Iterations 5
+(DILUPBiCGStab T 1 1.59265e-07 5 1 (0) )
+210 230 250 270 290 210 230 250 270 290 210 230 250 270 290 210 230 250 270 290 210 230 250 270 290 
+top 210 230 250 270 290 
+left 200 200 200 200 200 
+right 300 300 300 300 300 
+bottom 210 230 250 270 290 
+front 
+back 
+
+ExecutionTime = 0.006873 s  ClockTime = 0 s
+
+End
+
