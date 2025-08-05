@@ -238,7 +238,7 @@ volScalarField beta
 #include "readhRef.H"
 #include "gh.H"
 
-// surface normal gradient of g & h
+// surface normal gradient of g & h for boussinesq approximation
 const surfaceScalarField snGradGh
 (
     "snGradGh",
