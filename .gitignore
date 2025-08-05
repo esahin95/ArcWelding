@@ -8,3 +8,7 @@ processor*/
 \d+*/
 !0/
 !0.orig/
+
+# match unnecessary run folders
+pitzDaily/
+multiphaseEulerFoam/
