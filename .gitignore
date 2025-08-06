@@ -4,6 +4,7 @@ linux64*/
 .vscode/
 
 # match runtime directories excluding initial directories
+dynamicCode/
 processor*/
 [0-9]*/
 !0/
