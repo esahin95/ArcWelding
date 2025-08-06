@@ -138,13 +138,6 @@ IOdictionary phase2Dict
     )
 );
 
-const dimensionedScalar dsigmadT
-(
-    "dsigmadT",
-    dimensionSet(1, 0, -2, -1, 0),
-    phaseProperties.lookupOrDefault("dsigmadT", 0.0)
-);
-
 const dimensionedScalar Cp1
 (
     "Cp1",
