@@ -26,8 +26,8 @@
                     mixture.surfaceTensionForce()
                   - ghf*fvc::snGrad(rho)
                   - fvc::interpolate(beta*(T - T0)*rho) * snGradGh
-                  + fvc::interpolate(dsigmadT * mag(fvc::grad(alpha1))) * fvc::snGrad(T)
-                  - fvc::interpolate(dsigmadT * (mixture.n() & fvc::grad(T))) * fvc::snGrad(alpha1)
+                  //+ fvc::interpolate(dsigmadT * mag(fvc::grad(alpha1))) * fvc::snGrad(T)
+                  //- fvc::interpolate(dsigmadT * (mixture.n() & fvc::grad(T))) * fvc::snGrad(alpha1)
                   - fvc::snGrad(p_rgh)
                 ) * mesh.magSf()
             )

@@ -2,9 +2,9 @@ EXE_INC = \
     -I$(FOAM_APP)/solvers/multiphase/interFoam/incompressibleInterPhaseTransportModel/lnInclude \
     -I$(LIB_SRC)/physicalProperties/lnInclude \
     -I$(LIB_SRC)/twoPhaseModels/twoPhaseMixture/lnInclude \
-    -I$(LIB_SRC)/twoPhaseModels/interfaceProperties/lnInclude \
+    -I$(WM_PROJECT_USER_DIR)/src/twoPhaseModels/interfaceProperties/lnInclude \
     -I$(LIB_SRC)/twoPhaseModels/incompressibleTwoPhaseMixture/lnInclude \
-    -I$(LIB_SRC)/twoPhaseModels/immiscibleIncompressibleTwoPhaseMixture/lnInclude \
+    -I$(WM_PROJECT_USER_DIR)/src/twoPhaseModels/immiscibleIncompressibleTwoPhaseMixture/lnInclude \
     -I$(LIB_SRC)/twoPhaseModels/twoPhaseChange/lnInclude \
     -I$(LIB_SRC)/MomentumTransportModels/momentumTransportModels/lnInclude \
     -I$(LIB_SRC)/MomentumTransportModels/incompressible/lnInclude \
@@ -15,7 +15,8 @@ EXE_INC = \
     -I$(LIB_SRC)/sampling/lnInclude
 
 EXE_LIBS = \
-    -limmiscibleIncompressibleTwoPhaseMixture \
+    -L$(FOAM_USER_LIBBIN) \
+    -limmiscibleIncompressibleTwoPhaseThermoMixture \
     -ltwoPhaseChangeModels \
     -lmomentumTransportModels \
     -lincompressibleMomentumTransportModels \
