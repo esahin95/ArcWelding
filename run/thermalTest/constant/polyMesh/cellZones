@@ -8,28 +8,13 @@
 FoamFile
 {
     format      ascii;
-    class       dictionary;
-    location    "constant";
-    object      phaseProperties;
+    class       regIOobject;
+    location    "constant/polyMesh";
+    object      cellZones;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-phases          ( water air );
-
-sigma
-{
-  type          temperatureDependent;
-  sigma
-  {
-    type        polynomial;
-    coeffs
-    (
-      (0.0707106 0)
-    );
-  }
-}
-
-dsigmadT        0.001;
-
+0
+()
 
 // ************************************************************************* //

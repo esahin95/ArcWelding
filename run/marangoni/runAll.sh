@@ -8,7 +8,6 @@ cp -r 0_orig 0
 # create new mesh
 blockMesh > log.blockMesh
 createPatch -overwrite > log.createPatch
-#topoSet > log.topoSet
 checkMesh > log.checkMesh
 
 # initialize fields

@@ -9,27 +9,22 @@ FoamFile
 {
     format      ascii;
     class       dictionary;
-    location    "constant";
-    object      phaseProperties;
+    location    "0.06/uniform";
+    object      time;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-phases          ( water air );
+beginTime       0;
 
-sigma
-{
-  type          temperatureDependent;
-  sigma
-  {
-    type        polynomial;
-    coeffs
-    (
-      (0.0707106 0)
-    );
-  }
-}
+value           0.0599999999999999978;
 
-dsigmadT        0.001;
+name            "0.06";
+
+index           1035;
+
+deltaT          5.25347e-05;
+
+deltaT0         5.25347e-05;
 
 
 // ************************************************************************* //
