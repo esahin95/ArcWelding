@@ -12,3 +12,6 @@ processor*/
 # match unnecessary run folders
 pitzDaily/
 multiphaseEulerFoam/
+
+# match log files
+log.*
