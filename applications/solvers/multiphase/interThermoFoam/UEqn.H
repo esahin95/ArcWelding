@@ -23,7 +23,7 @@
             fvc::reconstruct
             (
                 (
-                    mixture.surfaceTensionForce()
+                    mixture.surfaceTensionForce() //* damper
                   - ghf*fvc::snGrad(rho)
                   - fvc::interpolate(beta*(T - T0)*rho) * snGradGh
                   - fvc::snGrad(p_rgh)

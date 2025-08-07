@@ -21,9 +21,7 @@ boundaryField
 {
     top
     {
-        type            prghTotalPressure;
-        p0              uniform 0;
-        value           uniform 0;
+        type            fixedFluxPressure;
     }
 
     right

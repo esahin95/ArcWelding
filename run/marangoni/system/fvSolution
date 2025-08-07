@@ -19,8 +19,9 @@ solvers
     "alpha.water.*"
     {
         nAlphaCorr      1;
-        nAlphaSubCycles 1;
+        nAlphaSubCycles 3;
         
+        /*
         MULESCorr       yes;
         nLimiterIter    5;
         
@@ -28,6 +29,7 @@ solvers
         smoother        symGaussSeidel;
         tolerance       1e-8;
         relTol          0;
+        */
     }
 
     p_rgh
@@ -72,10 +74,13 @@ solvers
 
 PIMPLE
 {
-    momentumPredictor yes;
-    nCorrectors     2;
+    momentumPredictor no;
+    nCorrectors     3;
     nNonOrthogonalCorrectors 0;
     nOuterCorrectors 1;
+
+    pRefCell    0;
+    pRefValue   0;
 }
 
 

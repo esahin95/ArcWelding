@@ -14,4 +14,9 @@ checkMesh > log.checkMesh
 setFields > log.setFields
 
 # run solver
-interThermoFoam | tee log.solver
+decomposePar -cellDist > log.decompose
+mpirun -np 4 interThermoFoam -parallel > log.solver
+reconstructPar > log.reconstruct
+
+# post process
+postProcess -latestTime -funcs "(cellMin(p_rgh) cellMax(p_rgh) residuals)"

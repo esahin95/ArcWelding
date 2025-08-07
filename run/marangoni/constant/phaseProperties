@@ -16,9 +16,19 @@ FoamFile
 
 phases          ( water air );
 
-sigma           0.0707106;
-
-dsigmadT        0.001;
+sigma
+{
+  type  temperatureDependent;
+  sigma
+  {
+    type  polynomial;
+    coeffs
+    (
+      (0.04 0)
+      (-0.0001 1)
+    );
+  }
+}
 
 
 // ************************************************************************* //
