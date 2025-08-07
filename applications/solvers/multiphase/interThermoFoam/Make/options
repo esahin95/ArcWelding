@@ -4,7 +4,7 @@ EXE_INC = \
     -I$(LIB_SRC)/twoPhaseModels/twoPhaseMixture/lnInclude \
     -I$(WM_PROJECT_USER_DIR)/src/twoPhaseModels/interfaceProperties/lnInclude \
     -I$(LIB_SRC)/twoPhaseModels/incompressibleTwoPhaseMixture/lnInclude \
-    -I$(WM_PROJECT_USER_DIR)/src/twoPhaseModels/immiscibleIncompressibleTwoPhaseMixture/lnInclude \
+    -I$(LIB_SRC)/twoPhaseModels/immiscibleIncompressibleTwoPhaseMixture/lnInclude \
     -I$(LIB_SRC)/twoPhaseModels/twoPhaseChange/lnInclude \
     -I$(LIB_SRC)/MomentumTransportModels/momentumTransportModels/lnInclude \
     -I$(LIB_SRC)/MomentumTransportModels/incompressible/lnInclude \
@@ -16,7 +16,7 @@ EXE_INC = \
 
 EXE_LIBS = \
     -L$(FOAM_USER_LIBBIN) \
-    -limmiscibleIncompressibleTwoPhaseThermoMixture \
+    -limmiscibleIncompressibleTwoPhaseMixture \
     -ltwoPhaseChangeModels \
     -lmomentumTransportModels \
     -lincompressibleMomentumTransportModels \
