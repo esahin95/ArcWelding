@@ -39,12 +39,15 @@ internalField   #codeStream
         const IOdictionary& d = static_cast<const IOdictionary&>(dict);
         const fvMesh& mesh = refCast<const fvMesh>(d.db());
 
+        scalar lx = 0.001;
+        scalar dT = 4.0;
+        scalar T0 = 300.0;
+
         scalarField T(mesh.nCells(), 0.0);
         scalarField X(mesh.C().component(0));
         forAll(T, cellI)
         {
-            T[cellI] = 300.0 + (0.0005 - X[cellI]) * 4000.0;
-            Info<< X[cellI] << " : " << T[cellI] << endl;
+            T[cellI] = T0 + (0.5 * lx - X[cellI]) / lx * dT;
         }
 
         writeEntry(os, "", T);
