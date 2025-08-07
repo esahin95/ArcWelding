@@ -22,17 +22,17 @@ startTime       0;
 
 stopAt          endTime;
 
-endTime         .01;
+endTime         0.1;
 
 deltaT          1e-5;
 
 writeControl    adjustableRunTime;
 
-writeInterval   0.001;
+writeInterval   0.01;
 
 purgeWrite      0;
 
-writeFormat     ascii;
+writeFormat     binary;
 
 writePrecision  6;
 
@@ -42,7 +42,7 @@ timeFormat      general;
 
 timePrecision   6;
 
-runTimeModifiable yes;
+runTimeModifiable no;
 
 adjustTimeStep  yes;
 
@@ -54,3 +54,10 @@ maxDeltaT       1;
 
 
 // ************************************************************************* //
+
+functions
+{
+  #includeFunc graphUniformLeft
+  #includeFunc graphUniformRight
+  #includeFunc residuals
+}

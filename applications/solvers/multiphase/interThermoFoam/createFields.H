@@ -224,9 +224,9 @@ volScalarField beta
     mixture.alpha1() * beta1 + mixture.alpha2() * beta2
 );
 
-surfaceScalarField damper
+surfaceScalarField corrf
 (
-    "damper",
+    "corrf",
     scalar(2.0) * fvc::interpolate(mixture.rho()) / (mixture.rho1() + mixture.rho2())
 );
 
