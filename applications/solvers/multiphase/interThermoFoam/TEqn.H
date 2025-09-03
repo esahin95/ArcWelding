@@ -1,7 +1,11 @@
 {    
+    
+    // apparent heat capacity
+    CpApp == L * fb * Foam::exp(-Foam::sqr(fa * (T - Tmid)));
+
     // derived quantities for numerical integration
-    rhoCp == rho * Cp;
-    rhoPhiCp == rhoPhi * fvc::interpolate(Cp);
+    rhoCp == rho * (Cp + CpApp);
+    rhoPhiCp == rhoPhi * fvc::interpolate(Cp + CpApp);
     
     // build linear equation
     fvScalarMatrix TEqn

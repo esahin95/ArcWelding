@@ -175,6 +175,43 @@ const dimensionedScalar beta2
     phase2Dict.lookupOrDefault("beta", 0.0)
 );
 
+// added to primary phase temporarily
+const dimensionedScalar Tliq
+(
+    "Tliq",
+    dimensionSet(0, 0, 0, 1, 0),
+    phase1Dict.lookupOrDefault("Tliq", scalar(1000.0))
+);
+const dimensionedScalar Tsol
+(
+    "Tsol",
+    dimensionSet(0, 0, 0, 1, 0),
+    phase1Dict.lookupOrDefault("Tsol", Tliq.value() - scalar(50.0))
+);
+const dimensionedScalar L
+(
+    "L",
+    dimensionSet(0, 0, 0, -1, 0),
+    phase1Dict.lookupOrDefault("L", 0.0)
+);
+
+// precomputed factors
+const dimensionedScalar Tmid
+(
+    "Tmid",
+    scalar(0.5) * (Tliq + Tsol)
+);
+const dimensionedScalar fa
+(
+    "fa",
+    scalar(4.0) / (Tliq - Tsol)
+);
+const dimensionedScalar fb
+(
+    "fb",
+    fa / Foam::sqrt(constant::mathematical::pi)
+);
+
 Info<< "Creating thermophysical fields\n" << endl;
 volScalarField T
 (
@@ -210,6 +247,11 @@ volScalarField Cp
 (
     "Cp",
     mixture.alpha1() * Cp1 + mixture.alpha2() * Cp2
+);
+volScalarField CpApp
+(
+    "Cp",
+    scalar(0.0) * Cp
 );
 
 volScalarField kappa 
