@@ -191,8 +191,14 @@ const dimensionedScalar Tsol
 const dimensionedScalar L
 (
     "L",
-    dimensionSet(0, 0, 0, -1, 0),
+    dimensionSet(0, 2, -2, 0, 0),
     phase1Dict.lookupOrDefault("L", 0.0)
+);
+const dimensionedScalar DC 
+(
+    "DC",
+    dimensionSet(1,-3,-1,0,0),
+    phase1Dict.lookupOrDefault("DC", 1.0e+10)
 );
 
 // precomputed factors
@@ -226,8 +232,23 @@ volScalarField T
     mesh
 );
 
+// liquid fraction
+Info<< "Creating liquid fraction field\n" << endl;
+volScalarField fliq
+(
+    IOobject
+    (
+        "fliq",
+        runTime.timeName(),
+        mesh,
+        IOobject::NO_READ,
+        IOobject::AUTO_WRITE
+    ),
+    scalar(0.5) * Foam::erf(fa*(T - Tmid))
+);
+
 // temperature reference
-const dimensionedScalar T0("T0", dimTemperature, pimple.dict().lookupOrDefault<scalar>("T0", 300.0));
+const dimensionedScalar T0("T0", dimTemperature, pimple.dict().lookupOrDefault<scalar>("T0", Tliq.value()));
 Info<< "Set temperature reference to " << T0.value() << endl;
 
 volScalarField rhoCp
