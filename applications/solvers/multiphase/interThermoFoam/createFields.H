@@ -244,7 +244,7 @@ volScalarField fliq
         IOobject::NO_READ,
         IOobject::AUTO_WRITE
     ),
-    scalar(0.5) * Foam::erf(fa*(T - Tmid))
+    scalar(0.5) * (Foam::erf(fa*(T - Tmid)) + scalar(1.0))
 );
 
 // temperature reference
