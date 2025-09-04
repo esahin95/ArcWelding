@@ -36,9 +36,11 @@ solvers
     {
         solver          GAMG;
         smoother        DICGaussSeidel;
+        //solver          PCG;
+        //preconditioner  DIC;
         tolerance       1e-05;
         relTol          0.1;
-        maxIter         50;
+        //maxIter         50;
     }
 
     p_rghFinal

@@ -1,7 +1,8 @@
 {    
     
     // apparent heat capacity
-    CpApp == L * fb * Foam::exp(-Foam::sqr(fa * (T - Tmid)));
+    CpApp == alpha1 * L * fb * Foam::exp(-Foam::sqr(fa * (T - Tmid)));
+    tmpScl == CpApp / dimensionedScalar("tmp", dimensionSet(0,2,-2,-1,0), 1.0);
 
     // derived quantities for numerical integration
     rhoCp == rho * (Cp + CpApp);
