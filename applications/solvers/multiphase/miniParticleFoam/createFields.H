@@ -28,15 +28,7 @@ volVectorField U
     "fixedValue"
 ); 
 
-forAll(U.boundaryField(), patchI)
-{
-    forAll(U.boundaryField()[patchI], faceI)
-    {
-        Info<< patchI << " : " << U.boundaryField()[patchI][faceI] << endl;
-    }
-}
-
-// density for solid particles
+// density for laser particles
 volScalarField rho
 (
     IOobject
@@ -52,24 +44,12 @@ volScalarField rho
     "fixedValue"
 ); 
 
-volScalarField nu
-(
-    IOobject
-    (
-        "nu",
-        runTime.timeName(),
-        mesh,
-        IOobject::NO_READ,
-        IOobject::AUTO_WRITE
-    ),
-    mesh,
-    dimensionedScalar("nu", dimensionSet(0,2,-1,0,0), scalar(1.0)),
-    "fixedValue"
-); 
-
-// gravitational acceleration for solid particles
-#include "readGravitationalAcceleration.H"
-Info<< g << endl;
+// define laser particles
+Info<< "Adding cloud of laser particles" << endl;
+laserParticleCloud cloud(mesh);
+//cloud.addParticle(new laserParticle(mesh, vector(0,0.5,0), scalar(1.0), vector(0,-100.0,0)));
+cloud.regenerate();
+//Info<< "number of particles is " << cloud.size() << endl;
 
 surfaceScalarField phi("phi", fvc::interpolate(U) & mesh.Sf());
 

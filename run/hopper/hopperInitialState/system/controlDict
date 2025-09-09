@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Version:  9
+    \\  /    A nd           | Version:  10
      \\/     M anipulation  |
 \*---------------------------------------------------------------------------*/
 FoamFile
@@ -14,21 +14,21 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-application     miniFoam;
+application     particleFoam;
 
 startFrom       startTime;
 
 startTime       0;
 
-stopAt          nextWrite;
+stopAt          endTime;
 
-endTime         .1;
+endTime         0.25;
 
-deltaT          1e-4;
+deltaT          5e-5;
 
-writeControl    adjustableRunTime;
+writeControl    runTime;
 
-writeInterval   3e-4;
+writeInterval   0.05;
 
 purgeWrite      0;
 
@@ -43,14 +43,5 @@ timeFormat      general;
 timePrecision   6;
 
 runTimeModifiable yes;
-
-adjustTimeStep  yes;
-
-maxCo           0.5;
-maxAlphaCo      0.2;
-maxDi           50.0;
-
-maxDeltaT       1;
-
 
 // ************************************************************************* //

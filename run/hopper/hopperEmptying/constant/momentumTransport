@@ -2,55 +2,19 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Version:  9
+    \\  /    A nd           | Version:  10
      \\/     M anipulation  |
 \*---------------------------------------------------------------------------*/
 FoamFile
 {
     format      ascii;
     class       dictionary;
-    location    "system";
-    object      controlDict;
+    location    "constant";
+    object      momentumTransport;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-application     miniFoam;
-
-startFrom       startTime;
-
-startTime       0;
-
-stopAt          nextWrite;
-
-endTime         .1;
-
-deltaT          1e-4;
-
-writeControl    adjustableRunTime;
-
-writeInterval   3e-4;
-
-purgeWrite      0;
-
-writeFormat     ascii;
-
-writePrecision  6;
-
-writeCompression off;
-
-timeFormat      general;
-
-timePrecision   6;
-
-runTimeModifiable yes;
-
-adjustTimeStep  yes;
-
-maxCo           0.5;
-maxAlphaCo      0.2;
-maxDi           50.0;
-
-maxDeltaT       1;
+simulationType  laminar;
 
 
 // ************************************************************************* //

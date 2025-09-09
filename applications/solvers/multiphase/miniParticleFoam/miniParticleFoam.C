@@ -30,8 +30,7 @@ Description
 
 #include "fvCFD.H"
 #include "pimpleControl.H"
-#include "simpleMatrix.H"
-#include "solidParticleCloud.H"
+#include "laserParticleCloud.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -49,72 +48,24 @@ int main(int argc, char *argv[])
     
     Info<< "\nStarting time loop\n" << endl;
 
-    // use unused variables
-    Info<< adjustTimeStep << " , " << maxCo << " , " << maxDeltaT << " , " << checkMeshCourantNo << " , " << moveMeshOuterCorrectors << endl;
+    // unused variables
+    Info<< "UNUSED" << adjustTimeStep << maxCo << maxDeltaT << correctPhi << checkMeshCourantNo << moveMeshOuterCorrectors << "END" << endl;
 
-    // add cloud 
-    solidParticleCloud particles(mesh);
-
-    particle newParticle(mesh, vector(0,0.5,0), label(-1));
-    solidParticle newSolidParticle
-    (
-        mesh, 
-        newParticle.coordinates(), 
-        newParticle.cell(),
-        newParticle.tetFace(),
-        newParticle.tetPt(),
-        scalar(0.001),
-        vector(1.7, 0, 0)
-    );
-    solidParticle *particlePtr = &newSolidParticle;
-    particles.addParticle(particlePtr);
-    Info<< "number of particles is " << particles.size() << endl;
-
-    // print matrix coefficients
+    // move particles
     while (pimple.run(runTime))
     {
     	runTime++;
 
         Info<< "Time = " << runTime.userTimeName() << nl << endl;
 
-        // --- Pressure-velocity PIMPLE corrector loop
-        while (pimple.loop())
-        {
-	        Info<< "In outer corrector loop" << nl << endl;
-            while (pimple.correct())
-            {
-                Info<< "    In corrector loop" << nl << endl;
-                while (pimple.correctNonOrthogonal())
-                {
-                    Info<< "        In nonorthogonal corrector loop" << nl << endl;
-                    Info<< "        Is correctPhi relevant? " << correctPhi << nl << endl;
-                }
-            }
-        }
-
         // move particles
-        particles.move(g);
-        Info<< "Particle position is " << newSolidParticle.position() << endl;
+        cloud.move();
+        forAllConstIter(Cloud<laserParticle>, cloud, iter)
+        {
+            Info<< "Particle position is " << iter().position() << endl;
+        }
 
         runTime.write();
-    }
-
-    #include "writeMatCoeffs.H"
-
-    Info<< "\nSolution: " << TEqn.solve() << endl;
-    forAll(T, cellI)
-    {
-        Info<< T.internalField()[cellI] << " ";
-    }
-    Info<< endl;
-    forAll(T.boundaryField(), patchI)
-    {
-        Info<< T.boundaryField()[patchI].patch().name() << " ";
-        forAll(T.boundaryField()[patchI], faceI)
-        {
-            Info<< T.boundaryField()[patchI][faceI] << " ";
-        }
-        Info<< endl;
     }
     
     Info<< nl << "ExecutionTime = " << runTime.elapsedCpuTime() << " s"
