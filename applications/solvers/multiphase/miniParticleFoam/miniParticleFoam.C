@@ -60,17 +60,23 @@ int main(int argc, char *argv[])
 
         // move particles
         cloud.move();
+        cloud.move();
+        cloud.move();
+
         forAllConstIter(Cloud<laserParticle>, cloud, iter)
         {
             Info<< "Particle position is " << iter().position() << endl;
         }
-
+        
         runTime.write();
     }
     
     Info<< nl << "ExecutionTime = " << runTime.elapsedCpuTime() << " s"
         << "  ClockTime = " << runTime.elapsedClockTime() << " s"
         << nl << endl;
+
+    Random rng(12345);
+    Info<<"rng normal: " << rng.scalarNormal() << endl;
 
     Info<< "End\n" << endl;
 

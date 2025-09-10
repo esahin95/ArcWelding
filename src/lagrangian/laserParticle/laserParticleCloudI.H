@@ -30,4 +30,29 @@ inline const Foam::fvMesh& Foam::laserParticleCloud::mesh() const
     return mesh_;
 }
 
+inline const Foam::vector& Foam::laserParticleCloud::centre() const 
+{
+    return centre_;
+}
+
+inline Foam::scalar Foam::laserParticleCloud::radius() const 
+{
+    return radius_;
+}
+
+inline const Foam::vector& Foam::laserParticleCloud::direction() const 
+{
+    return direction_;
+}
+
+inline Foam::scalar Foam::laserParticleCloud::nRays() const 
+{
+    return nRays_;
+}
+
+inline Foam::scalar Foam::laserParticleCloud::power() const 
+{
+    return power_;
+}
+
 // ************************************************************************* //

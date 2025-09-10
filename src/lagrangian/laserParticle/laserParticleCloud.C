@@ -27,6 +27,7 @@ License
 #include "fvMesh.H"
 #include "volFields.H"
 #include "interpolationCellPoint.H"
+#include "meshSearch.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -58,16 +59,19 @@ Foam::laserParticleCloud::laserParticleCloud
             IOobject::NO_WRITE
         )
     ),
-    center_(laserProperties_.lookupOrDefault("center", vector(0.5, 0.5, 0.0))),
+    centre_(laserProperties_.lookupOrDefault("centre", average(mesh_.C().primitiveField()))),
     radius_(laserProperties_.lookupOrDefault("radius", 1.0)),
     direction_(laserProperties_.lookupOrDefault("direction", vector(0.0, -1.0, 0.0))),
-    nRays_(laserProperties_.lookupOrDefault("nRays", 1)),
+    nRays_(laserProperties_.lookupOrDefault("nRays", 0)),
     power_(laserProperties_.lookupOrDefault("power", 1.0))
 {
     if (readFields)
     {
         laserParticle::readFields(*this);
     }
+
+    // normalize direction
+    direction_ = normalised(direction_);
 }
 
 
@@ -86,9 +90,30 @@ void Foam::laserParticleCloud::move()
 
 Foam::scalar Foam::laserParticleCloud::regenerate()
 {
-    addParticle(new laserParticle(mesh_, center_, power_, direction_));
-    addParticle(new laserParticle(mesh_, center_*0.9, power_, direction_));
-    addParticle(new laserParticle(mesh_, center_*1.1, power_, direction_));
+    Random rng(12345);
+
+    const meshSearch searchEngine(mesh_);
+
+    // construct basis
+    const vector t1 = normalised(perpendicular(direction_));
+    const vector t2 = normalised(t1 ^ direction_);
+    
+    for (int i=0; i< nRays_; i++)
+    {
+        // sample position
+        const scalar r(radius_ * rng.scalar01());
+        const scalar w(2*Foam::constant::mathematical::pi * rng.scalar01());
+        const vector d(r*Foam::sin(w)*t1 + r*Foam::cos(w)*t2 + centre_);
+        
+        // distributed power 
+        const scalar p(power_ / nRays_);
+
+        // add particle
+        if (searchEngine.findCell(d) != -1)
+        {
+            addParticle(new laserParticle(mesh_, d, p, direction_));
+        }
+    }
     Info<< "number of initial particles is " << size() << endl;
     return size();
 }

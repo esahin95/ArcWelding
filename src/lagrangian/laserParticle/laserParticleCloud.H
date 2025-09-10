@@ -62,8 +62,7 @@ class laserParticleCloud
         const fvMesh& mesh_;
 
         IOdictionary laserProperties_;
-
-        vector center_;
+        vector centre_;
         scalar radius_;
         vector direction_;
         scalar nRays_;
@@ -92,36 +91,13 @@ public:
     // Member Functions
 
         // Access
+            inline const fvMesh& mesh() const;
 
-            const fvMesh& mesh() const
-            {
-                return mesh_;
-            }
-
-            const vector& center() const 
-            {
-                return center_;
-            }
-
-            scalar radius() const 
-            {
-                return radius_;
-            }
-
-            const vector& direction() const 
-            {
-                return direction_;
-            }
-
-            scalar nRays() const 
-            {
-                return nRays_;
-            }
-
-            scalar power() const 
-            {
-                return power_;
-            }
+            inline const vector& direction() const;
+            inline const vector& centre() const;
+            inline scalar radius() const;
+            inline scalar power() const;
+            inline scalar nRays() const;
 
         // Edit
 
@@ -130,7 +106,6 @@ public:
 
             //- Generate laser particles from properties
             scalar regenerate();
-
 
     // Member Operators
 
@@ -142,6 +117,10 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#include "laserParticleCloudI.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

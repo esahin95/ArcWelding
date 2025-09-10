@@ -92,7 +92,6 @@ public:
         // Interpolators for continuous phase fields
 
             const interpolationCellPoint<scalar>& rhoInterp_;
-
     public:
 
         // Constructors
