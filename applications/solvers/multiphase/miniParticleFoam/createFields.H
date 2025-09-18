@@ -78,9 +78,4 @@ dimensionedScalar k
 };
 Info<< "k = " << k << endl;
 
-fvScalarMatrix TEqn
-(
-    -fvm::laplacian(k, T)
-);
-
 #include "createFvModels.H"

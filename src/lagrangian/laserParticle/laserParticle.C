@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "laserParticleCloud.H"
+#include "laserParticle.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -37,7 +37,7 @@ namespace Foam
 
 bool Foam::laserParticle::move
 (
-    laserParticleCloud& cloud,
+    Cloud<laserParticle>& cloud,
     trackingData& td,
     const scalar trackTime
 )
@@ -63,8 +63,8 @@ bool Foam::laserParticle::move
         if (alpha1c > 0.5)
         {
             td.keepParticle = false;
-            //cloud.volLaserPower()[this->cell()] += this->d();
-            Info<<"particle died at cellI: " << this->cell() << endl;
+            td.lPower(cell()) += d();
+            //Info<<"particle died at cellI: " << this->cell() << "with power " << d() << endl;
         }
 
 
@@ -74,7 +74,7 @@ bool Foam::laserParticle::move
 }
 
 
-void Foam::laserParticle::hitWallPatch(laserParticleCloud& cloud, trackingData&)
+void Foam::laserParticle::hitWallPatch(Cloud<laserParticle>& cloud, trackingData&)
 {
     const vector nw = normal();
 

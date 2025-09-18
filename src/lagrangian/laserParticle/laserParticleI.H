@@ -27,12 +27,16 @@ License
 
 inline Foam::laserParticle::trackingData::trackingData
 (
-    const laserParticleCloud& spc,
-    const interpolationCellPoint<scalar>& alpha1Interp
+    const Cloud<laserParticle>& spc,
+    const interpolationCellPoint<scalar>& alpha1Interp,
+    const interpolationCellPoint<vector>& nHatInterp,
+    volScalarField& lPower
 )
 :
     particle::trackingData(spc),
-    alpha1Interp_(alpha1Interp)
+    alpha1Interp_(alpha1Interp),
+    nHatInterp_(nHatInterp),
+    lPower_(lPower)
 {}
 
 
@@ -57,10 +61,11 @@ inline Foam::laserParticle::laserParticle
     const polyMesh& mesh,
     const vector& position,
     const scalar d,
-    const vector& U
+    const vector& U,
+    const label cellI
 )
 :
-    particle(mesh, position, label(-1)),
+    particle(mesh, position, cellI),
     d_(d),
     U_(U)
 {}
@@ -74,6 +79,12 @@ Foam::laserParticle::trackingData::alpha1Interp() const
     return alpha1Interp_;
 }
 
+inline const Foam::interpolationCellPoint<Foam::vector>&
+Foam::laserParticle::trackingData::nHatInterp() const
+{
+    return nHatInterp_;
+}
+
 inline Foam::scalar Foam::laserParticle::d() const
 {
     return d_;
@@ -82,6 +93,11 @@ inline Foam::scalar Foam::laserParticle::d() const
 inline const Foam::vector& Foam::laserParticle::U() const
 {
     return U_;
+}
+
+inline Foam::scalar& Foam::laserParticle::trackingData::lPower(label cellI)
+{
+    return lPower_[cellI];
 }
 
 

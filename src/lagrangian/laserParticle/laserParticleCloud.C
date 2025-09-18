@@ -29,6 +29,7 @@ License
 #include "interpolationCellPoint.H"
 #include "meshSearch.H"
 #include "zeroGradientFvPatchFields.H"
+#include "fvcGrad.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -83,8 +84,9 @@ void Foam::laserParticleCloud::move()
     const volScalarField& alpha1 = mesh_.lookupObject<const volScalarField>("alpha1");
 
     interpolationCellPoint<scalar> alpha1Interp(alpha1);
+    interpolationCellPoint<vector> nHatInterp(fvc::grad(alpha1));
 
-    laserParticle::trackingData td(*this, alpha1Interp);
+    laserParticle::trackingData td(*this, alpha1Interp, nHatInterp);
 
     Cloud<laserParticle>::move(*this, td, mesh_.time().deltaTValue());
 }
@@ -110,9 +112,10 @@ Foam::scalar Foam::laserParticleCloud::regenerate()
         const scalar p(power_ / nRays_);
 
         // add particle
-        if (searchEngine.findCell(d) != -1)
+        label cellI = searchEngine.findCell(d);
+        if (cellI != -1)
         {
-            addParticle(new laserParticle(mesh_, d, p, direction_));
+            addParticle(new laserParticle(mesh_, d, p, direction_, cellI));
         }
     }
     Info<< "number of initial particles is " << size() << endl;

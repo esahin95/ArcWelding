@@ -30,6 +30,8 @@ License
 #include "addToRunTimeSelectionTable.H"
 #include "zeroGradientFvPatchFields.H"
 #include "meshSearch.H"
+#include "fvcGrad.H"
+#include "laserParticle.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -81,12 +83,29 @@ void Foam::fv::laserDTRM::update() const
         const scalar p(Q_ / nRays_);
 
         // add particle
-        if (searchEngine.findCell(d) != -1)
+        label cellI = searchEngine.findCell(d);
+        if (cellI != -1)
         {
-            cloud_.addParticle(new laserParticle(mesh(), d, p, direction_));
+            cloud_.addParticle(new laserParticle(mesh(), d, p, direction_, cellI));
         }
     }
     Info<< "number of initial particles is " << cloud_.size() << endl;
+
+    const volScalarField& alpha1 = mesh().lookupObject<const volScalarField>("alpha1");
+
+    interpolationCellPoint<scalar> alpha1Interp(alpha1);
+    interpolationCellPoint<vector> nHatInterp(fvc::grad(alpha1));
+
+    laserParticle::trackingData td
+    (
+        cloud_, 
+        alpha1Interp, 
+        nHatInterp,
+        lPower_
+    );
+
+    cloud_.move(cloud_, td, 1.0);
+    Info<<"Total Laser Power Deposited in Field "<< Foam::sum(lPower_)<<endl;
 }
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
@@ -117,7 +136,7 @@ Foam::fv::laserDTRM::laserDTRM
             IOobject::AUTO_WRITE
         ),
         mesh,
-        dimensionedScalar(dimensionSet(1,-1,-2,0,0,0,0), 0.0),
+        dimensionedScalar(dimensionSet(1,-1,-3,0,0,0,0), 0.0),
         zeroGradientFvPatchScalarField::typeName
     ),
     curTimeIndex_(-1)
@@ -146,7 +165,8 @@ void Foam::fv::laserDTRM::addSup
     const word& fieldName
 ) const
 {
-    
+    Info<< "this function is called"<<endl;
+    update();
 }
 
 

@@ -1,5 +1,4 @@
 laserParticle.C
 laserParticleIO.C
-laserParticleCloud.C
 
 LIB = $(FOAM_USER_LIBBIN)/liblaserParticle

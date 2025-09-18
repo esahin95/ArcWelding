@@ -58,8 +58,12 @@ int main(int argc, char *argv[])
 
         Info<< "Time = " << runTime.userTimeName() << nl << endl;
 
-        // move particles
-        //cloud.move();
+        fvScalarMatrix TEqn
+        (
+            - fvm::laplacian(k, T)
+              ==
+              fvModels.source(T)
+        );
 
         /*
         forAllConstIter(Cloud<laserParticle>, cloud, iter)
@@ -74,9 +78,6 @@ int main(int argc, char *argv[])
     Info<< nl << "ExecutionTime = " << runTime.elapsedCpuTime() << " s"
         << "  ClockTime = " << runTime.elapsedClockTime() << " s"
         << nl << endl;
-
-    Random rng(12345);
-    Info<<"rng normal: " << rng.scalarNormal() << endl;
 
     Info<< "End\n" << endl;
 

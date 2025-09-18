@@ -92,20 +92,30 @@ public:
         // Interpolators for continuous phase fields
 
             const interpolationCellPoint<scalar>& alpha1Interp_;
+            const interpolationCellPoint<vector>& nHatInterp_;
+
+        // reference to heat source field
+
+            volScalarField& lPower_;
     public:
 
         // Constructors
 
             inline trackingData
             (
-                const laserParticleCloud& spc,
-                const interpolationCellPoint<scalar>& alpha1Interp
+                const Cloud<laserParticle>& spc,
+                const interpolationCellPoint<scalar>& alpha1Interp,
+                const interpolationCellPoint<vector>& nHatInterp,
+                volScalarField& lPower
             );
 
 
         // Member Functions
 
             inline const interpolationCellPoint<scalar>& alpha1Interp() const;
+            inline const interpolationCellPoint<vector>& nHatInterp() const;
+
+            inline scalar& lPower(label cellI);
     };
 
 
@@ -133,7 +143,8 @@ public:
             const polyMesh& mesh,
             const vector& position,
             const scalar d,
-            const vector& U
+            const vector& U,
+            const label cellI
         );
 
         //- Construct from Istream
@@ -187,13 +198,13 @@ public:
         // Tracking
 
             //- Move
-            bool move(laserParticleCloud&, trackingData&, const scalar);
+            bool move(Cloud<laserParticle>&, trackingData&, const scalar);
 
 
         // Patch interactions
 
             //- Overridable function to handle the particle hitting a wallPatch
-            void hitWallPatch(laserParticleCloud& cloud, trackingData& td);
+            void hitWallPatch(Cloud<laserParticle>& cloud, trackingData& td);
 
             //- Transform the physical properties of the particle
             //  according to the given transformation
