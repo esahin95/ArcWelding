@@ -24,11 +24,12 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "laserDTRM.H"
-#include "basicThermo.H"
 #include "fvModels.H"
 #include "fvMatrix.H"
 #include "Scale.H"
 #include "addToRunTimeSelectionTable.H"
+#include "zeroGradientFvPatchFields.H"
+#include "meshSearch.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -50,41 +51,43 @@ namespace fv
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 void Foam::fv::laserDTRM::readCoeffs()
+{}
+
+void Foam::fv::laserDTRM::update() const
 {
-    if (!coeffs().found("q") && !coeffs().found("Q"))
+    if (curTimeIndex_ == mesh().time().timeIndex())
     {
-        FatalIOErrorInFunction(coeffs())
-            << "Neither heat source per unit volume, q, or total heat source, "
-            << "Q, has been specified. One is required." << exit(FatalIOError);
+        return;
     }
+    lPower_.oldTime();
+    lPower_ == dimensionedScalar(lPower_.dimensions(), Zero);
+    
+    Random rng(12345);
 
-    if (coeffs().found("q") && coeffs().found("Q"))
-    {
-        FatalIOErrorInFunction(coeffs())
-            << "Both heat source per unit volume, q, and total heat source, "
-            << "Q, have been specified. One is required."
-            << exit(FatalIOError);
-    }
+    const meshSearch searchEngine(mesh());
 
-    if (coeffs().found("q"))
+    // construct basis
+    const vector t1 = normalised(perpendicular(direction_));
+    const vector t2 = normalised(t1 ^ direction_);
+    
+    for (int i=0; i< nRays_; i++)
     {
-        q_.reset(Function1<scalar>::New("q", coeffs()).ptr());
+        // sample position
+        const scalar r(radius_ * rng.scalar01());
+        const scalar w(2*Foam::constant::mathematical::pi * rng.scalar01());
+        const vector d(r*Foam::sin(w)*t1 + r*Foam::cos(w)*t2 + centre_);
+        
+        // distributed power 
+        const scalar p(Q_ / nRays_);
+
+        // add particle
+        if (searchEngine.findCell(d) != -1)
+        {
+            cloud_.addParticle(new laserParticle(mesh(), d, p, direction_));
+        }
     }
-    else
-    {
-        q_.reset
-        (
-            new Function1s::Scale<scalar>
-            (
-                "q",
-                Function1s::Constant<scalar>("1/V", 1/set_.V()),
-                Function1s::Constant<scalar>("1", 1),
-                Function1<scalar>::New("Q", coeffs())()
-            )
-        );
-    }
+    Info<< "number of initial particles is " << cloud_.size() << endl;
 }
-
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -97,8 +100,27 @@ Foam::fv::laserDTRM::laserDTRM
 )
 :
     fvModel(name, modelType, dict, mesh),
-    set_(coeffs(), mesh),
-    q_(nullptr)
+    Q_(dict.lookupOrDefault("Q", 0.0)),
+    nRays_(dict.lookupOrDefault("nRays", 0)),
+    radius_(dict.lookupOrDefault("radius", 1.0)),
+    centre_(dict.lookupOrDefault("centre", mesh().bounds().midpoint())),
+    direction_(dict.lookupOrDefault("direction", vector(0.0, -1.0, 0.0))),
+    cloud_(mesh, "cloudDTRM", IDLList<laserParticle>()),
+    lPower_
+    (
+        IOobject
+        (
+            IOobject::groupName(name, "power"),
+            mesh.time().timeName(),
+            mesh,
+            IOobject::READ_IF_PRESENT,
+            IOobject::AUTO_WRITE
+        ),
+        mesh,
+        dimensionedScalar(dimensionSet(1,-1,-2,0,0,0,0), 0.0),
+        zeroGradientFvPatchScalarField::typeName
+    ),
+    curTimeIndex_(-1)
 {
     readCoeffs();
 }
@@ -114,10 +136,7 @@ Foam::fv::laserDTRM::~laserDTRM()
 
 Foam::wordList Foam::fv::laserDTRM::addSupFields() const
 {
-    const basicThermo& thermo =
-        mesh().lookupObject<basicThermo>(physicalProperties::typeName);
-
-    return wordList(1, thermo.he().name());
+    return wordList({"T"});
 }
 
 
@@ -127,15 +146,7 @@ void Foam::fv::laserDTRM::addSup
     const word& fieldName
 ) const
 {
-    const labelList& cells = set_.cells();
-
-    const scalar t = mesh().time().userTimeValue();
-    const scalar q = q_->value(t);
-
-    forAll(cells, i)
-    {
-        eqn.source()[cells[i]] -= mesh().V()[cells[i]]*q;
-    }
+    
 }
 
 
@@ -152,27 +163,20 @@ void Foam::fv::laserDTRM::addSup
 
 bool Foam::fv::laserDTRM::movePoints()
 {
-    set_.movePoints();
     return true;
 }
 
 
 void Foam::fv::laserDTRM::topoChange(const polyTopoChangeMap& map)
-{
-    set_.topoChange(map);
-}
+{}
 
 
 void Foam::fv::laserDTRM::mapMesh(const polyMeshMap& map)
-{
-    set_.mapMesh(map);
-}
+{}
 
 
 void Foam::fv::laserDTRM::distribute(const polyDistributionMap& map)
-{
-    set_.distribute(map);
-}
+{}
 
 
 bool Foam::fv::laserDTRM::read(const dictionary& dict)

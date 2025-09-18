@@ -25,8 +25,7 @@ Class
     Foam::fv::laserDTRM
 
 Description
-    Model for applying a heat source. Requires either the power, Q, or the
-    power per unit volume, q, to be specified.
+    Model for applying a heat source. Requires the power Q to be specified
 
 Usage
     Example usage:
@@ -34,9 +33,6 @@ Usage
     laserDTRM
     {
         type            laserDTRM;
-
-        selectionMode   cellSet;
-        cellSet         heater;
 
         Q               1e6;
     }
@@ -48,8 +44,9 @@ Usage
 #define laserDTRM_H
 
 #include "fvModel.H"
-#include "fvCellSet.H"
 #include "Function1.H"
+#include "Cloud.H"
+#include "laserParticle.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -68,17 +65,30 @@ class laserDTRM
 {
     // Private data
 
-        //- The set of cells the model applies to
-        fvCellSet set_;
-
         //- The heat source
-        autoPtr<Function1<scalar>> q_;
+        scalar Q_;
+        scalar nRays_;
+        scalar radius_;
+        vector centre_;
+        vector direction_;
 
+
+        //- The lagrangian cloud
+        mutable Cloud<laserParticle> cloud_;
+
+        // volume heat source
+        mutable volScalarField lPower_;
+
+        //- Current time index
+        mutable label curTimeIndex_;
 
     // Private member functions
 
         //- Non-virtual read
         void readCoeffs();
+
+        //- Update power deposition
+        void update() const;
 
 
 public:

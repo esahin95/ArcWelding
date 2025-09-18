@@ -30,7 +30,7 @@ Description
 
 #include "fvCFD.H"
 #include "pimpleControl.H"
-#include "laserParticleCloud.H"
+#include "fvModels.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -59,14 +59,14 @@ int main(int argc, char *argv[])
         Info<< "Time = " << runTime.userTimeName() << nl << endl;
 
         // move particles
-        cloud.move();
-        cloud.move();
-        cloud.move();
+        //cloud.move();
 
+        /*
         forAllConstIter(Cloud<laserParticle>, cloud, iter)
         {
             Info<< "Particle position is " << iter().position() << endl;
         }
+        */
         
         runTime.write();
     }
