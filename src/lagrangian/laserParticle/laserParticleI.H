@@ -28,11 +28,11 @@ License
 inline Foam::laserParticle::trackingData::trackingData
 (
     const laserParticleCloud& spc,
-    const interpolationCellPoint<scalar>& rhoInterp
+    const interpolationCellPoint<scalar>& alpha1Interp
 )
 :
     particle::trackingData(spc),
-    rhoInterp_(rhoInterp)
+    alpha1Interp_(alpha1Interp)
 {}
 
 
@@ -69,9 +69,9 @@ inline Foam::laserParticle::laserParticle
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 inline const Foam::interpolationCellPoint<Foam::scalar>&
-Foam::laserParticle::trackingData::rhoInterp() const
+Foam::laserParticle::trackingData::alpha1Interp() const
 {
-    return rhoInterp_;
+    return alpha1Interp_;
 }
 
 inline Foam::scalar Foam::laserParticle::d() const

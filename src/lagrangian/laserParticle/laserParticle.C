@@ -56,6 +56,18 @@ bool Foam::laserParticle::move
 
         const scalar f = 1 - stepFraction();
         trackToAndHitFace(f*trackTime*U_, f, cloud, td);
+
+        // crossed interface
+        const tetIndices tetIs = this->currentTetIndices();
+        scalar alpha1c = td.alpha1Interp().interpolate(this->coordinates(), tetIs);
+        if (alpha1c > 0.5)
+        {
+            td.keepParticle = false;
+            //cloud.volLaserPower()[this->cell()] += this->d();
+            Info<<"particle died at cellI: " << this->cell() << endl;
+        }
+
+
     }
 
     return td.keepParticle;

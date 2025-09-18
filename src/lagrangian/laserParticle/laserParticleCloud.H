@@ -98,6 +98,7 @@ public:
             inline scalar radius() const;
             inline scalar power() const;
             inline scalar nRays() const;
+            //inline const volScalarField& volLaserPower() const;
 
         // Edit
 

@@ -28,6 +28,7 @@ License
 #include "volFields.H"
 #include "interpolationCellPoint.H"
 #include "meshSearch.H"
+#include "zeroGradientFvPatchFields.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -79,11 +80,11 @@ Foam::laserParticleCloud::laserParticleCloud
 
 void Foam::laserParticleCloud::move()
 {
-    const volScalarField& rho = mesh_.lookupObject<const volScalarField>("rho");
+    const volScalarField& alpha1 = mesh_.lookupObject<const volScalarField>("alpha1");
 
-    interpolationCellPoint<scalar> rhoInterp(rho);
+    interpolationCellPoint<scalar> alpha1Interp(alpha1);
 
-    laserParticle::trackingData td(*this, rhoInterp);
+    laserParticle::trackingData td(*this, alpha1Interp);
 
     Cloud<laserParticle>::move(*this, td, mesh_.time().deltaTValue());
 }

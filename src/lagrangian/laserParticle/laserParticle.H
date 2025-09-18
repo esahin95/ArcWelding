@@ -91,7 +91,7 @@ public:
     {
         // Interpolators for continuous phase fields
 
-            const interpolationCellPoint<scalar>& rhoInterp_;
+            const interpolationCellPoint<scalar>& alpha1Interp_;
     public:
 
         // Constructors
@@ -99,13 +99,13 @@ public:
             inline trackingData
             (
                 const laserParticleCloud& spc,
-                const interpolationCellPoint<scalar>& rhoInterp
+                const interpolationCellPoint<scalar>& alpha1Interp
             );
 
 
         // Member Functions
 
-            inline const interpolationCellPoint<scalar>& rhoInterp() const;
+            inline const interpolationCellPoint<scalar>& alpha1Interp() const;
     };
 
 

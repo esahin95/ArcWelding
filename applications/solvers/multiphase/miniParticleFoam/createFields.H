@@ -29,27 +29,32 @@ volVectorField U
 ); 
 
 // density for laser particles
-volScalarField rho
+volScalarField alpha1
 (
     IOobject
     (
-        "rho",
+        "alpha1",
         runTime.timeName(),
         mesh,
         IOobject::NO_READ,
         IOobject::AUTO_WRITE
     ),
     mesh,
-    dimensionedScalar("rho", dimensionSet(1,-3,0,0,0), scalar(1.0)),
-    "fixedValue"
+    dimensionedScalar("alpha1", dimensionSet(1,-3,0,0,0), scalar(0.0)),
+    "zeroGradient"
 ); 
+forAll(alpha1, cellI)
+{
+    const scalar x = mesh.C()[cellI].x();
+    const scalar y = mesh.C()[cellI].y();
+    alpha1[cellI] = y < x ? 1.0 : 0.0;
+}
+alpha1.correctBoundaryConditions();
 
 // define laser particles
 Info<< "Adding cloud of laser particles" << endl;
 laserParticleCloud cloud(mesh);
-//cloud.addParticle(new laserParticle(mesh, vector(0,0.5,0), scalar(1.0), vector(0,-100.0,0)));
 cloud.regenerate();
-//Info<< "number of particles is " << cloud.size() << endl;
 
 surfaceScalarField phi("phi", fvc::interpolate(U) & mesh.Sf());
 
