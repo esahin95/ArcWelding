@@ -1,3 +1,0 @@
-derived/laserDTRM/laserDTRM.C
-
-LIB = $(FOAM_USER_LIBBIN)/liblaserDTRM

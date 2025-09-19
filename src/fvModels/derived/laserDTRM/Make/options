@@ -2,7 +2,7 @@ EXE_INC = \
     -I$(LIB_SRC)/finiteVolume/lnInclude \
     -I$(LIB_SRC)/meshTools/lnInclude \
     -I$(LIB_SRC)/lagrangian/basic/lnInclude \
-    -I$(WM_PROJECT_USER_DIR)/src/lagrangian/laserParticle/lnInclude
+    -I$(WM_PROJECT_USER_DIR)/src/fvModels/derived/laserDTRM/laserParticle/lnInclude
 
 LIB_LIBS = \
     -L$(FOAM_USER_LIBBIN) \

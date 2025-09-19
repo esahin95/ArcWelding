@@ -104,6 +104,12 @@ void Foam::fv::laserDTRM::update() const
         lPower_
     );
 
+    /*
+    while (cloud_.size() > 0)
+    {
+        cloud_.move(cloud_, td, mesh().time().deltaTValue());
+    }
+    */
     cloud_.move(cloud_, td, 1.0);
     Info<<"Total Laser Power Deposited in Field "<< Foam::sum(lPower_)<<endl;
 }
@@ -165,8 +171,9 @@ void Foam::fv::laserDTRM::addSup
     const word& fieldName
 ) const
 {
-    Info<< "this function is called"<<endl;
     update();
+
+    eqn.source() -= lPower_.primitiveField();
 }
 
 
