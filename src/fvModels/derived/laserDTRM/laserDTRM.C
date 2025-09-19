@@ -61,7 +61,7 @@ void Foam::fv::laserDTRM::update() const
     {
         return;
     }
-    lPower_.oldTime();
+    lPower_.storePrevIter();
     lPower_ == dimensionedScalar(lPower_.dimensions(), Zero);
     
     Random rng(12345);
@@ -89,8 +89,6 @@ void Foam::fv::laserDTRM::update() const
             cloud_.addParticle(new laserParticle(mesh(), d, p, direction_, cellI));
         }
     }
-    Info<< "number of initial particles is " << cloud_.size() << endl;
-
     const volScalarField& alpha1 = mesh().lookupObject<const volScalarField>("alpha1");
 
     interpolationCellPoint<scalar> alpha1Interp(alpha1);
@@ -105,12 +103,17 @@ void Foam::fv::laserDTRM::update() const
     );
 
     /*
-    while (cloud_.size() > 0)
+    scalar tTotal = 0;
+    while (cloud_.size() > 0 && tTotal < 1.0) // max track length is 1m
     {
         cloud_.move(cloud_, td, mesh().time().deltaTValue());
+        tTotal += mesh().time().deltaTValue();
     }
     */
-    cloud_.move(cloud_, td, 1.0);
+    cloud_.move(cloud_, td, 1.0); // max track length is 1m
+    
+    // relax power deposition
+    lPower_.relax(0.8);
     Info<<"Total Laser Power Deposited in Field "<< Foam::sum(lPower_)<<endl;
 }
 
@@ -171,8 +174,10 @@ void Foam::fv::laserDTRM::addSup
     const word& fieldName
 ) const
 {
+    // update heat deposition with ray tracing
     update();
 
+    // add power source
     eqn.source() -= lPower_.primitiveField();
 }
 

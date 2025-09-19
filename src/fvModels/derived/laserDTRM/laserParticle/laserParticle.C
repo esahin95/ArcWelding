@@ -60,11 +60,12 @@ bool Foam::laserParticle::move
         // crossed interface
         const tetIndices tetIs = this->currentTetIndices();
         scalar alpha1c = td.alpha1Interp().interpolate(this->coordinates(), tetIs);
+        //Info<<"particle alive at cellI: " << this->cell() << "with alpha " << alpha1c << endl;
         if (alpha1c > 0.5)
         {
             td.keepParticle = false;
             td.lPower(cell()) += d();
-            //Info<<"particle died at cellI: " << this->cell() << "with power " << d() << endl;
+            //Info<<"particle died at cellI: " << this->cell() << "with alpha " << alpha1c << endl;
         }
 
 

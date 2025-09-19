@@ -19,42 +19,42 @@ FoamFile
     top
     {
         type            patch;
-        nFaces          25;
-        startFace       1200;
+        nFaces          5;
+        startFace       40;
     }
     left
     {
         type            wall;
         inGroups        List<word> 1(wall);
-        nFaces          25;
-        startFace       1225;
+        nFaces          5;
+        startFace       45;
     }
     right
     {
         type            patch;
-        nFaces          25;
-        startFace       1250;
+        nFaces          5;
+        startFace       50;
     }
     bottom
     {
         type            wall;
         inGroups        List<word> 1(wall);
-        nFaces          25;
-        startFace       1275;
+        nFaces          5;
+        startFace       55;
     }
     front
     {
         type            empty;
         inGroups        List<word> 1(empty);
-        nFaces          625;
-        startFace       1300;
+        nFaces          25;
+        startFace       60;
     }
     back
     {
         type            empty;
         inGroups        List<word> 1(empty);
-        nFaces          625;
-        startFace       1925;
+        nFaces          25;
+        startFace       85;
     }
 )
 

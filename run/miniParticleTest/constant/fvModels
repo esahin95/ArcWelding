@@ -18,11 +18,11 @@ laser1
 {
     type      laserDTRM;
 
-    centre    (0.5 0.5 0.5);
+    centre    (0.5 0.9 0.5);
     radius    0.1;
     direction (0 -1 0);
     Q         10;    
-    nRays     1000;
+    nRays     100;
 }
 
 
