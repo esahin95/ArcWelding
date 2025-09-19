@@ -1,0 +1,4 @@
+laserParticle.C
+laserParticleIO.C
+
+LIB = $(FOAM_USER_LIBBIN)/liblaserParticle
