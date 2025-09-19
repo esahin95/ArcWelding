@@ -44,6 +44,7 @@ SourceFiles
 #include "autoPtr.H"
 #include "interpolationCellPoint.H"
 #include "contiguous.H"
+#include "DynamicField.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -79,6 +80,8 @@ class laserParticle
         //- direction
         vector U_;
 
+        //- index
+        label trackIndex_;
 
 public:
 
@@ -97,6 +100,13 @@ public:
         // reference to heat source field
 
             volScalarField& lPower_;
+
+        // streamline data
+
+            DynamicField<point>& allPositions_;
+            DynamicField<label>& allTracks_;
+            DynamicField<scalar>& allPowers_;
+
     public:
 
         // Constructors
@@ -106,7 +116,10 @@ public:
                 const Cloud<laserParticle>& spc,
                 const interpolationCellPoint<scalar>& alpha1Interp,
                 const interpolationCellPoint<vector>& nHatInterp,
-                volScalarField& lPower
+                volScalarField& lPower,
+                DynamicField<point>& allPositions,
+                DynamicField<label>& allTracks,
+                DynamicField<scalar>& allPowers
             );
 
 
@@ -116,6 +129,8 @@ public:
             inline const interpolationCellPoint<vector>& nHatInterp() const;
 
             inline scalar& lPower(label cellI);
+
+            inline void append(vector position, label trackIndex, scalar d);
     };
 
 
@@ -134,7 +149,8 @@ public:
             const label tetFacei,
             const label tetPti,
             const scalar d,
-            const vector& U
+            const vector& U,
+            const label trackIndex
         );
 
         //- Construct from position
@@ -144,7 +160,8 @@ public:
             const vector& position,
             const scalar d,
             const vector& U,
-            const label cellI
+            const label cellI,
+            const label trackIndex
         );
 
         //- Construct from Istream
@@ -193,6 +210,9 @@ public:
 
             //- Return direction
             inline const vector& U() const;
+
+            //- Return track index
+            inline label index() const;
 
 
         // Tracking

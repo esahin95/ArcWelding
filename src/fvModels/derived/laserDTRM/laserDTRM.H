@@ -46,12 +46,18 @@ Usage
 #include "fvModel.H"
 #include "Function1.H"
 #include "Cloud.H"
+#include "setWriter.H"
 #include "laserParticle.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
+
+// Forward declaration of classes
+class meshSearch;
+class Random;
+
 namespace fv
 {
 
@@ -81,6 +87,15 @@ class laserDTRM
 
         //- Current time index
         mutable label curTimeIndex_;
+
+        //- File writer
+        autoPtr<setWriter> formatterPtr_;
+
+        //- Mesh searching engine
+        autoPtr<meshSearch> meshSearchPtr_;
+
+        //- Random number generator
+        mutable Random rng_;
 
     // Private member functions
 

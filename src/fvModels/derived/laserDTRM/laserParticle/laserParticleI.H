@@ -30,13 +30,19 @@ inline Foam::laserParticle::trackingData::trackingData
     const Cloud<laserParticle>& spc,
     const interpolationCellPoint<scalar>& alpha1Interp,
     const interpolationCellPoint<vector>& nHatInterp,
-    volScalarField& lPower
+    volScalarField& lPower,
+    DynamicField<point>& allPositions,
+    DynamicField<label>& allTracks,
+    DynamicField<scalar>& allPowers
 )
 :
     particle::trackingData(spc),
     alpha1Interp_(alpha1Interp),
     nHatInterp_(nHatInterp),
-    lPower_(lPower)
+    lPower_(lPower),
+    allPositions_(allPositions),
+    allTracks_(allTracks),
+    allPowers_(allPowers)
 {}
 
 
@@ -48,12 +54,14 @@ inline Foam::laserParticle::laserParticle
     const label tetFacei,
     const label tetPti,
     const scalar d,
-    const vector& U
+    const vector& U,
+    const label trackIndex
 )
 :
     particle(mesh, coordinates, celli, tetFacei, tetPti),
     d_(d),
-    U_(U)
+    U_(U),
+    trackIndex_(trackIndex)
 {}
 
 inline Foam::laserParticle::laserParticle
@@ -62,12 +70,14 @@ inline Foam::laserParticle::laserParticle
     const vector& position,
     const scalar d,
     const vector& U,
-    const label cellI
+    const label cellI,
+    const label trackIndex
 )
 :
     particle(mesh, position, cellI),
     d_(d),
-    U_(U)
+    U_(U),
+    trackIndex_(trackIndex)
 {}
 
 
@@ -95,9 +105,21 @@ inline const Foam::vector& Foam::laserParticle::U() const
     return U_;
 }
 
+inline Foam::label Foam::laserParticle::index() const
+{
+    return trackIndex_;
+}
+
 inline Foam::scalar& Foam::laserParticle::trackingData::lPower(label cellI)
 {
     return lPower_[cellI];
+}
+
+inline void Foam::laserParticle::trackingData::append(vector position, label trackIndex, scalar d)
+{
+    allPositions_.append(position);
+    allTracks_.append(trackIndex);
+    allPowers_.append(d);
 }
 
 

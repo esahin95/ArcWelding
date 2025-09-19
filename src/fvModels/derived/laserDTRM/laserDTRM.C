@@ -30,6 +30,7 @@ License
 #include "addToRunTimeSelectionTable.H"
 #include "zeroGradientFvPatchFields.H"
 #include "meshSearch.H"
+#include "writeFile.H"
 #include "fvcGrad.H"
 #include "laserParticle.H"
 
@@ -63,10 +64,6 @@ void Foam::fv::laserDTRM::update() const
     }
     lPower_.storePrevIter();
     lPower_ == dimensionedScalar(lPower_.dimensions(), Zero);
-    
-    Random rng(12345);
-
-    const meshSearch searchEngine(mesh());
 
     // construct basis
     const vector t1 = normalised(perpendicular(direction_));
@@ -75,31 +72,37 @@ void Foam::fv::laserDTRM::update() const
     for (int i=0; i< nRays_; i++)
     {
         // sample position
-        const scalar r(radius_ * rng.scalar01());
-        const scalar w(2*Foam::constant::mathematical::pi * rng.scalar01());
+        const scalar r(radius_ * rng_.scalar01());
+        const scalar w(2*Foam::constant::mathematical::pi * rng_.scalar01());
         const vector d(r*Foam::sin(w)*t1 + r*Foam::cos(w)*t2 + centre_);
         
         // distributed power 
         const scalar p(Q_ / nRays_);
 
         // add particle
-        label cellI = searchEngine.findCell(d);
+        label cellI = meshSearchPtr_->findCell(d);
         if (cellI != -1)
         {
-            cloud_.addParticle(new laserParticle(mesh(), d, p, direction_, cellI));
+            cloud_.addParticle(new laserParticle(mesh(), d, p, direction_, cellI, i));
         }
     }
     const volScalarField& alpha1 = mesh().lookupObject<const volScalarField>("alpha1");
 
     interpolationCellPoint<scalar> alpha1Interp(alpha1);
     interpolationCellPoint<vector> nHatInterp(fvc::grad(alpha1));
+    DynamicField<point> allPositions;
+    DynamicField<label> allTracks;
+    DynamicField<scalar> allPowers;
 
     laserParticle::trackingData td
     (
         cloud_, 
         alpha1Interp, 
         nHatInterp,
-        lPower_
+        lPower_,
+        allPositions,
+        allTracks,
+        allPowers
     );
 
     /*
@@ -115,6 +118,22 @@ void Foam::fv::laserDTRM::update() const
     // relax power deposition
     lPower_.relax(0.8);
     Info<<"Total Laser Power Deposited in Field "<< Foam::sum(lPower_)<<endl;
+
+    // write rays to vtk
+    fileName outputPath
+    (
+        mesh().time().globalPath()/"postProcessing"/name()
+    );
+    mkDir(outputPath);
+
+    formatterPtr_->write
+    (
+        outputPath,
+        mesh().time().timeName(),
+        coordSet(allTracks, word::null, allPositions),
+        "Power",
+        allPowers
+    );
 }
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
@@ -148,9 +167,13 @@ Foam::fv::laserDTRM::laserDTRM
         dimensionedScalar(dimensionSet(1,-1,-3,0,0,0,0), 0.0),
         zeroGradientFvPatchScalarField::typeName
     ),
-    curTimeIndex_(-1)
+    curTimeIndex_(-1),
+    meshSearchPtr_(new meshSearch(mesh)),
+    rng_(Random(Foam::clock::getTime()))
 {
     readCoeffs();
+
+    formatterPtr_ = setWriter::New("vtk", dict);
 }
 
 

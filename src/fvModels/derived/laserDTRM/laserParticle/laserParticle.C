@@ -54,18 +54,20 @@ bool Foam::laserParticle::move
                 << " stepFraction() = " << stepFraction() << endl;
         }
 
+        // save current data
+        td.append(position(), index(), d());
+
         const scalar f = 1 - stepFraction();
         trackToAndHitFace(f*trackTime*U_, f, cloud, td);
 
         // crossed interface
         const tetIndices tetIs = this->currentTetIndices();
         scalar alpha1c = td.alpha1Interp().interpolate(this->coordinates(), tetIs);
-        //Info<<"particle alive at cellI: " << this->cell() << "with alpha " << alpha1c << endl;
         if (alpha1c > 0.5)
         {
             td.keepParticle = false;
             td.lPower(cell()) += d();
-            //Info<<"particle died at cellI: " << this->cell() << "with alpha " << alpha1c << endl;
+            td.append(position(), index(), d());
         }
 
 
