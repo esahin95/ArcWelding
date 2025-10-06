@@ -55,7 +55,6 @@ namespace Foam
 {
 
 // Forward declaration of classes
-//class meshSearch;
 class Random;
 
 namespace fv
@@ -72,14 +71,15 @@ class laserDTRM
     // Private data
 
         //- The heat source
-        scalar Q_;
-        scalar nRays_;
-        scalar radius_;
-        scalar sigma_;
-        vector centre_;
-        vector direction_;
-        vector t1_;
-        vector t2_;
+        const scalar Q_;
+        const scalar nRays_;
+        const scalar radius_;
+        const scalar sigma_;
+        const vector centre_;
+        const vector direction_;
+        const vector t1_;
+        const vector t2_;
+        const scalar q_;
 
 
         //- The lagrangian cloud
@@ -93,6 +93,7 @@ class laserDTRM
 
         //- File writer
         autoPtr<setWriter> formatterPtr_;
+        fileName outputPath_;
 
         //- Random number generator
         mutable Random rng_;

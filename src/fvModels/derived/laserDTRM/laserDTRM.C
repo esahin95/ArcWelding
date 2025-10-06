@@ -29,7 +29,7 @@ License
 //#include "Scale.H"
 #include "addToRunTimeSelectionTable.H"
 #include "zeroGradientFvPatchFields.H"
-#include "writeFile.H"
+//#include "writeFile.H"
 #include "fvcGrad.H"
 #include "laserParticle.H"
 
@@ -64,9 +64,6 @@ void Foam::fv::laserDTRM::update() const
     lPower_.storePrevIter();
     lPower_ == dimensionedScalar(lPower_.dimensions(), Zero);
     
-    // energy per particle
-    const scalar p(Q_ / nRays_);
-    
     // rejection sample positions
     int i = 0;
     for (int nTries=0; nTries < 10000; nTries++)
@@ -78,7 +75,7 @@ void Foam::fv::laserDTRM::update() const
         }
         
         // sample position
-        vector d(t1_ * (radius_ * rng_.scalar01()) + t2_ * (radius_ * rng_.scalar01()));
+        vector d(t1_ * rng_.scalarAB(-radius_, radius_) + t2_ * rng_.scalarAB(-radius_, radius_));
         scalar r(mag(d));
 
         if (r<radius_ && rng_.scalar01() < Foam::exp(-sqr(r / sigma_) / 2.0))
@@ -88,7 +85,7 @@ void Foam::fv::laserDTRM::update() const
             label cellI = mesh().findCell(d);
             if (cellI != -1)
             {
-                cloud_.addParticle(new laserParticle(mesh(), d, p, direction_, cellI, i));
+                cloud_.addParticle(new laserParticle(mesh(), d, q_, direction_, cellI, i));
                 i++;
             }
         }
@@ -112,15 +109,9 @@ void Foam::fv::laserDTRM::update() const
         allPowers
     );
 
-    /*
-    scalar tTotal = 0;
-    while (cloud_.size() > 0 && tTotal < 1.0) // max track length is 1m
-    {
-        cloud_.move(cloud_, td, mesh().time().deltaTValue());
-        tTotal += mesh().time().deltaTValue();
-    }
-    */
-    cloud_.move(cloud_, td, 1.0); // max track length is 1m
+    // ray tracing
+    cloud_.move(cloud_, td, 10.0);
+    Info<< "remaining particles: " << cloud_.size() << endl;
     
     // relax power deposition
     lPower_.relax(0.8);
@@ -129,15 +120,9 @@ void Foam::fv::laserDTRM::update() const
     // write rays to vtk
     if (mesh().time().writeTime())
     {
-        fileName outputPath
-        (
-            mesh().time().globalPath()/"postProcessing"/name()
-        );
-        mkDir(outputPath);
-
         formatterPtr_->write
         (
-            outputPath,
+            outputPath_,
             mesh().time().timeName(),
             coordSet(allTracks, word::null, allPositions),
             "Power",
@@ -168,6 +153,7 @@ Foam::fv::laserDTRM::laserDTRM
     direction_(dict.lookupOrDefault("direction", vector(0.0, -1.0, 0.0))),
     t1_(normalised(perpendicular(direction_))),
     t2_(normalised(t1_ ^ direction_)),
+    q_(Q_ / max(nRays_, 1)),
     cloud_(mesh, "cloudDTRM", IDLList<laserParticle>()),
     lPower_
     (
@@ -184,11 +170,14 @@ Foam::fv::laserDTRM::laserDTRM
         zeroGradientFvPatchScalarField::typeName
     ),
     curTimeIndex_(-1),
+    formatterPtr_(setWriter::New("vtk", dict)),
+    outputPath_(mesh().time().globalPath()/"postProcessing"/name),
     rng_(Random(Foam::clock::getTime()))
 {
     readCoeffs();
 
-    formatterPtr_ = setWriter::New("vtk", dict);
+    // create directory
+    mkDir(outputPath_);
 }
 
 

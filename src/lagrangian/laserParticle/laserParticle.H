@@ -51,9 +51,6 @@ SourceFiles
 namespace Foam
 {
 
-class laserParticleCloud;
-
-
 // Forward declaration of friend functions and operators
 
 class laserParticle;
@@ -74,13 +71,16 @@ class laserParticle
         //- Size in bytes of the fields
         static const std::size_t sizeofFields_;
 
-        //- power
+        //- Power
         scalar d_;
 
-        //- direction
+        //- Initial power
+        scalar d0_;
+
+        //- Direction
         vector U_;
 
-        //- index
+        //- Track index
         label trackIndex_;
 
 public:

@@ -60,6 +60,7 @@ inline Foam::laserParticle::laserParticle
 :
     particle(mesh, coordinates, celli, tetFacei, tetPti),
     d_(d),
+    d0_(d),
     U_(U),
     trackIndex_(trackIndex)
 {}
@@ -76,6 +77,7 @@ inline Foam::laserParticle::laserParticle
 :
     particle(mesh, position, cellI),
     d_(d),
+    d0_(d),
     U_(U),
     trackIndex_(trackIndex)
 {}

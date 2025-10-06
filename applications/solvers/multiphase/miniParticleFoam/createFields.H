@@ -47,7 +47,8 @@ forAll(alpha1, cellI)
 {
     const scalar x = mesh.C()[cellI].x();
     const scalar y = mesh.C()[cellI].y();
-    alpha1[cellI] = y < x ? 1.0 : 0.0;
+    alpha1[cellI] = y < x  || x < 0.3 ? 1.0 : 0.0;
+    //alpha1[cellI] = x < 0.3 ? 1.0 : 0.0;
 }
 alpha1.correctBoundaryConditions();
 

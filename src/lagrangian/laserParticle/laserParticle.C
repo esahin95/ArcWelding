@@ -72,10 +72,15 @@ bool Foam::laserParticle::move
             scalar a = 0.8;
             
             // reflection
-            vector nHatc = td.nHatInterp().interpolate(this->coordinates(), tetIs);
+            vector nHatc = normalised(td.nHatInterp().interpolate(this->coordinates(), tetIs));
             scalar Un = U_ & nHatc;
             if (Un > 0)
             {
+                if (d_ / d0_ < 0.02)
+                {
+                    a = 1.0;
+                    td.keepParticle = false;
+                }
                 td.lPower(cell()) += a * d();
                 U_ -= 2.0 * Un * nHatc;
                 d_ -= a * d();
@@ -91,16 +96,6 @@ bool Foam::laserParticle::move
 
 void Foam::laserParticle::hitWallPatch(Cloud<laserParticle>& cloud, trackingData& td)
 {
-    /*
-    const vector nw = normal();
-
-    const scalar Un = U_ & nw;
-
-    if (Un > 0)
-    {
-        U_ -= 2.0*Un*nw;
-    }
-    */
     td.keepParticle = false;
 }
 
