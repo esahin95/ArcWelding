@@ -55,7 +55,7 @@ namespace Foam
 {
 
 // Forward declaration of classes
-class meshSearch;
+//class meshSearch;
 class Random;
 
 namespace fv
@@ -75,8 +75,11 @@ class laserDTRM
         scalar Q_;
         scalar nRays_;
         scalar radius_;
+        scalar sigma_;
         vector centre_;
         vector direction_;
+        vector t1_;
+        vector t2_;
 
 
         //- The lagrangian cloud
@@ -90,9 +93,6 @@ class laserDTRM
 
         //- File writer
         autoPtr<setWriter> formatterPtr_;
-
-        //- Mesh searching engine
-        autoPtr<meshSearch> meshSearchPtr_;
 
         //- Random number generator
         mutable Random rng_;

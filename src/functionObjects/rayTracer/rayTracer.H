@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,106 +22,126 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::laserParticleCloud
+    Foam::functionObjects::rayTracer
 
 Description
-    A Cloud of solid particles
+    This function object...
+
+    Example of function object specification:
+    \verbatim
+    rayTracer1
+    {
+        type           rayTracer;
+        libs ("librayTracerFunctionObject.so");
+        ...
+        wordData       someWord;
+        scalarData     1.0;
+        labelData      1;
+    }
+    \endverbatim
+
+Usage
+    \table
+        Property     | Description               | Required | Default value
+        type         | type name: rayTracer | yes      |
+        wordData     | some word option...       | no       | defaultWord
+        scalarData   | some scalar value...      | yes      |
+        labelData    | some label value...       | yes      |
+    \endtable
 
 SourceFiles
-    laserParticleCloudI.H
-    laserParticleCloud.C
-    laserParticleCloudIO.C
+    rayTracer.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef laserParticleCloud_H
-#define laserParticleCloud_H
+#ifndef rayTracer_H
+#define rayTracer_H
 
-#include "Cloud.H"
-#include "laserParticle.H"
-#include "IOdictionary.H"
+#include "fvMeshFunctionObject.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-
-// Forward declaration of classes
-class fvMesh;
+namespace functionObjects
+{
 
 /*---------------------------------------------------------------------------*\
-                     Class laserParticleCloud Declaration
+                       Class rayTracer Declaration
 \*---------------------------------------------------------------------------*/
 
-class laserParticleCloud
+class rayTracer
 :
-    public Cloud<laserParticle>
+    public fvMeshFunctionObject
 {
     // Private Data
 
-        const fvMesh& mesh_;
+        //- word
+        word wordData_;
 
-        IOdictionary laserProperties_;
-        vector centre_;
-        scalar radius_;
-        vector direction_;
-        scalar nRays_;
-        scalar power_;
+        //- scalar
+        scalar scalarData_;
+
+        //- label
+        label labelData_;
+
+
+    // Private Member Functions
+
 
 public:
 
     //- Runtime type information
-    TypeName("laserParticleCloud");
+    TypeName("rayTracer");
 
 
     // Constructors
 
-        //- Construct given mesh
-        laserParticleCloud
+        //- Construct from Time and dictionary
+        rayTracer
         (
-            const fvMesh&,
-            const word& cloudName = "defaultCloud",
-            bool readFields = true
+            const word& name,
+            const Time& runTime,
+            const dictionary& dict
         );
 
         //- Disallow default bitwise copy construction
-        laserParticleCloud(const laserParticleCloud&) = delete;
+        rayTracer(const rayTracer&) = delete;
+
+
+    //- Destructor
+    virtual ~rayTracer();
 
 
     // Member Functions
 
-        // Access
-            inline const fvMesh& mesh() const;
+        //- Read the rayTracer data
+        virtual bool read(const dictionary&);
 
-            inline const vector& direction() const;
-            inline const vector& centre() const;
-            inline scalar radius() const;
-            inline scalar power() const;
-            inline scalar nRays() const;
-            //inline const volScalarField& volLaserPower() const;
+        //- Return the list of fields required
+        virtual wordList fields() const;
 
-        // Edit
+        //- Execute, currently does nothing
+        virtual bool execute();
 
-            //- Move the particles
-            void move();
+        //- Execute at the final time-loop, currently does nothing
+        virtual bool end();
 
-            //- Generate laser particles from properties
-            scalar regenerate();
+        //- Write the rayTracer
+        virtual bool write();
+
 
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const laserParticleCloud&) = delete;
+        void operator=(const rayTracer&) = delete;
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+} // End namespace functionObjects
 } // End namespace Foam
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#include "laserParticleCloudI.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

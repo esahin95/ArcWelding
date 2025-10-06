@@ -54,8 +54,11 @@ bool Foam::laserParticle::move
                 << " stepFraction() = " << stepFraction() << endl;
         }
 
-        // save current data
-        td.append(position(), index(), d());
+        // save current data only for writeTimes
+        if (mesh().time().writeTime())
+        {
+            td.append(position(), index(), d());
+        }
 
         const scalar f = 1 - stepFraction();
         trackToAndHitFace(f*trackTime*U_, f, cloud, td);
@@ -65,9 +68,18 @@ bool Foam::laserParticle::move
         scalar alpha1c = td.alpha1Interp().interpolate(this->coordinates(), tetIs);
         if (alpha1c > 0.5)
         {
-            td.keepParticle = false;
-            td.lPower(cell()) += d();
-            td.append(position(), index(), d());
+            // absorption rate
+            scalar a = 0.8;
+            
+            // reflection
+            vector nHatc = td.nHatInterp().interpolate(this->coordinates(), tetIs);
+            scalar Un = U_ & nHatc;
+            if (Un > 0)
+            {
+                td.lPower(cell()) += a * d();
+                U_ -= 2.0 * Un * nHatc;
+                d_ -= a * d();
+            }
         }
 
 
@@ -77,8 +89,9 @@ bool Foam::laserParticle::move
 }
 
 
-void Foam::laserParticle::hitWallPatch(Cloud<laserParticle>& cloud, trackingData&)
+void Foam::laserParticle::hitWallPatch(Cloud<laserParticle>& cloud, trackingData& td)
 {
+    /*
     const vector nw = normal();
 
     const scalar Un = U_ & nw;
@@ -87,6 +100,8 @@ void Foam::laserParticle::hitWallPatch(Cloud<laserParticle>& cloud, trackingData
     {
         U_ -= 2.0*Un*nw;
     }
+    */
+    td.keepParticle = false;
 }
 
 void Foam::laserParticle::transformProperties(const transformer& transform)
