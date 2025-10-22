@@ -22,7 +22,9 @@ laser1
     radius    0.1;
     direction (0 -1 0);
     Q         10;    
-    nRays     100;
+    nRays     150;
+    relax     1.0;
+    absorption 1.0;
 }
 
 
