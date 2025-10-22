@@ -83,6 +83,9 @@ class laserParticle
         //- Track index
         label trackIndex_;
 
+        //- absorptivity
+        scalar a_;
+
 public:
 
     friend class Cloud<laserParticle>;
@@ -150,7 +153,8 @@ public:
             const label tetPti,
             const scalar d,
             const vector& U,
-            const label trackIndex
+            const label trackIndex,
+            const scalar a
         );
 
         //- Construct from position
@@ -161,7 +165,8 @@ public:
             const scalar d,
             const vector& U,
             const label cellI,
-            const label trackIndex
+            const label trackIndex,
+            const scalar a
         );
 
         //- Construct from Istream

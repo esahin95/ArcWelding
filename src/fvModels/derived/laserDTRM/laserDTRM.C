@@ -26,10 +26,8 @@ License
 #include "laserDTRM.H"
 #include "fvModels.H"
 #include "fvMatrix.H"
-//#include "Scale.H"
 #include "addToRunTimeSelectionTable.H"
 #include "zeroGradientFvPatchFields.H"
-//#include "writeFile.H"
 #include "fvcGrad.H"
 #include "laserParticle.H"
 
@@ -80,13 +78,15 @@ void Foam::fv::laserDTRM::update() const
 
         if (r<radius_ && rng_.scalar01() < Foam::exp(-sqr(r / sigma_) / 2.0))
         {
+            // increment index
+            i++;
+            
             // add particle
             d += centre_;
             label cellI = mesh().findCell(d);
             if (cellI != -1)
             {
-                cloud_.addParticle(new laserParticle(mesh(), d, q_, direction_, cellI, i));
-                i++;
+                cloud_.addParticle(new laserParticle(mesh(), d, q_, direction_, cellI, i, a_));
             }
         }
     }
@@ -114,7 +114,7 @@ void Foam::fv::laserDTRM::update() const
     Info<< "remaining particles: " << cloud_.size() << endl;
     
     // relax power deposition
-    lPower_.relax(0.8);
+    lPower_.relax(relax_);
     Info<<"Total Laser Power Deposited in Field "<< Foam::sum(lPower_)<<endl;
 
     // write rays to vtk
@@ -154,6 +154,8 @@ Foam::fv::laserDTRM::laserDTRM
     t1_(normalised(perpendicular(direction_))),
     t2_(normalised(t1_ ^ direction_)),
     q_(Q_ / max(nRays_, 1)),
+    relax_(dict.lookupOrDefault("relax", 1.0)),
+    a_(dict.lookupOrDefault("absorption", 1.0)),
     cloud_(mesh, "cloudDTRM", IDLList<laserParticle>()),
     lPower_
     (

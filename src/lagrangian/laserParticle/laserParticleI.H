@@ -55,14 +55,16 @@ inline Foam::laserParticle::laserParticle
     const label tetPti,
     const scalar d,
     const vector& U,
-    const label trackIndex
+    const label trackIndex,
+    const scalar a
 )
 :
     particle(mesh, coordinates, celli, tetFacei, tetPti),
     d_(d),
     d0_(d),
     U_(U),
-    trackIndex_(trackIndex)
+    trackIndex_(trackIndex),
+    a_(a)
 {}
 
 inline Foam::laserParticle::laserParticle
@@ -72,14 +74,16 @@ inline Foam::laserParticle::laserParticle
     const scalar d,
     const vector& U,
     const label cellI,
-    const label trackIndex
+    const label trackIndex,
+    const scalar a
 )
 :
     particle(mesh, position, cellI),
     d_(d),
     d0_(d),
     U_(U),
-    trackIndex_(trackIndex)
+    trackIndex_(trackIndex),
+    a_(a)
 {}
 
 

@@ -80,6 +80,8 @@ class laserDTRM
         const vector t1_;
         const vector t2_;
         const scalar q_;
+        const scalar relax_;
+        const scalar a_;
 
 
         //- The lagrangian cloud

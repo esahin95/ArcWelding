@@ -67,23 +67,23 @@ bool Foam::laserParticle::move
         const tetIndices tetIs = this->currentTetIndices();
         scalar alpha1c = td.alpha1Interp().interpolate(this->coordinates(), tetIs);
         if (alpha1c > 0.5)
-        {
-            // absorption rate
-            scalar a = 0.8;
-            
-            // reflection
+        {            
+            // check reflection
             vector nHatc = normalised(td.nHatInterp().interpolate(this->coordinates(), tetIs));
             scalar Un = U_ & nHatc;
             if (Un > 0)
             {
+                // reflection
+                td.lPower(cell()) += a_ * d();
+                U_ -= 2.0 * Un * nHatc;
+                d_ -= a_ * d();
+
+                //- particle out of power
                 if (d_ / d0_ < 0.02)
                 {
-                    a = 1.0;
+                    td.lPower(cell()) += d();
                     td.keepParticle = false;
                 }
-                td.lPower(cell()) += a * d();
-                U_ -= 2.0 * Un * nHatc;
-                d_ -= a * d();
             }
         }
 
