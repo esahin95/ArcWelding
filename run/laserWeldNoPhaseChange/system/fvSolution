@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Version:  9
+    \\  /    A nd           | Version:  10
      \\/     M anipulation  |
 \*---------------------------------------------------------------------------*/
 FoamFile
@@ -16,20 +16,10 @@ FoamFile
 
 solvers
 {
-    "alpha.water.*"
+    "alpha.steel.*"
     {
-        nAlphaCorr      1;
+        nAlphaCorr      0;
         nAlphaSubCycles 2;
-        
-        /*
-        MULESCorr       yes;
-        nLimiterIter    5;
-        
-        solver          smoothSolver;
-        smoother        symGaussSeidel;
-        tolerance       1e-8;
-        relTol          0;
-        */
     }
 
     p_rgh
@@ -75,12 +65,9 @@ solvers
 PIMPLE
 {
     momentumPredictor no;
-    nCorrectors     3;
+    nCorrectors     0;
     nNonOrthogonalCorrectors 0;
     nOuterCorrectors 1;
-
-    pRefCell    0;
-    pRefValue   0;
 }
 
 

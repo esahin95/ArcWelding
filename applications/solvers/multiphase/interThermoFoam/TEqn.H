@@ -1,8 +1,6 @@
 {    
-    
     // apparent heat capacity
     CpApp == alpha1 * L * fb * Foam::exp(-Foam::sqr(fa * (T - Tmid)));
-    tmpScl == CpApp / dimensionedScalar("tmp", dimensionSet(0,2,-2,-1,0), 1.0);
 
     // derived quantities for numerical integration
     rhoCp == rho * (Cp + CpApp);
@@ -27,6 +25,5 @@
     
     T.relax();
     
-    Info<< "min/max(T) = "
-        << min(T).value() << " , " << max(T).value() << endl;
+    Info<< "min/max(T) = " << min(T).value() << " , " << max(T).value() << endl;
 }

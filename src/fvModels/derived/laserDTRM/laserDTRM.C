@@ -23,6 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
+#include "Pstream.H"
 #include "laserDTRM.H"
 #include "fvModels.H"
 #include "fvMatrix.H"
@@ -30,6 +31,25 @@ License
 #include "zeroGradientFvPatchFields.H"
 #include "fvcGrad.H"
 #include "laserParticle.H"
+
+namespace Foam
+{
+
+template<class Type>
+void gatherAndFlatten(DynamicField<Type>& field)
+{
+    List<List<Type>> gatheredField(Pstream::nProcs());
+    gatheredField[Pstream::myProcNo()] = field;
+    Pstream::gatherList(gatheredField);
+
+    field = ListListOps::combine<List<Type>>
+    (
+        gatheredField, 
+        accessOp<List<Type>>()
+    );
+}
+
+}
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -62,35 +82,34 @@ void Foam::fv::laserDTRM::update() const
     lPower_.storePrevIter();
     lPower_ == dimensionedScalar(lPower_.dimensions(), Zero);
     
-    // rejection sample positions
-    int i = 0;
-    for (int nTries=0; nTries < 10000; nTries++)
-    {
-        if (i >= nRays_)
+    // populate cloud
+    vector d;
+    scalar r;
+    for (int i=0; i < nRays_; i++)
+    {        
+        // sample position
+        do 
         {
-            Info<<"Cloud populated with nTries: "<< nTries << endl;
-            break;
+            d = t1_ * rng_.scalarAB(-radius_, radius_) + t2_ * rng_.scalarAB(-radius_, radius_);
+            r = mag(d);
+        } 
+        while ( r>radius_ || rng_.scalar01() > Foam::exp(-sqr(r / sigma_) / 2.0) );
+
+        // add particle
+        d += centre_;
+        label cellI = mesh().findCell(d);
+        if (cellI != -1)
+        {
+            cloud_.addParticle(new laserParticle(mesh(), d, q_, direction_, cellI, i, a_));
         }
         
-        // sample position
-        vector d(t1_ * rng_.scalarAB(-radius_, radius_) + t2_ * rng_.scalarAB(-radius_, radius_));
-        scalar r(mag(d));
-
-        if (r<radius_ && rng_.scalar01() < Foam::exp(-sqr(r / sigma_) / 2.0))
+        // warning if particles are outside mesh
+        if (returnReduce(cellI, maxOp<label>()) == -1)
         {
-            // increment index
-            i++;
-            
-            // add particle
-            d += centre_;
-            label cellI = mesh().findCell(d);
-            if (cellI != -1)
-            {
-                cloud_.addParticle(new laserParticle(mesh(), d, q_, direction_, cellI, i, a_));
-            }
+            Info << "Cannot find owner cell for position " << d << endl;
         }
     }
-    const volScalarField& alpha1 = mesh().lookupObject<const volScalarField>("alpha1");
+    const volScalarField& alpha1 = mesh().lookupObject<const volScalarField>("alpha.steel");
 
     interpolationCellPoint<scalar> alpha1Interp(alpha1);
     interpolationCellPoint<vector> nHatInterp(fvc::grad(alpha1));
@@ -115,19 +134,29 @@ void Foam::fv::laserDTRM::update() const
     
     // relax power deposition
     lPower_.relax(relax_);
-    Info<<"Total Laser Power Deposited in Field "<< Foam::sum(lPower_)<<endl;
+    Info<<"Total Laser Power Deposited in Field: "<< gSum(lPower_) << endl;
 
     // write rays to vtk
     if (mesh().time().writeTime())
     {
-        formatterPtr_->write
-        (
-            outputPath_,
-            mesh().time().timeName(),
-            coordSet(allTracks, word::null, allPositions),
-            "Power",
-            allPowers
-        );
+        if (Pstream::parRun())
+        {
+            gatherAndFlatten(allPositions);
+            gatherAndFlatten(allTracks);
+            gatherAndFlatten(allPowers);
+        }
+        
+        if (Pstream::master())
+        {
+            formatterPtr_->write
+            (
+                outputPath_,
+                mesh().time().timeName(),
+                coordSet(allTracks, word::null, allPositions),
+                "Power",
+                allPowers
+            );
+        }
     }
 
     // update time level

@@ -48,6 +48,7 @@ Description
 #include "fvConstraints.H"
 #include "CorrectPhi.H"
 #include "fvcSmooth.H"
+//#include "simpleMatrix.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -74,6 +75,9 @@ int main(int argc, char *argv[])
     // Initialize time stepping
     scalar DiNum = 0.0;
     scalar maxDi = runTime.controlDict().lookupOrDefault<scalar>("maxDi", 10.0);
+
+    // solve T multiple times
+    //#include "writeMatCoeffs.H"
 
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
     Info<< "\nStarting time loop\n" << endl;

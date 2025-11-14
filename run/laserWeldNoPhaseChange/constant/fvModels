@@ -14,19 +14,17 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-/*
 laser1
 {
     type      laserDTRM;
 
-    centre    (0.5 0.9 0.5);
-    radius    0.1;
-    direction (0 -1 0);
-    Q         10;    
-    nRays     150;
+    centre    (7.5e-4 2.5e-4 5e-5);
+    radius    1e-4;
+    direction (0 0 -1);
+    Q         1;    
+    nRays     250;
     relax     1.0;
     absorption 1.0;
 }
-*/
 
 //************************************************************************* //
