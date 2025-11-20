@@ -18,7 +18,7 @@ solvers
 {
     "alpha.steel.*"
     {
-        nAlphaCorr      0;
+        nAlphaCorr      1;
         nAlphaSubCycles 2;
     }
 
@@ -65,7 +65,7 @@ solvers
 PIMPLE
 {
     momentumPredictor no;
-    nCorrectors     0;
+    nCorrectors     3;
     nNonOrthogonalCorrectors 0;
     nOuterCorrectors 1;
 }

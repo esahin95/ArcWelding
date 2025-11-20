@@ -16,20 +16,20 @@ FoamFile
 
 viscosityModel  Newtonian;
 
-nu              3.2e-06;
+nu              8e-3;
 
-rho             1562.5;
+rho             7249.2;
 
 Cp              500;
 
-kappa           12.5;
+kappa           28.951;
 
-beta            0.1;
+beta            0.0;
 
-Tliq            300;
-Tsol            298;
-L               1000;
-DC              100000;
+Tliq            30;
+Tsol            28;
+L               0;
+DC              0;
 
 
 // ************************************************************************* //

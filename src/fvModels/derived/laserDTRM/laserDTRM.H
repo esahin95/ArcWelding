@@ -75,7 +75,7 @@ class laserDTRM
         const scalar nRays_;
         const scalar radius_;
         const scalar sigma_;
-        const vector centre_;
+        const autoPtr<Function1<point>> centre_;
         const vector direction_;
         const vector t1_;
         const vector t2_;
@@ -95,7 +95,6 @@ class laserDTRM
 
         //- File writer
         autoPtr<setWriter> formatterPtr_;
-        fileName outputPath_;
 
         //- Random number generator
         mutable Random rng_;

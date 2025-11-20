@@ -18,12 +18,12 @@ laser1
 {
     type      laserDTRM;
 
-    centre    (7.5e-4 2.5e-4 5e-5);
-    radius    1e-4;
+    centre table ((0.0 (2.5e-4 2.5e-4 5e-5)) (0.001 (12.5e-4 2.5e-4 5e-5)));
+    radius    5e-5;
     direction (0 0 -1);
     Q         1;    
-    nRays     250;
-    relax     1.0;
+    nRays     400;
+    relax     0.6;
     absorption 1.0;
 }
 

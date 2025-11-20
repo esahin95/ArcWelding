@@ -96,7 +96,7 @@ void Foam::fv::laserDTRM::update() const
         while ( r>radius_ || rng_.scalar01() > Foam::exp(-sqr(r / sigma_) / 2.0) );
 
         // add particle
-        d += centre_;
+        d += centre_->value(mesh().time().value());
         label cellI = mesh().findCell(d);
         if (cellI != -1)
         {
@@ -129,8 +129,10 @@ void Foam::fv::laserDTRM::update() const
     );
 
     // ray tracing
-    cloud_.move(cloud_, td, 10.0);
-    Info<< "remaining particles: " << cloud_.size() << endl;
+    while (returnReduce(cloud_.size(), sumOp<label>()) > 0)
+    {
+        cloud_.move(cloud_, td, 1.0);
+    }
     
     // relax power deposition
     lPower_.relax(relax_);
@@ -147,11 +149,12 @@ void Foam::fv::laserDTRM::update() const
         }
         
         if (Pstream::master())
-        {
+        {           
+            fileName outputPath(mesh().time().globalPath()/mesh().time().timeName());
             formatterPtr_->write
             (
-                outputPath_,
-                mesh().time().timeName(),
+                outputPath,
+                IOobject::groupName(name(), "rayTracer"),
                 coordSet(allTracks, word::null, allPositions),
                 "Power",
                 allPowers
@@ -178,7 +181,7 @@ Foam::fv::laserDTRM::laserDTRM
     nRays_(dict.lookupOrDefault("nRays", 0)),
     radius_(dict.lookupOrDefault("radius", 1.0)),
     sigma_(dict.lookupOrDefault("sigma", radius_ * 10.0)),
-    centre_(dict.lookupOrDefault("centre", mesh().bounds().midpoint())),
+    centre_(Function1<point>::New("centre", dict)),
     direction_(dict.lookupOrDefault("direction", vector(0.0, -1.0, 0.0))),
     t1_(normalised(perpendicular(direction_))),
     t2_(normalised(t1_ ^ direction_)),
@@ -202,13 +205,9 @@ Foam::fv::laserDTRM::laserDTRM
     ),
     curTimeIndex_(-1),
     formatterPtr_(setWriter::New("vtk", dict)),
-    outputPath_(mesh().time().globalPath()/"postProcessing"/name),
     rng_(Random(Foam::clock::getTime()))
 {
     readCoeffs();
-
-    // create directory
-    mkDir(outputPath_);
 }
 
 
