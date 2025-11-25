@@ -19,22 +19,22 @@ solvers
     "alpha.steel.*"
     {
         nAlphaCorr      1;
-        nAlphaSubCycles 2;
+        nAlphaSubCycles 3;
     }
 
     p_rgh
     {
         solver          GAMG;
         smoother        DICGaussSeidel;
-        tolerance       1e-05;
-        relTol          0.1;
+        tolerance       1e-08;
+        relTol          0.01;
         maxIter         50;
     }
 
     p_rghFinal
     {
         $p_rgh;
-        tolerance       1e-07;
+        tolerance       1e-08;
         relTol          0;
     }
     
@@ -57,7 +57,7 @@ solvers
     {
         solver          PBiCGStab;
         preconditioner  DILU;
-        tolerance       1e-6;
+        tolerance       1e-8;
         relTol          0;
     }
 }

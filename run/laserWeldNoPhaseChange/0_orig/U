@@ -20,10 +20,18 @@ internalField   uniform (0 0 0);
 
 boundaryField
 {
+    /*
     zmax
     {
         type            inletOutlet;
         inletValue      uniform (0 0 0);
+        value           uniform (0 0 0);
+    }
+    */
+
+    zmax
+    {
+        type            pressureInletOutletVelocity;
         value           uniform (0 0 0);
     }
 

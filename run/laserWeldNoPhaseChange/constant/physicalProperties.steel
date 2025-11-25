@@ -16,7 +16,7 @@ FoamFile
 
 viscosityModel  Newtonian;
 
-nu              8e-3;
+nu              1.1e-6;
 
 rho             7249.2;
 

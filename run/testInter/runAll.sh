@@ -13,6 +13,6 @@ checkMesh > log.checkMesh
 setFields > log.setFields
 
 # run solver
-decomposePar -cellDist > log.decompose
+decomposePar -cellDist > log.demoposePar
 mpirun -np 4 interFoam -parallel > log.solver
-reconstructPar > log.reconstruct
+reconstructPar > log.reconstructPar

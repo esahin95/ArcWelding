@@ -83,6 +83,12 @@ bool Foam::laserParticle::move
                 {
                     td.lPower(cell()) += d();
                     td.keepParticle = false;
+
+                    // save last position
+                    if (mesh().time().writeTime())
+                    {
+                        td.append(position(), index(), d());
+                    }
                 }
             }
         }

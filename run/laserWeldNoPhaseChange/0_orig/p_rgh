@@ -19,15 +19,29 @@ internalField   uniform 0;
 
 boundaryField
 {
+    /*
     zmax
     {
         type            fixedValue;
+        value           uniform 0;
+    }
+    */
+
+    zmax 
+    {
+        type            prghTotalPressure;
+        rho             rho;
+        psi             none;
+        gamma           1;
+        p0              uniform 0;
         value           uniform 0;
     }
 
     "(zmin|xmin|xmax|ymin|ymax)"
     {
         type            fixedFluxPressure;
+        gradient        uniform 0;
+        value           uniform 0;
     }
 }
 

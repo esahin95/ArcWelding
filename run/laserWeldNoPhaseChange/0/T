@@ -19,9 +19,18 @@ internalField   uniform 300;
 
 boundaryField
 {
+    /*
     zmax
     {
         type            fixedValue;
+        value           uniform 300;
+    }
+    */
+
+    zmax
+    {
+        type            inletOutlet;
+        inletValue      uniform 300;
         value           uniform 300;
     }
 
