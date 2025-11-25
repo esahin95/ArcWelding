@@ -7,7 +7,7 @@
 \*---------------------------------------------------------------------------*/
 FoamFile
 {
-    format      ascii;
+    format      binary;
     class       polyBoundaryMesh;
     location    "constant/polyMesh";
     object      boundary;
@@ -20,42 +20,42 @@ FoamFile
     {
         type            wall;
         inGroups        List<word> 1(wall);
-        nFaces          2000;
-        startFace       174400;
+        nFaces          4500;
+        startFace       661500;
     }
     xmin
     {
         type            wall;
         inGroups        List<word> 1(wall);
-        nFaces          600;
-        startFace       176400;
+        nFaces          1500;
+        startFace       666000;
     }
     xmax
     {
         type            wall;
         inGroups        List<word> 1(wall);
-        nFaces          600;
-        startFace       177000;
+        nFaces          1500;
+        startFace       667500;
     }
     ymin
     {
         type            wall;
         inGroups        List<word> 1(wall);
-        nFaces          2000;
-        startFace       177600;
+        nFaces          4500;
+        startFace       669000;
     }
     zmin
     {
         type            wall;
         inGroups        List<word> 1(wall);
-        nFaces          3000;
-        startFace       179600;
+        nFaces          7500;
+        startFace       673500;
     }
     zmax
     {
         type            patch;
-        nFaces          3000;
-        startFace       182600;
+        nFaces          7500;
+        startFace       681000;
     }
 )
 

@@ -22,8 +22,8 @@ laser1
     radius    5e-5;
     direction (0 0 -1);
     Q         1;    
-    nRays     400;
-    relax     0.8;
+    nRays     300;
+    relax     0.9;
     absorption 1.0;
 }
 
