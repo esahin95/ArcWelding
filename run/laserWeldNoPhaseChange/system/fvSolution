@@ -18,12 +18,12 @@ solvers
 {
     "alpha.steel.*"
     {
-        nAlphaCorr      2;
+        nAlphaCorr      1;
         nAlphaSubCycles 1;
 
         MULESCorr       yes;
-        nLimiterIter    3;
-        alphaApplyPrevCorr yes;
+        nLimiterIter    5;
+        alphaApplyPrevCorr no;
 
         solver          smoothSolver;
         smoother        symGaussSeidel;
@@ -32,18 +32,19 @@ solvers
         minIter         1;
     }
 
-    /*
+    
     p_rgh
     {
         solver          GAMG;
-        smoother        DIC;
+        smoother        DICGaussSeidel;
         tolerance       1e-07;
         relTol          0.01;
+        cacheAgglomeration no;
         maxIter         15;
     }
-    */
-
     
+
+    /*
     p_rgh 
     {
         solver          PCG;
@@ -59,7 +60,7 @@ solvers
         relTol          0.01;
         maxIter         20;
     }
-    
+    */    
     
     /*
     p_rgh 
@@ -80,6 +81,7 @@ solvers
     "pcorr.*"
     {
         $p_rghFinal;
+        minIter         1;
     }
     
     "U.*"
@@ -107,6 +109,7 @@ PIMPLE
     nOuterCorrectors 1;
 }
 
+/*
 relaxationFactors
 {
     equations
@@ -114,5 +117,6 @@ relaxationFactors
         ".*" 1;
     }
 }
+*/
 
 // ************************************************************************* //

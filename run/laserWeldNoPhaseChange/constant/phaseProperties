@@ -22,7 +22,7 @@ sigma
   sigma
   {
     type    polynomial;
-    coeffs  ((0.0 0) (0.0 1));
+    coeffs  ((1.0 0) (-0.0e-4 1));
   }
 }
 
