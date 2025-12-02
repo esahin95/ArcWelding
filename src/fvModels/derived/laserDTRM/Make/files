@@ -1,3 +1,6 @@
+laserParticle/laserParticle.C
+laserParticle/laserParticleIO.C
+
 laserDTRM.C
 
 LIB = $(FOAM_USER_LIBBIN)/liblaserDTRM

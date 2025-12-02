@@ -22,9 +22,9 @@ startTime       0;
 
 stopAt          endTime;
 
-endTime         0.001;
+endTime         0.0001;
 
-deltaT          1e-6;
+deltaT          2e-6;
 
 writeControl    adjustableRunTime;
 
@@ -46,11 +46,11 @@ runTimeModifiable yes;
 
 adjustTimeStep  yes;
 
-maxCo           0.5;
-maxAlphaCo      0.5;
-maxDi           5000000.0;
+maxCo           0.2;
+maxAlphaCo      0.2;
+maxDi           50000.0;
 
-maxDeltaT       1e-4;
+maxDeltaT       2e-6;
 
 
 // ************************************************************************* //
@@ -69,9 +69,31 @@ functions
             (7.51e-4 2.51e-4 -1.10e-5)
         );
         fixedLocations  true;
-        fields
-        (
-            T
-        );
+        fields (T);
     }
+
+    maxValue
+    {
+        type            volFieldValue;
+        libs            ("libfieldFunctionObjects.so");
+        log             true;
+        writeControl    timeStep;
+        writeFields     false;
+        regionType      all;
+        operation       maxMag;
+
+        fields (p_rgh U T);
+    }
+    
+    /*
+    residuals
+    {
+        type            residuals;
+        libs            ("libutilityFunctionObjects.so");
+        writeControl    timeStep;
+        writeInterval   1;
+        log             true;
+        fields (p_rgh T);
+    }
+    */
 }

@@ -1,0 +1,3 @@
+interfaceThermoProperties.C
+
+LIB = $(FOAM_USER_LIBBIN)/libinterfaceThermoProperties

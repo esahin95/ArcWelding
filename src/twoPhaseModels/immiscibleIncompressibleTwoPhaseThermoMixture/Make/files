@@ -1,0 +1,3 @@
+immiscibleIncompressibleTwoPhaseThermoMixture.C
+
+LIB = $(FOAM_USER_LIBBIN)/libimmiscibleIncompressibleTwoPhaseThermoMixture

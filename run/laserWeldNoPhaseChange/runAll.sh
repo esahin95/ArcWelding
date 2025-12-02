@@ -18,6 +18,6 @@ mpirun -np 4 interThermoFoam -parallel > log.solver
 reconstructPar > log.reconstruct
 
 # postprocess
-python3 postProcess.py 
+#python3 postProcess.py 
 
 #interThermoFoam > log.solver

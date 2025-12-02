@@ -28,11 +28,25 @@ volVectorField U
     mesh
 );
 
+Info<< "Reading field T\n" << endl;
+volScalarField T
+(
+    IOobject
+    (
+        "T",
+        runTime.timeName(),
+        mesh,
+        IOobject::MUST_READ,
+        IOobject::AUTO_WRITE
+    ),
+    mesh
+);
+
 #include "createPhi.H"
 
 
 Info<< "Reading phaseProperties\n" << endl;
-immiscibleIncompressibleTwoPhaseMixture mixture(U, phi);
+immiscibleIncompressibleTwoPhaseThermoMixture mixture(U, phi);
 
 autoPtr<twoPhaseChangeModel> phaseChangePtr
 (
@@ -54,259 +68,9 @@ volScalarField rho
 );
 rho.oldTime();
 
-// Testing ------------------------------------------------------------------------------------
-// --------------------------------------------------------------------------------------------
-
-volScalarField tmpScl
-(
-    IOobject
-    (
-        "tmpScl",
-        runTime.timeName(),
-        mesh,
-        IOobject::NO_READ,
-        IOobject::AUTO_WRITE
-    ),
-    mesh,
-    dimensionedScalar("tmpScl", dimless, 0.0)
-);
-
-volVectorField tmpVec
-(
-    IOobject
-    (
-        "tmpVec",
-        runTime.timeName(),
-        mesh,
-        IOobject::NO_READ,
-        IOobject::AUTO_WRITE
-    ),
-    mesh,
-    dimensionedVector("tmpVec", dimless, vector::zero),
-    extrapolatedCalculatedFvPatchVectorField::typeName
-);
-
-// --------------------------------------------------------------------------------------------
-// --------------------------------------------------------------------------------------------
-
-// Additions ----------------------------------------------------------------------------------
-// --------------------------------------------------------------------------------------------
-
-Info<< "Reading thermophysical properties\n" << endl;
-
-IOdictionary phaseProperties
-(
-    IOobject
-    (
-        "phaseProperties",
-        runTime.constant(),
-        mesh,
-        IOobject::MUST_READ_IF_MODIFIED,
-        IOobject::NO_WRITE
-    )
-);
-
-IOdictionary phase1Dict 
-(
-    IOobject
-    (
-        IOobject::groupName
-        (
-            physicalProperties::typeName,
-            mixture.phase1Name()
-        ),
-        runTime.constant(),
-        mesh,
-        IOobject::MUST_READ_IF_MODIFIED,
-        IOobject::NO_WRITE
-    )
-);
-
-IOdictionary phase2Dict 
-(
-    IOobject
-    (
-        IOobject::groupName
-        (
-            physicalProperties::typeName,
-            mixture.phase2Name()
-        ),
-        runTime.constant(),
-        mesh,
-        IOobject::MUST_READ_IF_MODIFIED,
-        IOobject::NO_WRITE
-    )
-);
-
-const dimensionedScalar Cp1
-(
-    "Cp1",
-    dimensionSet(0, 2, -2, -1, 0),
-    phase1Dict.lookup("Cp")
-);
-const dimensionedScalar Cp2
-(
-    "Cp2",
-    dimensionSet(0, 2, -2, -1, 0),
-    phase2Dict.lookup("Cp")
-);
-const dimensionedScalar kappa1
-(
-    "kappa1",
-    dimensionSet(1, 1, -3, -1, 0),
-    phase1Dict.lookup("kappa")
-);
-const dimensionedScalar kappa2
-(
-    "kappa2",
-    dimensionSet(1, 1, -3, -1, 0),
-    phase2Dict.lookup("kappa")
-);
-const dimensionedScalar beta1
-(
-    "beta1",
-    dimensionSet(0, 0, 0, -1, 0),
-    phase1Dict.lookupOrDefault("beta", 0.0)
-);
-const dimensionedScalar beta2
-(
-    "beta2",
-    dimensionSet(0, 0, 0, -1, 0),
-    phase2Dict.lookupOrDefault("beta", 0.0)
-);
-
-// added to primary phase temporarily
-const dimensionedScalar Tliq
-(
-    "Tliq",
-    dimensionSet(0, 0, 0, 1, 0),
-    phase1Dict.lookupOrDefault("Tliq", scalar(1000.0))
-);
-const dimensionedScalar Tsol
-(
-    "Tsol",
-    dimensionSet(0, 0, 0, 1, 0),
-    phase1Dict.lookupOrDefault("Tsol", Tliq.value() - scalar(50.0))
-);
-const dimensionedScalar L
-(
-    "L",
-    dimensionSet(0, 2, -2, 0, 0),
-    phase1Dict.lookupOrDefault("L", 0.0)
-);
-const dimensionedScalar DC 
-(
-    "DC",
-    dimensionSet(1,-3,-1,0,0),
-    phase1Dict.lookupOrDefault("DC", 1.0e+10)
-);
-
-// precomputed factors
-const dimensionedScalar Tmid
-(
-    "Tmid",
-    scalar(0.5) * (Tliq + Tsol)
-);
-const dimensionedScalar fa
-(
-    "fa",
-    scalar(4.0) / (Tliq - Tsol)
-);
-const dimensionedScalar fb
-(
-    "fb",
-    fa / Foam::sqrt(constant::mathematical::pi)
-);
-
-Info<< "Creating thermophysical fields\n" << endl;
-volScalarField T
-(
-    IOobject
-    (
-        "T",
-        runTime.timeName(),
-        mesh,
-        IOobject::MUST_READ,
-        IOobject::AUTO_WRITE
-    ),
-    mesh
-);
-
-// liquid fraction
-Info<< "Creating liquid fraction field\n" << endl;
-volScalarField fliq
-(
-    IOobject
-    (
-        "fliq",
-        runTime.timeName(),
-        mesh,
-        IOobject::NO_READ,
-        IOobject::AUTO_WRITE
-    ),
-    scalar(0.5) * (Foam::erf(fa*(T - Tmid)) + scalar(1.0))
-);
-
-// temperature reference
-const dimensionedScalar T0("T0", dimTemperature, pimple.dict().lookupOrDefault<scalar>("T0", Tliq.value()));
-Info<< "Set temperature reference to " << T0.value() << endl;
-
-volScalarField rhoCp
-(
-    "rhoCp", 
-    mixture.rho() * (mixture.alpha1() * Cp1 + mixture.alpha2() * Cp2)
-);
-rhoCp.oldTime();
-
-surfaceScalarField rhoPhiCp
-(
-    "rhoPhiCp",
-    fvc::interpolate(rhoCp) * phi
-);
-
-volScalarField Cp 
-(
-    "Cp",
-    mixture.alpha1() * Cp1 + mixture.alpha2() * Cp2
-);
-volScalarField CpApp
-(
-    "Cp",
-    scalar(0.0) * Cp
-);
-
-volScalarField kappa 
-(
-    "kappa",
-    mixture.alpha1() * kappa1 + mixture.alpha2() * kappa2
-);
-
-volScalarField beta 
-(
-    "beta",
-    mixture.alpha1() * beta1 + mixture.alpha2() * beta2
-);
-
-surfaceScalarField corrf
-(
-    "corrf",
-    scalar(2.0) * fvc::interpolate(mixture.rho()) / (mixture.rho1() + mixture.rho2())
-);
-
-// --------------------------------------------------------------------------------------------
-// --------------------------------------------------------------------------------------------
-
 #include "readGravitationalAcceleration.H"
 #include "readhRef.H"
 #include "gh.H"
-
-// surface normal gradient of g & h for boussinesq approximation
-const surfaceScalarField snGradGh
-(
-    "snGradGh",
-    g & mesh.Sf() / mesh.magSf()
-);
-
 
 volScalarField p
 (
@@ -356,3 +120,191 @@ incompressibleInterPhaseTransportModel turbulence
 #include "createMRF.H"
 #include "createFvModels.H"
 #include "createFvConstraints.H"
+
+// --- Additions
+
+Info<< "Reading thermophysical properties\n" << endl;
+
+IOdictionary phaseProperties
+(
+    IOobject
+    (
+        "phaseProperties",
+        runTime.constant(),
+        mesh,
+        IOobject::MUST_READ_IF_MODIFIED,
+        IOobject::NO_WRITE
+    )
+);
+
+IOdictionary phase1Dict 
+(
+    IOobject
+    (
+        IOobject::groupName
+        (
+            physicalProperties::typeName,
+            mixture.phase1Name()
+        ),
+        runTime.constant(),
+        mesh,
+        IOobject::MUST_READ_IF_MODIFIED,
+        IOobject::NO_WRITE
+    )
+);
+
+IOdictionary phase2Dict 
+(
+    IOobject
+    (
+        IOobject::groupName
+        (
+            physicalProperties::typeName,
+            mixture.phase2Name()
+        ),
+        runTime.constant(),
+        mesh,
+        IOobject::MUST_READ_IF_MODIFIED,
+        IOobject::NO_WRITE
+    )
+);
+
+// temperature reference
+const dimensionedScalar T0("T0", dimTemperature, pimple.dict().lookupOrDefault<scalar>("T0", 300.0));
+Info<< "Set temperature reference to " << T0.value() << endl;
+
+const dimensionedScalar Cp1
+(
+    "Cp1",
+    dimensionSet(0, 2, -2, -1, 0),
+    phase1Dict.lookup("Cp")
+);
+const dimensionedScalar Cp2
+(
+    "Cp2",
+    dimensionSet(0, 2, -2, -1, 0),
+    phase2Dict.lookup("Cp")
+);
+const dimensionedScalar kappa1
+(
+    "kappa1",
+    dimensionSet(1, 1, -3, -1, 0),
+    phase1Dict.lookup("kappa")
+);
+const dimensionedScalar kappa2
+(
+    "kappa2",
+    dimensionSet(1, 1, -3, -1, 0),
+    phase2Dict.lookup("kappa")
+);
+const dimensionedScalar beta1
+(
+    "beta1",
+    dimensionSet(0, 0, 0, -1, 0),
+    phase1Dict.lookupOrDefault("beta", 0.0)
+);
+const dimensionedScalar beta2
+(
+    "beta2",
+    dimensionSet(0, 0, 0, -1, 0),
+    phase2Dict.lookupOrDefault("beta", 0.0)
+);
+
+const dimensionedScalar Tliq
+(
+    "Tliq",
+    dimensionSet(0, 0, 0, 1, 0),
+    phase1Dict.lookupOrDefault("Tliq", scalar(1000.0))
+);
+const dimensionedScalar Tsol
+(
+    "Tsol",
+    dimensionSet(0, 0, 0, 1, 0),
+    phase1Dict.lookupOrDefault("Tsol", Tliq.value() - scalar(50.0))
+);
+const dimensionedScalar L
+(
+    "L",
+    dimensionSet(0, 2, -2, 0, 0),
+    phase1Dict.lookupOrDefault("L", 0.0)
+);
+const dimensionedScalar DC 
+(
+    "DC",
+    dimensionSet(1,-3,-1,0,0),
+    phase1Dict.lookupOrDefault("DC", 1.0e+10)
+);
+
+const dimensionedScalar Tmid
+(
+    "Tmid",
+    scalar(0.5) * (Tliq + Tsol)
+);
+
+const dimensionedScalar fa
+(
+    "fa",
+    scalar(4.0) / (Tliq - Tsol)
+);
+
+const dimensionedScalar fb
+(
+    "fb",
+    fa / Foam::sqrt(constant::mathematical::pi)
+);
+
+volScalarField fliq
+(
+    "fliq",
+    scalar(0.5) * (Foam::erf(fa*(T - Tmid)) + scalar(1.0))
+);
+
+volScalarField rhoCp
+(
+    "rhoCp", 
+    mixture.rho() * (mixture.alpha1() * Cp1 + mixture.alpha2() * Cp2)
+);
+rhoCp.oldTime();
+
+surfaceScalarField rhoPhiCp
+(
+    "rhoPhiCp",
+    fvc::interpolate(rhoCp) * phi
+);
+
+volScalarField Cp 
+(
+    "Cp",
+    mixture.alpha1() * Cp1 + mixture.alpha2() * Cp2
+);
+volScalarField CpApp
+(
+    "Cp",
+    scalar(0.0) * Cp
+);
+
+volScalarField kappa 
+(
+    "kappa",
+    mixture.alpha1() * kappa1 + mixture.alpha2() * kappa2
+);
+
+volScalarField beta 
+(
+    "beta",
+    mixture.alpha1() * beta1 + mixture.alpha2() * beta2
+);
+
+surfaceScalarField corrf
+(
+    "corrf",
+    scalar(2.0) * fvc::interpolate(mixture.rho()) / (mixture.rho1() + mixture.rho2())
+);
+
+surfaceScalarField snGradGh
+(
+    "snGradGh",
+    g & mesh.Sf() / mesh.magSf()
+);
+
+// --- End

@@ -1,40 +1,36 @@
-    MRF.correctBoundaryVelocity(U);
+MRF.correctBoundaryVelocity(U);
 
-    // update liquid fraction
-    fliq == scalar(0.5) * (Foam::erf(fa*(T - Tmid)) + scalar(1.0));
-    tmpVec == alpha1*DC*Foam::sqr(1.0 - fliq)/(pow3(fliq) + scalar(0.001)) * U / dimensionedScalar("tmp", dimensionSet(1,-2,-2,0,0), 1.0);
+fvVectorMatrix UEqn
+(
+    fvm::ddt(rho, U) + fvm::div(rhoPhi, U)
+    + MRF.DDt(rho, U)
+    + turbulence.divDevTau(rho, U)
+    + fvm::Sp(alpha1*DC*Foam::sqr(1.0 - fliq)/(pow3(fliq) + scalar(0.001)), U)
+    ==
+    phaseChange.SU(rho, rhoPhi, U)
+    + fvModels.source(rho, U)
+);
 
-    fvVectorMatrix UEqn
+UEqn.relax();
+
+fvConstraints.constrain(UEqn);
+
+if (pimple.momentumPredictor())
+{
+    solve
     (
-        fvm::ddt(rho, U) + fvm::div(rhoPhi, U)
-      + MRF.DDt(rho, U)
-      + turbulence.divDevTau(rho, U)
-      + fvm::Sp(alpha1*DC*Foam::sqr(1.0 - fliq)/(pow3(fliq) + scalar(0.001)), U)
-     ==
-       phaseChange.SU(rho, rhoPhi, U)
-     + fvModels.source(rho, U)
+        UEqn
+        ==
+        fvc::reconstruct
+        (
+            (
+                mixture.surfaceTensionForce() * corrf
+                - ghf*fvc::snGrad(rho)
+                - fvc::interpolate(beta*(T - T0)*rho) * snGradGh
+                - fvc::snGrad(p_rgh)
+            ) * mesh.magSf()
+        )
     );
 
-    UEqn.relax();
-
-    fvConstraints.constrain(UEqn);
-
-    if (pimple.momentumPredictor())
-    {
-        solve
-        (
-            UEqn
-         ==
-            fvc::reconstruct
-            (
-                (
-                    mixture.surfaceTensionForce() * corrf
-                  - ghf*fvc::snGrad(rho)
-                  - fvc::interpolate(beta*(T - T0)*rho) * snGradGh
-                  - fvc::snGrad(p_rgh)
-                ) * mesh.magSf()
-            )
-        );
-
-        fvConstraints.constrain(U);
-    }
+    fvConstraints.constrain(U);
+}

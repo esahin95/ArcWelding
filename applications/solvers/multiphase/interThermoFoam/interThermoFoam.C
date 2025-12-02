@@ -39,7 +39,7 @@ Description
 #include "localEulerDdtScheme.H"
 #include "CrankNicolsonDdtScheme.H"
 #include "subCycle.H"
-#include "immiscibleIncompressibleTwoPhaseMixture.H"
+#include "immiscibleIncompressibleTwoPhaseThermoMixture.H"
 #include "noPhaseChange.H"
 #include "incompressibleInterPhaseTransportModel.H"
 #include "pimpleControl.H"
@@ -48,7 +48,6 @@ Description
 #include "fvConstraints.H"
 #include "CorrectPhi.H"
 #include "fvcSmooth.H"
-//#include "simpleMatrix.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -65,6 +64,7 @@ int main(int argc, char *argv[])
     #include "createFieldRefs.H"
     #include "initCorrectPhi.H"
     #include "createUfIfPresent.H"
+    #include "updateProps.H"
 
     if (!LTS)
     {
@@ -75,9 +75,6 @@ int main(int argc, char *argv[])
     // Initialize time stepping
     scalar DiNum = 0.0;
     scalar maxDi = runTime.controlDict().lookupOrDefault<scalar>("maxDi", 10.0);
-
-    // solve T multiple times
-    //#include "writeMatCoeffs.H"
 
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
     Info<< "\nStarting time loop\n" << endl;
@@ -161,6 +158,8 @@ int main(int argc, char *argv[])
                     gh = (g & mesh.C()) - ghRef;
                     ghf = (g & mesh.Cf()) - ghRef;
 
+                    snGradGh = g & mesh.Sf() / mesh.magSf();
+
                     MRF.update();
 
                     if (correctPhi)
@@ -195,20 +194,23 @@ int main(int argc, char *argv[])
 
             #include "alphaControls.H"
             #include "alphaEqnSubCycle.H"
-            
-            #include "updateProps.H"
+
+            corrf == scalar(2.0) * fvc::interpolate(rho) / (rho1 + rho2);
 
             turbulence.correctPhasePhi();
 
             mixture.correct();
 
-            #include "TEqn.H"
             #include "UEqn.H"
 
             // --- Pressure corrector loop
             while (pimple.correct())
             {
                 #include "pEqn.H"
+
+                #include "TEqn.H"
+
+                #include "updateProps.H"
             }
 
             if (pimple.turbCorr())

@@ -18,7 +18,7 @@ solvers
 {
     "alpha.steel.*"
     {
-        nAlphaCorr      1;
+        nAlphaCorr      2;
         nAlphaSubCycles 1;
 
         MULESCorr       yes;
@@ -37,10 +37,16 @@ solvers
     {
         solver          GAMG;
         smoother        DICGaussSeidel;
-        tolerance       1e-07;
+        tolerance       1e-08;
         relTol          0.01;
-        cacheAgglomeration no;
+        cacheAgglomeration yes;
         maxIter         15;
+
+        mergeLevels     1;
+        agglomerator    faceAreaPair;
+        nCellsInCoarsestLevel 10;
+        nPostSweeps     4;
+        directSolveCoarset false;
     }
     
 
@@ -56,7 +62,7 @@ solvers
             nVcycles        2;
             smoother        GaussSeidel;
         }
-        tolerance       1e-07;
+        tolerance       1e-08;
         relTol          0.01;
         maxIter         20;
     }
@@ -67,7 +73,7 @@ solvers
     {
         solver          PCG;
         preconditioner  DIC;
-        tolerance       1e-07;
+        tolerance       1e-08;
         relTol          0.01;
     }
     */
@@ -92,12 +98,18 @@ solvers
         relTol          0;
     }
     
-    "T.*"
+    T
     {
         solver          PBiCGStab;
         preconditioner  DILU;
         tolerance       1e-8;
-        relTol          0;
+        relTol          0.01;
+    }
+
+    TFinal
+    {
+        $T;
+        relTol          0.0;
     }
 }
 
