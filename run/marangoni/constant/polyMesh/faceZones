@@ -2,35 +2,19 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Version:  9
+    \\  /    A nd           | Version:  10
      \\/     M anipulation  |
 \*---------------------------------------------------------------------------*/
 FoamFile
 {
-    format      ascii;
-    class       dictionary;
-    location    "constant";
-    object      transportProperties;
+    format      binary;
+    class       regIOobject;
+    location    "constant/polyMesh";
+    object      faceZones;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-phases (water air);
-
-water
-{
-    transportModel  Newtonian;
-    nu              1e-06;
-    rho             1000;
-}
-
-air
-{
-    transportModel  Newtonian;
-    nu              1.48e-05;
-    rho             1;
-}
-
-sigma           0.0707106;
-
+0
+()
 
 // ************************************************************************* //

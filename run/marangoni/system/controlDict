@@ -22,13 +22,13 @@ startTime       0;
 
 stopAt          endTime;
 
-endTime         0.1;
+endTime         0.001;
 
 deltaT          1e-5;
 
 writeControl    adjustableRunTime;
 
-writeInterval   0.01;
+writeInterval   0.0001;
 
 purgeWrite      0;
 
@@ -46,18 +46,81 @@ runTimeModifiable no;
 
 adjustTimeStep  yes;
 
-maxCo           0.02;
-maxAlphaCo      0.02;
+maxCo           0.2;
+maxAlphaCo      0.2;
 maxDi           5000000.0;
 
-maxDeltaT       1;
+maxDeltaT       1e-3;
 
 
 // ************************************************************************* //
 
 functions
 {
-  #includeFunc graphUniformLeft
-  #includeFunc graphUniformRight
-  #includeFunc residuals
+    residuals
+    {
+        type            residuals;
+
+        libs            ("libutilityFunctionObjects.so");
+
+        writeControl    timeStep;
+        writeInterval   1;
+
+        fields          (p_rgh);
+    }
+
+    maxValue
+    {
+        type            volFieldValue;
+
+        libs            ("libfieldFunctionObjects.so");
+
+        log             true;
+
+        writeControl    timeStep;
+
+        writeFields     false;
+
+        regionType      all;
+
+        operation       maxMag;
+
+        fields (p_rgh U T tmpVectorField);
+    }
+  
+    lineUniform
+    {
+        type            sets;
+
+        libs            ("libsampling.so");
+
+        writeControl    writeTime;
+
+        interpolationScheme cellPoint;
+
+        setFormat       raw;
+
+        fields          (alpha.water);
+
+        sets
+        (
+            left
+            {
+                type            lineUniform;
+                axis            distance;
+                start           (1e-7 0.0 5e-5);
+                end             (1e-7 5e-4 5e-5);
+                nPoints         1000;
+            }
+
+            right
+            {
+                type            lineUniform;
+                axis            distance;
+                start           (0.9999e-3 0.0 5e-5);
+                end             (0.9999e-3 5e-4 5e-5);
+                nPoints         1000;
+            }
+        );
+    }
 }

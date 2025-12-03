@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Version:  9
+    \\  /    A nd           | Version:  10
      \\/     M anipulation  |
 \*---------------------------------------------------------------------------*/
 FoamFile
@@ -22,14 +22,15 @@ ddtSchemes
 gradSchemes
 {
     default         Gauss linear;
+    limited         cellLimited Gauss linear 1;
 }
 
 divSchemes
 {
     default         none;
-    div(rhoPhi,U)   Gauss linearUpwindV grad(U);
-    div(phi,alpha)  Gauss interfaceCompression vanLeer 1;
-    div(rhoPhiCp,T) Gauss linearUpwind grad(T);
+    div(rhoPhi,U)   Gauss linearUpwind limited;
+    div(phi,alpha)  Gauss MPLIC;
+    div(rhoPhiCp,T) Gauss linearUpwind limited;
     div(((rho*nuEff)*dev2(T(grad(U))))) Gauss linear;
 }
 

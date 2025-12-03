@@ -307,4 +307,17 @@ surfaceScalarField snGradGh
     g & mesh.Sf() / mesh.magSf()
 );
 
+volVectorField tmpVectorField
+(
+    IOobject
+    (
+        "tmpVectorField",
+        runTime.timeName(),
+        mesh,
+        IOobject::NO_READ,
+        IOobject::AUTO_WRITE
+    ),
+    fvc::reconstruct(mixture.surfaceTensionForce() * corrf * mesh.magSf() * 0.0)
+);
+
 // --- End

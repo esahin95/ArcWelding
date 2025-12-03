@@ -7,43 +7,14 @@
 \*---------------------------------------------------------------------------*/
 FoamFile
 {
-    format      ascii;
-    class       volScalarField;
-    object      p_rgh;
+    format      binary;
+    class       regIOobject;
+    location    "constant/polyMesh";
+    object      cellZones;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [1 -1 -2 0 0 0 0];
-
-internalField   uniform 0;
-
-boundaryField
-{
-    top
-    {
-        type            fixedFluxPressure;
-    }
-
-    right
-    {
-        type            fixedFluxPressure;
-    }
-    
-    left
-    {
-        type            fixedFluxPressure;
-    }
-
-    bottom
-    {
-        type            fixedFluxPressure;
-    }
-
-    frontAndBack
-    {
-        type            empty;
-    }
-}
-
+0
+()
 
 // ************************************************************************* //

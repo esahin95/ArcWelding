@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Version:  9
+    \\  /    A nd           | Version:  10
      \\/     M anipulation  |
 \*---------------------------------------------------------------------------*/
 FoamFile
@@ -18,10 +18,9 @@ solvers
 {
     "alpha.water.*"
     {
-        nAlphaCorr      1;
-        nAlphaSubCycles 2;
+        nAlphaCorr      2;
+        nAlphaSubCycles 1;
         
-        /*
         MULESCorr       yes;
         nLimiterIter    5;
         
@@ -29,46 +28,54 @@ solvers
         smoother        symGaussSeidel;
         tolerance       1e-8;
         relTol          0;
-        */
     }
 
     p_rgh
     {
         solver          GAMG;
         smoother        DICGaussSeidel;
-        tolerance       1e-05;
-        relTol          0.1;
+        tolerance       1e-08;
+        relTol          0.01;
         maxIter         50;
+
+        mergeLevels     1;
+        agglomerator    faceAreaPair;
+        nCellsInCoarsestLevel 10;
+        nPostSweeps     4;
+        directSolveCoarset false;
     }
 
     p_rghFinal
     {
         $p_rgh;
-        tolerance       1e-07;
         relTol          0;
     }
     
     "pcorr.*"
     {
-        $p_rgh
-        tolerance       1e-10;
-        relTol          0.0;
+        $p_rghFinal;
     }
     
     "U.*"
     {
         solver          PBiCGStab;
         preconditioner  DILU;
-        tolerance       1e-6;
+        tolerance       1e-8;
         relTol          0;
     }
     
-    "T.*"
+    T
     {
         solver          PBiCGStab;
         preconditioner  DILU;
-        tolerance       1e-6;
-        relTol          0;
+        tolerance       1e-8;
+        relTol          0.01;
+    }
+
+    TFinal
+    {
+        $T;
+        relTol          0.0;
     }
 }
 
