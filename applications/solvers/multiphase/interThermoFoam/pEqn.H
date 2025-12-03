@@ -25,12 +25,10 @@
         fvc::makeAbsolute(phiHbyA, U);
     }
 
-    tmpVectorField == fvc::reconstruct(mixture.surfaceTensionForce() * corrf * mesh.magSf());
-
     surfaceScalarField phig
     (
         (
-            mixture.surfaceTensionForce() //* corrf
+            mixture.surfaceTensionForce() * corrf
           - ghf*fvc::snGrad(rho)
           - fvc::interpolate(beta*(T - T0)*rho) * snGradGh
         )*rAUf*mesh.magSf()

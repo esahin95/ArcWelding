@@ -234,6 +234,11 @@ const dimensionedScalar DC
     dimensionSet(1,-3,-1,0,0),
     phase1Dict.lookupOrDefault("DC", 1.0e+10)
 );
+Info<< "Using solid liquid phase change with:\n" 
+    << "Tsol: " << Tsol << endl
+    << "Tliq: " << Tliq << endl
+    << "L: " << L << endl
+    << "DC: " << DC << endl;
 
 const dimensionedScalar Tmid
 (
@@ -307,6 +312,7 @@ surfaceScalarField snGradGh
     g & mesh.Sf() / mesh.magSf()
 );
 
+/*
 volVectorField tmpVectorField
 (
     IOobject
@@ -319,5 +325,19 @@ volVectorField tmpVectorField
     ),
     fvc::reconstruct(mixture.surfaceTensionForce() * corrf * mesh.magSf() * 0.0)
 );
+
+volScalarField tmpScalarField
+(
+    IOobject
+    (
+        "tmpScalarField",
+        runTime.timeName(),
+        mesh,
+        IOobject::NO_READ,
+        IOobject::AUTO_WRITE
+    ),
+    fliq
+);
+*/
 
 // --- End
