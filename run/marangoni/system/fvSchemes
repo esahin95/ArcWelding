@@ -28,7 +28,7 @@ gradSchemes
 divSchemes
 {
     default         none;
-    div(rhoPhi,U)   Gauss linearUpwind limited;
+    div(rhoPhi,U)   Gauss linearUpwind grad(U);
     div(phi,alpha)  Gauss MPLIC;
     div(rhoPhiCp,T) Gauss linearUpwind limited;
     div(((rho*nuEff)*dev2(T(grad(U))))) Gauss linear;

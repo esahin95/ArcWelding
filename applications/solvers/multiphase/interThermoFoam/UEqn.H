@@ -24,7 +24,7 @@ if (pimple.momentumPredictor())
         fvc::reconstruct
         (
             (
-                mixture.surfaceTensionForce() * corrf
+                mixture.surfaceTensionForce() //* corrf
                 - ghf*fvc::snGrad(rho)
                 - fvc::interpolate(beta*(T - T0)*rho) * snGradGh
                 - fvc::snGrad(p_rgh)
