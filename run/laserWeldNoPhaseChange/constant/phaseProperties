@@ -16,6 +16,7 @@ FoamFile
 
 phases          ( steel air );
 
+/*
 sigma
 {
   type  temperatureDependent;
@@ -25,6 +26,9 @@ sigma
     coeffs  ((1.0 0) (-0.0e-4 1));
   }
 }
+*/
+
+sigma 0.07;
 
 
 // ************************************************************************* //

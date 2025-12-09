@@ -16,55 +16,10 @@ FoamFile
 
 solvers
 {
-    "alpha.water.*"
+    T
     {
-        nAlphaCorr      1;
-        nAlphaSubCycles 1;
-        
-        MULESCorr       yes;
-        nLimiterIter    5;
-        
-        solver          smoothSolver;
-        smoother        symGaussSeidel;
-        tolerance       1e-8;
-        relTol          0;
-    }
-
-    p_rgh
-    {
-        solver          GAMG;
-        smoother        DICGaussSeidel;
-        tolerance       1e-05;
-        relTol          0.1;
-        maxIter         50;
-    }
-
-    p_rghFinal
-    {
-        $p_rgh;
-        tolerance       1e-07;
-        relTol          0;
-    }
-    
-    "pcorr.*"
-    {
-        $p_rgh
-        tolerance       1e-10;
-        relTol          0.0;
-    }
-    
-    "U.*"
-    {
-        solver          PBiCGStab;
-        preconditioner  DILU;
-        tolerance       1e-6;
-        relTol          0;
-    }
-    
-    "T.*"
-    {
-        solver          PBiCGStab;
-        preconditioner  DILU;
+        solver          PCG;
+        preconditioner  DIC;
         tolerance       1e-6;
         relTol          0;
     }

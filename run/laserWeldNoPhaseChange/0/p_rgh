@@ -30,9 +30,6 @@ boundaryField
     zmax 
     {
         type            prghTotalPressure;
-        rho             rho;
-        psi             none;
-        gamma           1;
         p0              uniform 0;
         value           uniform 0;
     }

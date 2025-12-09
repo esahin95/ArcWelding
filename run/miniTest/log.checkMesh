@@ -7,10 +7,10 @@
 \*---------------------------------------------------------------------------*/
 Build  : 10-c4cf895ad8fa
 Exec   : checkMesh
-Date   : Aug 05 2025
-Time   : 10:39:58
+Date   : Dec 09 2025
+Time   : 17:47:45
 Host   : "Erazer"
-PID    : 36118
+PID    : 187908
 I/O    : uncollated
 Case   : /home/sahin/OpenFOAM/sahin-10/run/miniTest
 nProcs : 1
@@ -26,10 +26,10 @@ Create polyMesh for time = 0
 Time = 0s
 
 Mesh stats
-    points:           72
+    points:           104
     internal points:  0
-    faces:            110
-    internal faces:   40
+    faces:            126
+    internal faces:   24
     cells:            25
     faces per cell:   6
     boundary patches: 6
@@ -56,27 +56,27 @@ Checking topology...
 
 Checking patch topology for multiply connected surfaces...
     Patch               Faces    Points   Surface topology                  
-    top                 5        12       ok (non-closed singly connected)  
-    left                5        12       ok (non-closed singly connected)  
-    right               5        12       ok (non-closed singly connected)  
-    bottom              5        12       ok (non-closed singly connected)  
-    front               25       36       ok (non-closed singly connected)  
-    back                25       36       ok (non-closed singly connected)  
+    top                 25       52       ok (non-closed singly connected)  
+    left                1        4        ok (non-closed singly connected)  
+    right               1        4        ok (non-closed singly connected)  
+    bottom              25       52       ok (non-closed singly connected)  
+    front               25       52       ok (non-closed singly connected)  
+    back                25       52       ok (non-closed singly connected)  
 
 Checking geometry...
     Overall domain bounding box (0 0 0) (1 1 1)
     Mesh has 2 geometric (non-empty/wedge) directions (1 1 0)
     Mesh has 2 solution (non-empty) directions (1 1 0)
     All edges aligned with or perpendicular to non-empty directions.
-    Boundary openness (-1.85037e-17 1.85037e-17 -3.46945e-18) OK.
-    Max cell openness = 8.67362e-17 OK.
-    Max aspect ratio = 1 OK.
-    Minimum face area = 0.04. Maximum face area = 0.2.  Face area magnitudes OK.
+    Boundary openness (0 -7.40149e-17 7.40149e-17) OK.
+    Max cell openness = 0 OK.
+    Max aspect ratio = 25 OK.
+    Minimum face area = 0.04. Maximum face area = 1.  Face area magnitudes OK.
     Min volume = 0.04. Max volume = 0.04.  Total volume = 1.  Cell volumes OK.
     Mesh non-orthogonality Max: 0 average: 0
     Non-orthogonality check OK.
     Face pyramids OK.
-    Max skewness = 1.24127e-15 OK.
+    Max skewness = 1.11022e-15 OK.
     Coupled point location match (average 0) OK.
 
 Mesh OK.

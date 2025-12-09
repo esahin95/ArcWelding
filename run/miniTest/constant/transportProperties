@@ -16,5 +16,19 @@ FoamFile
 
 k   1e-3;
 
+/*
+fliq
+{
+    type constant;
+    value 0.2;
+}
+*/
+
+fliq
+{
+    type errorFunction;
+    Tliq 0.3;
+    Tsol 0.2;
+}
 
 // ************************************************************************* //

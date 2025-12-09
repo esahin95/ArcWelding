@@ -26,8 +26,8 @@ kappa           28.951;
 
 beta            0.0;
 
-Tliq            30;
-Tsol            28;
+Tliq            300;
+Tsol            280;
 L               0;
 DC              0;
 

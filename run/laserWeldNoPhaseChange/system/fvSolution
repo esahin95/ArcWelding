@@ -32,7 +32,7 @@ solvers
         minIter         1;
     }
 
-    
+    /*
     p_rgh
     {
         solver          GAMG;
@@ -40,17 +40,16 @@ solvers
         tolerance       1e-08;
         relTol          0.01;
         cacheAgglomeration yes;
-        maxIter         15;
+        maxIter         100;
 
-        mergeLevels     1;
-        agglomerator    faceAreaPair;
-        nCellsInCoarsestLevel 10;
-        nPostSweeps     4;
-        directSolveCoarset false;
+        //mergeLevels     1;
+        //agglomerator    faceAreaPair;
+        //nCellsInCoarsestLevel 10;
+        //nPostSweeps     4;
+        //directSolveCoarset false;
     }
+    */
     
-
-    /*
     p_rgh 
     {
         solver          PCG;
@@ -64,9 +63,8 @@ solvers
         }
         tolerance       1e-08;
         relTol          0.01;
-        maxIter         20;
-    }
-    */    
+        maxIter         100;
+    }  
     
     /*
     p_rgh 
@@ -87,7 +85,6 @@ solvers
     "pcorr.*"
     {
         $p_rghFinal;
-        minIter         1;
     }
     
     "U.*"
@@ -116,9 +113,11 @@ solvers
 PIMPLE
 {
     momentumPredictor no;
-    nCorrectors     3;
+    nCorrectors     2;
     nNonOrthogonalCorrectors 0;
     nOuterCorrectors 1;
+    
+    T0  300.0;
 }
 
 /*
@@ -126,7 +125,7 @@ relaxationFactors
 {
     equations
     {
-        ".*" 1;
+        p_rgh 0.7;
     }
 }
 */

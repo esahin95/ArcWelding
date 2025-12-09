@@ -31,6 +31,8 @@ Description
 #include "fvCFD.H"
 #include "pimpleControl.H"
 #include "simpleMatrix.H"
+#include "Function1.H"
+#include "ErrorFunction1.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -73,12 +75,13 @@ int main(int argc, char *argv[])
             }
         }
 
-        #include "writeMatCoeffs.H"
+        //#include "writeMatCoeffs.H"
 
-        Info<< "\nSolution: " << TEqn.solve() << endl;
+        TEqn.solve();
+        Info<< "\nSolution: " << endl;
         forAll(T, cellI)
         {
-            Info<< T.internalField()[cellI] << " ";
+            Info<< T[cellI] << " ";
         }
         Info<< endl;
         forAll(T.boundaryField(), patchI)

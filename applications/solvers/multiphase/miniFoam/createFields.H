@@ -28,16 +28,6 @@ volVectorField U
     "fixedValue"
 ); 
 
-forAll(U.boundaryField(), patchI)
-{
-    forAll(U.boundaryField()[patchI], faceI)
-    {
-        Info<< patchI << " : " << U.boundaryField()[patchI][faceI] << endl;
-    }
-}
-
-surfaceScalarField phi("phi", fvc::interpolate(U) & mesh.Sf());
-
 Info<< "Reading diffusivity k\n" << endl;
 IOdictionary transportProperties
 (
@@ -57,6 +47,51 @@ dimensionedScalar k
     transportProperties.lookupOrDefault("k", 1.0)
 };
 Info<< "k = " << k << endl;
+
+autoPtr<Function1<scalar>> fliqPtr(Function1<scalar>::New("fliq", transportProperties));
+Info<<fliqPtr()<<endl;
+
+/*
+forAll(U, cellI)
+{
+    Info<< cellI << " : " << U[cellI] << endl;
+}
+
+forAll(U.boundaryField(), patchI)
+{
+    forAll(U.boundaryField()[patchI], faceI)
+    {
+        Info<< patchI << " : " << U.boundaryField()[patchI][faceI] << endl;
+    }
+}
+*/
+
+/*
+forAll(T, cellI)
+{
+    scalar x = mesh.C()[cellI][0];
+    T[cellI] = fliqPtr->value(x);
+    Info<< "( " << x << " , " << T[cellI] << " , " << fliqPtr->value(x)  << " )" << " ";
+}
+Info<<endl;
+*/
+
+//Info << fliqPtr->value(mesh.C() & vector(1.0,0.0,0.0)) << endl;
+T.primitiveFieldRef() = fliqPtr->value(mesh.C() & vector(1.0,0.0,0.0));
+T.correctBoundaryConditions();
+Info<<T<<endl;
+
+/*
+forAll(T.boundaryField(), patchI)
+{
+    forAll(T.boundaryField()[patchI], faceI)
+    {
+        Info<< T.boundaryField()[patchI].patch().name() << " : " << T.boundaryField()[patchI][faceI] << endl;
+    }
+}
+*/
+
+surfaceScalarField phi("phi", fvc::interpolate(U) & mesh.Sf());
 
 fvScalarMatrix TEqn
 (

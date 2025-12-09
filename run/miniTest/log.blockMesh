@@ -7,10 +7,10 @@
 \*---------------------------------------------------------------------------*/
 Build  : 10-c4cf895ad8fa
 Exec   : blockMesh
-Date   : Aug 05 2025
-Time   : 10:39:58
+Date   : Dec 09 2025
+Time   : 17:47:45
 Host   : "Erazer"
-PID    : 36111
+PID    : 187907
 I/O    : uncollated
 Case   : /home/sahin/OpenFOAM/sahin-10/run/miniTest
 nProcs : 1
@@ -49,8 +49,8 @@ Creating patches
 Creating cells
 Creating points with scale 1
     Block 0 cell size :
-        i : 0.2 .. 0.2
-        j : 0.2 .. 0.2
+        i : 0.04 .. 0.04
+        j : 1
         k : 1
 
 Writing polyMesh
@@ -58,19 +58,19 @@ Writing polyMesh
 Mesh Information
 ----------------
   boundingBox: (0 0 0) (1 1 1)
-  nPoints: 72
+  nPoints: 104
   nCells: 25
-  nFaces: 110
-  nInternalFaces: 40
+  nFaces: 126
+  nInternalFaces: 24
 ----------------
 Patches
 ----------------
-  patch 0 (start: 40 size: 5) name: top
-  patch 1 (start: 45 size: 5) name: left
-  patch 2 (start: 50 size: 5) name: right
-  patch 3 (start: 55 size: 5) name: bottom
-  patch 4 (start: 60 size: 25) name: front
-  patch 5 (start: 85 size: 25) name: back
+  patch 0 (start: 24 size: 25) name: top
+  patch 1 (start: 49 size: 1) name: left
+  patch 2 (start: 50 size: 1) name: right
+  patch 3 (start: 51 size: 25) name: bottom
+  patch 4 (start: 76 size: 25) name: front
+  patch 5 (start: 101 size: 25) name: back
 
 End
 

@@ -16,8 +16,8 @@ FoamFile
 
 ddtSchemes
 {
-    //default         CrankNicolson 0.9;
-    default         Euler;
+    default         CrankNicolson 0.9;
+    //default         Euler;
 }
 
 gradSchemes
@@ -29,18 +29,19 @@ gradSchemes
 divSchemes
 {
     default         none;
-    div(rhoPhi,U)   Gauss linearUpwind limited;
-    //div(rhoPhi,U)   Gauss upwind;
-    div(phi,alpha)  Gauss MPLIC;
-    //div(phi,alpha)  Gauss interfaceCompression vanLeer 1;
-    div(rhoPhiCp,T) Gauss linearUpwind limited;
+    //div(rhoPhi,U)   Gauss linearUpwind limited;
+    div(rhoPhi,U)   Gauss LUST limited;
+    //div(phi,alpha)  Gauss MPLIC;
+    div(phi,alpha)  Gauss interfaceCompression vanLeer 1;
+    //div(rhoPhiCp,T) Gauss linearUpwind limited;
+    div(rhoPhiCp,T) Gauss LUST grad(T);
     //div(rhoPhiCp,T) Gauss linear;
     div(((rho*nuEff)*dev2(T(grad(U))))) Gauss linear;
 }
 
 laplacianSchemes
 {
-    default         Gauss linear corrected;
+    default         Gauss linear uncorrected;
 }
 
 interpolationSchemes
@@ -50,7 +51,7 @@ interpolationSchemes
 
 snGradSchemes
 {
-    default         corrected;
+    default         uncorrected;
 }
 
 
