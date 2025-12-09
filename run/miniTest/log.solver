@@ -8,9 +8,9 @@
 Build  : 10-c4cf895ad8fa
 Exec   : miniFoam
 Date   : Dec 09 2025
-Time   : 17:47:45
+Time   : 17:54:52
 Host   : "Erazer"
-PID    : 187909
+PID    : 190790
 I/O    : uncollated
 Case   : /home/sahin/OpenFOAM/sahin-10/run/miniTest
 nProcs : 1
@@ -45,31 +45,31 @@ dimensions      [0 0 0 1 0 0 0];
 internalField   nonuniform List<scalar> 
 25
 (
+1
+1
+1
+1
+0.999962
+0.955157
+0.285804
+0.00233887
+1.77931e-07
+9.62563e-14
 0
 0
 0
-2.44586e-10
-3.75066e-05
-0.044843
-0.714196
-0.997661
-1
-1
-1
-1
-1
-1
-1
-1
-1
-1
-1
-1
-1
-1
-1
-1
-1
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
 )
 ;
 
@@ -123,7 +123,7 @@ In outer corrector loop
 
         Is correctPhi relevant? 0
 
-DICPCG:  Solving for T, Initial residual = 0.999001, Final residual = 9.45164e-16, No Iterations 1
+DICPCG:  Solving for T, Initial residual = 0.997006, Final residual = 1.01933e-15, No Iterations 1
 
 Solution: 
 202 206 210 214 218 222 226 230 234 238 242 246 250 254 258 262 266 270 274 278 282 286 290 294 298 
@@ -134,7 +134,7 @@ bottom 202 206 210 214 218 222 226 230 234 238 242 246 250 254 258 262 266 270 2
 front 
 back 
 
-ExecutionTime = 0.003441 s  ClockTime = 0 s
+ExecutionTime = 0.002163 s  ClockTime = 0 s
 
 End
 

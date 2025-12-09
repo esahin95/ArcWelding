@@ -14,7 +14,8 @@ EXE_INC = \
     -I$(LIB_SRC)/finiteVolume/lnInclude \
     -I$(LIB_SRC)/meshTools/lnInclude \
     -I$(LIB_SRC)/sampling/lnInclude \
-	-I$(WM_PROJECT_USER_DIR)/src/fvModels/derived/laserDTRM/lnInclude
+	-I$(WM_PROJECT_USER_DIR)/src/fvModels/derived/laserDTRM/lnInclude \
+	-I$(WM_PROJECT_USER_DIR)/src/OpenFOAM/primitives/functions/ErrorFunction/lnInclude
 
 EXE_LIBS = \
     -L$(FOAM_USER_LIBBIN) \
@@ -27,4 +28,5 @@ EXE_LIBS = \
     -lfvModels \
     -lfvConstraints \
     -lmeshTools \
-	-llaserDTRM
+	-llaserDTRM \
+	-lfunction1sExtensions

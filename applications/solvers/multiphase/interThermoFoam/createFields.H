@@ -210,59 +210,37 @@ const dimensionedScalar beta2
     phase2Dict.lookupOrDefault("beta", 0.0)
 );
 
-const dimensionedScalar Tliq
-(
-    "Tliq",
-    dimensionSet(0, 0, 0, 1, 0),
-    phase1Dict.lookupOrDefault("Tliq", scalar(1000.0))
-);
-const dimensionedScalar Tsol
-(
-    "Tsol",
-    dimensionSet(0, 0, 0, 1, 0),
-    phase1Dict.lookupOrDefault("Tsol", Tliq.value() - scalar(50.0))
-);
+const autoPtr<Function1<scalar>> alphaSolidT(Function1<scalar>::New("alphaSolid", phaseProperties));
+
 const dimensionedScalar L
 (
     "L",
     dimensionSet(0, 2, -2, 0, 0),
-    phase1Dict.lookupOrDefault("L", 0.0)
+    phaseProperties.lookupOrDefault("L", 0.0)
 );
 const dimensionedScalar DC 
 (
     "DC",
     dimensionSet(1,-3,-1,0,0),
-    phase1Dict.lookupOrDefault("DC", 1.0e+10)
-);
-Info<< "Using solid liquid phase change with:\n" 
-    << "Tsol: " << Tsol << endl
-    << "Tliq: " << Tliq << endl
-    << "L: " << L << endl
-    << "DC: " << DC << endl;
-
-const dimensionedScalar Tmid
-(
-    "Tmid",
-    scalar(0.5) * (Tliq + Tsol)
+    phaseProperties.lookupOrDefault("DC", 0.0)
 );
 
-const dimensionedScalar fa
+volScalarField alphaSolid
 (
-    "fa",
-    scalar(4.0) / (Tliq - Tsol)
+    IOobject
+    (
+        "alphaSolid",
+        mesh.time().timeName(),
+        mesh,
+        IOobject::READ_IF_PRESENT,
+        IOobject::AUTO_WRITE
+    ),
+    mesh,
+    dimensionedScalar(dimless, 0),
+    zeroGradientFvPatchScalarField::typeName
 );
-
-const dimensionedScalar fb
-(
-    "fb",
-    fa / Foam::sqrt(constant::mathematical::pi)
-);
-
-volScalarField fliq
-(
-    "fliq",
-    scalar(0.5) * (Foam::erf(fa*(T - Tmid)) + scalar(1.0))
-);
+alphaSolid.field() = alphaSolidT->value(T.field());
+alphaSolid.correctBoundaryConditions();
 
 volScalarField rhoCp
 (
@@ -281,11 +259,6 @@ volScalarField Cp
 (
     "Cp",
     mixture.alpha1() * Cp1 + mixture.alpha2() * Cp2
-);
-volScalarField CpApp
-(
-    "Cp",
-    scalar(0.0) * Cp
 );
 
 volScalarField kappa 

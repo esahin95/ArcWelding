@@ -38,7 +38,7 @@ Foam::Function1s::ErrorFunction<Type>::~ErrorFunction()
 template<class Type>
 Type Foam::Function1s::ErrorFunction<Type>::value(const scalar x) const 
 {
-    return 0.5 * (Foam::erf(a_ * (x - Tmid_)) + 1.0);
+    return 0.5 * (1.0 - Foam::erf(a_ * (x - Tmid_)));
 }
 
 /*

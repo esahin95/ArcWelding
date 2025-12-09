@@ -1,7 +1,7 @@
-{    
-    // derived quantities for numerical integration
-    rhoCp == rho * (Cp + CpApp);
-    rhoPhiCp == rhoPhi * fvc::interpolate(Cp + CpApp);
+{        
+    rhoCp == rho * Cp;
+    
+    rhoPhiCp == rhoPhi * fvc::interpolate(Cp);
     
     T.storePrevIter();
     while (pimple.correctNonOrthogonal())
@@ -13,7 +13,8 @@
             - fvm::Sp(fvc::ddt(rhoCp) + fvc::div(rhoPhiCp), T)
             - fvm::laplacian(kappa, T)
             ==
-            fvModels.source(rhoCp, T)
+            L * fvc::ddt(rho, alphaSolid)
+            + fvModels.source(rhoCp, T)
         );
     
         TEqn.relax();

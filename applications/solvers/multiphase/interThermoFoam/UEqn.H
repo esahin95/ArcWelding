@@ -5,7 +5,7 @@ fvVectorMatrix UEqn
     fvm::ddt(rho, U) + fvm::div(rhoPhi, U)
     + MRF.DDt(rho, U)
     + turbulence.divDevTau(rho, U)
-    + fvm::Sp(alpha1*DC*Foam::sqr(1.0 - fliq)/(pow3(fliq) + scalar(0.001)), U)
+    + fvm::Sp(alpha1*DC*Foam::sqr(alphaSolid)/(pow3(1-alphaSolid) + scalar(0.001)), U)
     ==
     phaseChange.SU(rho, rhoPhi, U)
     + fvModels.source(rho, U)
