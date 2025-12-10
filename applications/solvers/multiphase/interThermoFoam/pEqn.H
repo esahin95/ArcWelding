@@ -40,7 +40,7 @@
     constrainPressure(p_rgh, U, phiHbyA, rAUf, MRF);
 
     // Cache the phase change pressure source
-    fvScalarMatrix Sp_rgh(phaseChange.Sp_rgh(rho, gh, p_rgh));
+    fvScalarMatrix Sp_rgh(tmp<fvScalarMatrix>(new fvScalarMatrix(p_rgh, dimVolume/dimTime)));
 
     while (pimple.correctNonOrthogonal())
     {
