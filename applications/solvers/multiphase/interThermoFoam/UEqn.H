@@ -7,8 +7,7 @@ fvVectorMatrix UEqn
     + turbulence.divDevTau(rho, U)
     + fvm::Sp(alpha1*DC*Foam::sqr(alphaSolid)/(pow3(1-alphaSolid) + scalar(0.001)), U)
     ==
-    tmp<fvVectorMatrix>(new fvVectorMatrix(U, dimMass*dimVelocity/dimTime))
-    + fvModels.source(rho, U)
+    fvModels.source(rho, U)
 );
 
 UEqn.relax();
