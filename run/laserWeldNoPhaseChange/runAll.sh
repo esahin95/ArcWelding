@@ -14,7 +14,7 @@ setFields > log.setFields
 
 # run solver
 decomposePar -cellDist > log.decompose
-mpirun -np 4 interFoam -parallel > log.solver
+mpirun -np 4 interThermoFoam -parallel > log.solver
 reconstructPar > log.reconstruct
 
 # postprocess
