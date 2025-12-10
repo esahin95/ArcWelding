@@ -40,7 +40,6 @@ Description
 #include "CrankNicolsonDdtScheme.H"
 #include "subCycle.H"
 #include "immiscibleIncompressibleTwoPhaseThermoMixture.H"
-#include "noPhaseChange.H"
 #include "incompressibleInterPhaseTransportModel.H"
 #include "pimpleControl.H"
 #include "pressureReference.H"
@@ -102,21 +101,6 @@ int main(int argc, char *argv[])
         // same divergence
         tmp<volScalarField> divU;
 
-        if
-        (
-            correctPhi
-         && !isType<twoPhaseChangeModels::noPhaseChange>(phaseChange)
-         && mesh.topoChanged()
-        )
-        {
-            // Construct and register divU for correctPhi
-            divU = new volScalarField
-            (
-                "divU0",
-                fvc::div(fvc::absolute(phi, U))
-            );
-        }
-
         // Update the mesh for topology change, mesh to mesh mapping
         bool topoChanged = mesh.update();
 
@@ -136,21 +120,6 @@ int main(int argc, char *argv[])
         {
             if (pimple.firstPimpleIter() || moveMeshOuterCorrectors)
             {
-                if
-                (
-                    correctPhi
-                 && !isType<twoPhaseChangeModels::noPhaseChange>(phaseChange)
-                 && !divU.valid()
-                )
-                {
-                    // Construct and register divU for correctPhi
-                    divU = new volScalarField
-                    (
-                        "divU0",
-                        fvc::div(fvc::absolute(phi, U))
-                    );
-                }
-
                 // Move the mesh
                 mesh.move();
 
