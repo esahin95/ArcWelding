@@ -1,0 +1,3 @@
+thermoPhysicalModel/thermoPhysicalModel.C
+
+EXE = $(FOAM_USER_LIBBIN)/libthermoPhysicalModel

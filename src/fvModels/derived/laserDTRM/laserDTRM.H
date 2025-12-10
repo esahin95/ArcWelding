@@ -82,6 +82,7 @@ class laserDTRM
         const scalar q_;
         const scalar relax_;
         const scalar a_;
+        const scalar maxTrackLength_;
 
 
         //- The lagrangian cloud

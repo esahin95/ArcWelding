@@ -203,9 +203,17 @@ Foam::interfaceThermoProperties::interfaceThermoProperties
 {
     calculateK();
 
-    autoPtr<Function1<scalar>> tmpSigma(Function1<scalar>::New("sigma", dict.subDict("sigma")));
-    Info<< "Surface Tension at 300K: "<< tmpSigma->value(300.0) << endl;
-    Info<< "Surface Tension Derivative at 300K: "<< (tmpSigma->value(300.5) - tmpSigma->value(299.5)) << endl;
+    autoPtr<Function1<scalar>> tmpSigma;
+    if (dict.isDict("sigma"))
+    {
+        tmpSigma = Function1<scalar>::New("sigma", dict.subDict("sigma"));
+    }
+    else 
+    {
+        tmpSigma = Function1<scalar>::New("sigma", dict);
+    }
+    Info<< "Surface Tension at 300K: s = "<< tmpSigma->value(300.0) 
+        << " dsdT = " << (tmpSigma->value(300.5) - tmpSigma->value(299.5)) << endl;
 }
 
 
