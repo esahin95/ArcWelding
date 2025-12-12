@@ -35,11 +35,32 @@ immiscibleIncompressibleTwoPhaseThermoMixture
 )
 :
     incompressibleTwoPhaseMixture(U, phi),
-    interfaceThermoProperties(alpha1(), alpha2(), U, *this)
+    interfaceThermoProperties(alpha1(), alpha2(), U, *this),
+    thermo1_(new simpleThermoModel(U.mesh(), this->phase1Name())),
+    thermo2_(new simpleThermoModel(U.mesh(), this->phase2Name()))
 {}
 
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
+
+Foam::tmp<Foam::volScalarField>
+Foam::immiscibleIncompressibleTwoPhaseThermoMixture::Cp() const 
+{
+    return alpha1() * thermo1_->Cp() + (1 - alpha1()) * thermo2_->Cp();
+}
+
+Foam::tmp<Foam::volScalarField>
+Foam::immiscibleIncompressibleTwoPhaseThermoMixture::kappa() const 
+{
+    return alpha1() * thermo1_->kappa() + (1 - alpha1()) * thermo2_->kappa();
+}
+
+Foam::tmp<Foam::volScalarField>
+Foam::immiscibleIncompressibleTwoPhaseThermoMixture::beta() const 
+{
+    return alpha1() * thermo1_->beta() + (1 - alpha1()) * thermo2_->beta();
+}
+
 
 bool Foam::immiscibleIncompressibleTwoPhaseThermoMixture::read()
 {

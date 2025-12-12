@@ -40,7 +40,6 @@ Description
 #include "CrankNicolsonDdtScheme.H"
 #include "subCycle.H"
 #include "immiscibleIncompressibleTwoPhaseThermoMixture.H"
-#include "noPhaseChange.H"
 #include "incompressibleInterPhaseTransportModel.H"
 #include "pimpleControl.H"
 #include "pressureReference.H"
@@ -65,7 +64,6 @@ int main(int argc, char *argv[])
     #include "createFieldRefs.H"
     #include "initCorrectPhi.H"
     #include "createUfIfPresent.H"
-    #include "updateProps.H"
 
     if (!LTS)
     {
@@ -102,21 +100,6 @@ int main(int argc, char *argv[])
         // same divergence
         tmp<volScalarField> divU;
 
-        if
-        (
-            correctPhi
-         && !isType<twoPhaseChangeModels::noPhaseChange>(phaseChange)
-         && mesh.topoChanged()
-        )
-        {
-            // Construct and register divU for correctPhi
-            divU = new volScalarField
-            (
-                "divU0",
-                fvc::div(fvc::absolute(phi, U))
-            );
-        }
-
         // Update the mesh for topology change, mesh to mesh mapping
         bool topoChanged = mesh.update();
 
@@ -136,21 +119,6 @@ int main(int argc, char *argv[])
         {
             if (pimple.firstPimpleIter() || moveMeshOuterCorrectors)
             {
-                if
-                (
-                    correctPhi
-                 && !isType<twoPhaseChangeModels::noPhaseChange>(phaseChange)
-                 && !divU.valid()
-                )
-                {
-                    // Construct and register divU for correctPhi
-                    divU = new volScalarField
-                    (
-                        "divU0",
-                        fvc::div(fvc::absolute(phi, U))
-                    );
-                }
-
                 // Move the mesh
                 mesh.move();
 
@@ -158,8 +126,6 @@ int main(int argc, char *argv[])
                 {
                     gh = (g & mesh.C()) - ghRef;
                     ghf = (g & mesh.Cf()) - ghRef;
-
-                    snGradGh = g & mesh.Sf() / mesh.magSf();
 
                     MRF.update();
 
@@ -210,8 +176,6 @@ int main(int argc, char *argv[])
                 #include "pEqn.H"
 
                 #include "TEqn.H"
-
-                #include "updateProps.H"
             }
 
             if (pimple.turbCorr())

@@ -1,0 +1,87 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  10
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    location    "constant";
+    object      phaseProperties;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+type basicMultiphaseSystem;
+
+phases (water air);
+
+water
+{
+    type            pureIsothermalPhaseModel;
+    diameterModel   none;
+
+    residualAlpha 1e-3;
+}
+
+air
+{
+    type            pureIsothermalPhaseModel;
+    diameterModel   none;
+
+    residualAlpha 1e-3;
+}
+
+blending
+{
+    default
+    {
+        type            segregated;
+    }
+}
+
+surfaceTension
+{
+    air_water
+    {
+        type            constant;
+        sigma           0.07;
+    }
+}
+
+interfaceCompression
+{
+    air_water       1;
+}
+
+drag
+{
+    air_segregatedWith_water
+    {
+        type            segregated;
+        m               0.1;
+        n               8;
+    }
+}
+
+virtualMass
+{}
+
+heatTransfer
+{}
+
+phaseTransfer
+{}
+
+lift
+{}
+
+wallLubrication
+{}
+
+turbulentDispersion
+{}
+
+// ************************************************************************* //

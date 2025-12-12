@@ -131,7 +131,7 @@ void Foam::fv::laserDTRM::update() const
     // ray tracing
     while (returnReduce(cloud_.size(), sumOp<label>()) > 0)
     {
-        cloud_.move(cloud_, td, 1.0);
+        cloud_.move(cloud_, td, maxTrackLength_);
     }
     
     // relax power deposition
@@ -188,6 +188,7 @@ Foam::fv::laserDTRM::laserDTRM
     q_(Q_ / max(nRays_, 1)),
     relax_(dict.lookupOrDefault("relax", 1.0)),
     a_(dict.lookupOrDefault("absorption", 1.0)),
+    maxTrackLength_(dict.lookupOrDefault("maxTrackLength", mesh.time().deltaTValue())),
     cloud_(mesh, "cloudDTRM", IDLList<laserParticle>()),
     lPower_
     (

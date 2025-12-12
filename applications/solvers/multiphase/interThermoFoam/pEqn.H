@@ -30,7 +30,7 @@
         (
             mixture.surfaceTensionForce() * corrf
           - ghf*fvc::snGrad(rho)
-          - fvc::interpolate(beta*(T - T0)*rho) * snGradGh
+          - fvc::interpolate(mixture.beta()*(T - T0)*rho) * (g & mesh.Sf() / mesh.magSf())
         )*rAUf*mesh.magSf()
     );
 
@@ -39,15 +39,11 @@
     // Update the pressure BCs to ensure flux consistency
     constrainPressure(p_rgh, U, phiHbyA, rAUf, MRF);
 
-    // Cache the phase change pressure source
-    fvScalarMatrix Sp_rgh(phaseChange.Sp_rgh(rho, gh, p_rgh));
-
     while (pimple.correctNonOrthogonal())
     {
         fvScalarMatrix p_rghEqn
         (
             fvc::div(phiHbyA) - fvm::laplacian(rAUf, p_rgh)
-         == Sp_rgh
         );
 
         p_rghEqn.setReference

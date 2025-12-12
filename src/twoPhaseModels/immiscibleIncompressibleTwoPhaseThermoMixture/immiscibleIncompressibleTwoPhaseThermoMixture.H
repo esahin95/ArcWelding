@@ -37,6 +37,7 @@ SourceFiles
 
 #include "incompressibleTwoPhaseMixture.H"
 #include "interfaceThermoProperties.H"
+#include "simpleThermoModel.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -52,6 +53,9 @@ class immiscibleIncompressibleTwoPhaseThermoMixture
     public incompressibleTwoPhaseMixture,
     public interfaceThermoProperties
 {
+
+    autoPtr<simpleThermoModel> thermo1_;
+    autoPtr<simpleThermoModel> thermo2_;
 
 public:
 
@@ -77,10 +81,18 @@ public:
         {
             incompressibleTwoPhaseMixture::correct();
             interfaceThermoProperties::correct();
+            thermo1_->correct();
+            thermo2_->correct();
         }
 
         //- Read base phaseProperties dictionary
         virtual bool read();
+
+        tmp<volScalarField> Cp() const;
+
+        tmp<volScalarField> kappa() const;
+
+        tmp<volScalarField> beta() const;
 };
 
 

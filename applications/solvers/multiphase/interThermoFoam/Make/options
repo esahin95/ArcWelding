@@ -1,26 +1,21 @@
 EXE_INC = \
     -I$(FOAM_APP)/solvers/multiphase/interFoam/incompressibleInterPhaseTransportModel/lnInclude \
     -I$(LIB_SRC)/physicalProperties/lnInclude \
-    -I$(LIB_SRC)/twoPhaseModels/twoPhaseMixture/lnInclude \
     -I$(WM_PROJECT_USER_DIR)/src/twoPhaseModels/interfaceThermoProperties/lnInclude \
+	-I$(WM_PROJECT_USER_DIR)/src/twoPhaseModels/immiscibleIncompressibleTwoPhaseThermoMixture/lnInclude \
+	-I$(LIB_SRC)/twoPhaseModels/twoPhaseMixture/lnInclude \
 	-I$(LIB_SRC)/twoPhaseModels/interfaceProperties/lnInclude \
     -I$(LIB_SRC)/twoPhaseModels/incompressibleTwoPhaseMixture/lnInclude \
-    -I$(WM_PROJECT_USER_DIR)/src/twoPhaseModels/immiscibleIncompressibleTwoPhaseThermoMixture/lnInclude \
-    -I$(WM_PROJECT_USER_DIR)/src/twoPhaseModels/twoPhaseChange/lnInclude \
     -I$(LIB_SRC)/MomentumTransportModels/momentumTransportModels/lnInclude \
     -I$(LIB_SRC)/MomentumTransportModels/incompressible/lnInclude \
     -I$(LIB_SRC)/MomentumTransportModels/phaseIncompressible/lnInclude \
     -I$(LIB_SRC)/meshTools/lnInclude \
     -I$(LIB_SRC)/finiteVolume/lnInclude \
-    -I$(LIB_SRC)/meshTools/lnInclude \
-    -I$(LIB_SRC)/sampling/lnInclude \
 	-I$(WM_PROJECT_USER_DIR)/src/fvModels/derived/laserDTRM/lnInclude \
-	-I$(WM_PROJECT_USER_DIR)/src/OpenFOAM/primitives/functions/ErrorFunction/lnInclude
+	-I$(WM_PROJECT_USER_DIR)/src/OpenFOAM/primitives/functions/ErrorFunction/lnInclude \
+	-I$(WM_PROJECT_USER_DIR)/src/physicalProperties/lnInclude
 
 EXE_LIBS = \
-    -L$(FOAM_USER_LIBBIN) \
-    -limmiscibleIncompressibleTwoPhaseThermoMixture \
-    -ltwoPhaseChangeModelsModified \
     -lmomentumTransportModels \
     -lincompressibleMomentumTransportModels \
     -lincompressibleInterPhaseTransportModel \
@@ -28,5 +23,7 @@ EXE_LIBS = \
     -lfvModels \
     -lfvConstraints \
     -lmeshTools \
+	-L$(FOAM_USER_LIBBIN) \
+    -limmiscibleIncompressibleTwoPhaseThermoMixture \
 	-llaserDTRM \
 	-lfunction1sExtensions
