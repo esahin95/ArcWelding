@@ -12,7 +12,8 @@ EXE_INC = \
     -I$(LIB_SRC)/meshTools/lnInclude \
     -I$(LIB_SRC)/finiteVolume/lnInclude \
 	-I$(WM_PROJECT_USER_DIR)/src/fvModels/derived/laserDTRM/lnInclude \
-	-I$(WM_PROJECT_USER_DIR)/src/OpenFOAM/primitives/functions/ErrorFunction/lnInclude
+	-I$(WM_PROJECT_USER_DIR)/src/OpenFOAM/primitives/functions/ErrorFunction/lnInclude \
+	-I$(WM_PROJECT_USER_DIR)/src/physicalProperties/lnInclude
 
 EXE_LIBS = \
     -lmomentumTransportModels \

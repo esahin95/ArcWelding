@@ -64,7 +64,6 @@ int main(int argc, char *argv[])
     #include "createFieldRefs.H"
     #include "initCorrectPhi.H"
     #include "createUfIfPresent.H"
-    #include "updateProps.H"
 
     if (!LTS)
     {
@@ -128,8 +127,6 @@ int main(int argc, char *argv[])
                     gh = (g & mesh.C()) - ghRef;
                     ghf = (g & mesh.Cf()) - ghRef;
 
-                    snGradGh = g & mesh.Sf() / mesh.magSf();
-
                     MRF.update();
 
                     if (correctPhi)
@@ -179,8 +176,6 @@ int main(int argc, char *argv[])
                 #include "pEqn.H"
 
                 #include "TEqn.H"
-
-                #include "updateProps.H"
             }
 
             if (pimple.turbCorr())
