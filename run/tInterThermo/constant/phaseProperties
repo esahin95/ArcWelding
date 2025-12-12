@@ -1,0 +1,46 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  10
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    location    "constant";
+    object      phaseProperties;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+phases          ( steel air );
+
+sigma
+{
+  type  temperatureDependent;
+  sigma
+  {
+    type    polynomial;
+    coeffs  ((0.1 0) (-1.0e-4 1));
+  }
+}
+
+alphaSolid
+{
+    type errorFunction;
+    Tliq 305.0;
+    Tsol 303.0;
+}
+L   1.0;
+DC  1.0;
+
+/*
+sigma
+{
+    type constant;
+    sigma 0.01;
+}
+*/
+
+// ************************************************************************* //

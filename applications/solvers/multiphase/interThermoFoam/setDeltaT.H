@@ -39,9 +39,9 @@ if (adjustTimeStep)
         fvc::surfaceSum
         (
             mesh.magSf()
-          * fvc::interpolate(kappa)
+          * fvc::interpolate(mixture.beta())
           * mesh.surfaceInterpolation::deltaCoeffs()
-        )()() / (mesh.V() * rho * Cp) * runTime.deltaT()
+        )()() / (mesh.V() * rho * mixture.Cp().ref()) * runTime.deltaT()
     );
     DiNum = gMax(DiNumfv);
     Info<< "Diffusion number maximum: " << DiNum << endl;

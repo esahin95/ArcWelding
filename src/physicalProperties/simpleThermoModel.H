@@ -3,25 +3,42 @@
 
 #include "physicalProperties.H"
 
+#include "volFields.H"
+
 namespace Foam
 {
 
 //Forward declaration of classes
-class FvMesh;
+//class FvMesh;
 
 class simpleThermoModel
 :
     public physicalProperties
 {
 
+    const fvMesh& mesh_;
+    
+    dimensionedScalar Cp0_;
+    dimensionedScalar kappa0_;
+    dimensionedScalar beta0_;
+
+    volScalarField Cp_;
+    volScalarField kappa_;
+    volScalarField beta_;
 
 public:
 
-    TypeName("simpleThermoModel");
+    //TypeName("simpleThermoModel");
 
     simpleThermoModel(const fvMesh& mesh, const word& group);
 
     simpleThermoModel(const simpleThermoModel&) = delete;
+
+    static autoPtr<simpleThermoModel> New
+    (
+        const fvMesh& mesh,
+        const word& group = word::null
+    );
 
     virtual ~simpleThermoModel()
     {}
@@ -30,12 +47,15 @@ public:
 
     virtual bool read();
 
+    virtual void correct()
+    {};
+
     tmp<volScalarField> Cp() const;
 
     tmp<volScalarField> kappa() const;
 
-
-}
+    tmp<volScalarField> beta() const;
+};
 
 }
 

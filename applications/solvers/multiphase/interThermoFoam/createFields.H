@@ -117,8 +117,11 @@ incompressibleInterPhaseTransportModel turbulence
 
 // --- Additions
 
-Info<< "Reading thermophysical properties\n" << endl;
+// temperature reference
+const dimensionedScalar T0("T0", dimTemperature, pimple.dict().lookupOrDefault<scalar>("T0", 300.0));
+Info<< "Set temperature reference to " << T0.value() << endl;
 
+Info<< "Reading additional phase properties\n" << endl;
 IOdictionary phaseProperties
 (
     IOobject
@@ -131,79 +134,7 @@ IOdictionary phaseProperties
     )
 );
 
-IOdictionary phase1Dict 
-(
-    IOobject
-    (
-        IOobject::groupName
-        (
-            physicalProperties::typeName,
-            mixture.phase1Name()
-        ),
-        runTime.constant(),
-        mesh,
-        IOobject::MUST_READ_IF_MODIFIED,
-        IOobject::NO_WRITE
-    )
-);
-
-IOdictionary phase2Dict 
-(
-    IOobject
-    (
-        IOobject::groupName
-        (
-            physicalProperties::typeName,
-            mixture.phase2Name()
-        ),
-        runTime.constant(),
-        mesh,
-        IOobject::MUST_READ_IF_MODIFIED,
-        IOobject::NO_WRITE
-    )
-);
-
-// temperature reference
-const dimensionedScalar T0("T0", dimTemperature, pimple.dict().lookupOrDefault<scalar>("T0", 300.0));
-Info<< "Set temperature reference to " << T0.value() << endl;
-
-const dimensionedScalar Cp1
-(
-    "Cp1",
-    dimensionSet(0, 2, -2, -1, 0),
-    phase1Dict.lookup("Cp")
-);
-const dimensionedScalar Cp2
-(
-    "Cp2",
-    dimensionSet(0, 2, -2, -1, 0),
-    phase2Dict.lookup("Cp")
-);
-const dimensionedScalar kappa1
-(
-    "kappa1",
-    dimensionSet(1, 1, -3, -1, 0),
-    phase1Dict.lookup("kappa")
-);
-const dimensionedScalar kappa2
-(
-    "kappa2",
-    dimensionSet(1, 1, -3, -1, 0),
-    phase2Dict.lookup("kappa")
-);
-const dimensionedScalar beta1
-(
-    "beta1",
-    dimensionSet(0, 0, 0, -1, 0),
-    phase1Dict.lookupOrDefault("beta", 0.0)
-);
-const dimensionedScalar beta2
-(
-    "beta2",
-    dimensionSet(0, 0, 0, -1, 0),
-    phase2Dict.lookupOrDefault("beta", 0.0)
-);
-
+// solidification melting
 const autoPtr<Function1<scalar>> alphaSolidT(Function1<scalar>::New("alphaSolid", phaseProperties));
 
 const dimensionedScalar L
@@ -212,6 +143,7 @@ const dimensionedScalar L
     dimensionSet(0, 2, -2, 0, 0),
     phaseProperties.lookupOrDefault("L", 0.0)
 );
+
 const dimensionedScalar DC 
 (
     "DC",
@@ -239,7 +171,7 @@ alphaSolid.correctBoundaryConditions();
 volScalarField rhoCp
 (
     "rhoCp", 
-    mixture.rho() * (mixture.alpha1() * Cp1 + mixture.alpha2() * Cp2)
+    mixture.rho() * mixture.Cp()
 );
 rhoCp.oldTime();
 
@@ -249,62 +181,10 @@ surfaceScalarField rhoPhiCp
     fvc::interpolate(rhoCp) * phi
 );
 
-volScalarField Cp 
-(
-    "Cp",
-    mixture.alpha1() * Cp1 + mixture.alpha2() * Cp2
-);
-
-volScalarField kappa 
-(
-    "kappa",
-    mixture.alpha1() * kappa1 + mixture.alpha2() * kappa2
-);
-
-volScalarField beta 
-(
-    "beta",
-    mixture.alpha1() * beta1 + mixture.alpha2() * beta2
-);
-
 surfaceScalarField corrf
 (
     "corrf",
     scalar(2.0) * fvc::interpolate(mixture.rho()) / (mixture.rho1() + mixture.rho2())
 );
-
-surfaceScalarField snGradGh
-(
-    "snGradGh",
-    g & mesh.Sf() / mesh.magSf()
-);
-
-/*
-volVectorField tmpVectorField
-(
-    IOobject
-    (
-        "tmpVectorField",
-        runTime.timeName(),
-        mesh,
-        IOobject::NO_READ,
-        IOobject::AUTO_WRITE
-    ),
-    fvc::reconstruct(mixture.surfaceTensionForce() * corrf * mesh.magSf() * 0.0)
-);
-
-volScalarField tmpScalarField
-(
-    IOobject
-    (
-        "tmpScalarField",
-        runTime.timeName(),
-        mesh,
-        IOobject::NO_READ,
-        IOobject::AUTO_WRITE
-    ),
-    fliq
-);
-*/
 
 // --- End
