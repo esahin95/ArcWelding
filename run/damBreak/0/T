@@ -37,8 +37,8 @@ boundaryField
     atmosphere
     {
         type            inletOutlet;
-        value		uniform 300;
-        inletValue	uniform 300;
+        value		    uniform 300;
+        inletValue	    uniform 300;
     }
 
     defaultFaces

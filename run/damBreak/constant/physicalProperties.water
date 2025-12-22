@@ -19,8 +19,15 @@ viscosityModel  constant;
 nu              1e-6;
 rho             1000;
 
-Cp		1;
-kappa		2;
-beta		3;
+Cp		        1;
+kappa	        2;
+beta	        3;
+L               0;
+
+alphaSolid
+{
+    type constant;
+    value 0;
+}
 
 // ************************************************************************* //
