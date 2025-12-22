@@ -140,6 +140,8 @@ int main(int argc, char *argv[])
                 #include "pEqn.H"
             }
 
+            #include "TEqn.H"
+
             if (pimple.turbCorr())
             {
                 turbulence->correct();

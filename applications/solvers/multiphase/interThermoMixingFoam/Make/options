@@ -3,6 +3,7 @@ EXE_INC = \
     -I$(LIB_SRC)/twoPhaseModels/twoPhaseMixture/lnInclude \
     -I$(LIB_SRC)/twoPhaseModels/interfaceProperties/lnInclude \
     -I$(LIB_SRC)/twoPhaseModels/twoPhaseProperties/alphaContactAngle/alphaContactAngle \
+    -I./simpleThermoModel \
     -I./immiscibleIncompressibleThreePhaseThermoMixture \
     -I./incompressibleThreePhaseThermoMixture \
     -I./threePhaseInterfaceThermoProperties \

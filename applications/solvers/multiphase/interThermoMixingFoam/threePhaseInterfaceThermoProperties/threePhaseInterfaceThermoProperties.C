@@ -159,8 +159,8 @@ Foam::threePhaseInterfaceThermoProperties::threePhaseInterfaceThermoProperties
             mixture_.alpha1().name()
         ).lookup<scalar>("cAlpha")
     ),
-    sigma12_("sigma12", dimensionSet(1, 0, -2, 0, 0), mixture),
-    sigma13_("sigma13", dimensionSet(1, 0, -2, 0, 0), mixture),
+    sigma12_(surfaceTensionModel::New(mixture.subDict("sigma12"), mixture.alpha1().mesh())),
+    sigma13_(surfaceTensionModel::New(mixture.subDict("sigma13"), mixture.alpha2().mesh())),
 
     deltaN_
     (
@@ -190,6 +190,20 @@ Foam::threePhaseInterfaceThermoProperties::threePhaseInterfaceThermoProperties
         ),
         mixture.alpha1().mesh(),
         dimensionedScalar(dimless/dimLength, 0)
+    ),
+
+    sigma_
+    (
+        IOobject
+        (
+            "interfaceThermoProperties:sigma",
+            mixture.alpha1().time().timeName(),
+            mixture.alpha1().mesh(),
+            IOobject::NO_READ,
+            IOobject::AUTO_WRITE
+        ),
+        mixture.alpha1().mesh(),
+        dimensionedScalar(dimensionSet(1,0,-2,0,0), 0)
     )
 {
     calculateK();
@@ -201,7 +215,25 @@ Foam::threePhaseInterfaceThermoProperties::threePhaseInterfaceThermoProperties
 Foam::tmp<Foam::surfaceScalarField>
 Foam::threePhaseInterfaceThermoProperties::surfaceTensionForce() const
 {
-    return fvc::interpolate(sigmaK())*fvc::snGrad(mixture_.alpha1());
+    //return fvc::interpolate(sigmaK())*fvc::snGrad(mixture_.alpha1());
+    const volScalarField& alpha1 = mixture_.alpha1();
+    
+    // cell gradient
+    volVectorField gradAlpha(fvc::grad(alpha1));
+
+    // unit normal
+    volVectorField n(gradAlpha/(mag(gradAlpha) + deltaN_));
+
+    // buffer mixture surface tension
+    volScalarField tsigma = sigma();
+    
+    // surface tension force
+    return 
+    (
+          fvc::interpolate(tsigma * K_)*fvc::snGrad(alpha1)
+        + fvc::interpolate(mag(fvc::grad(alpha1))) * fvc::snGrad(tsigma)
+        - fvc::interpolate(n & fvc::grad(tsigma)) * fvc::snGrad(alpha1)
+    );
 }
 
 

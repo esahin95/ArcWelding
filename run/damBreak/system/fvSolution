@@ -60,6 +60,20 @@ solvers
         tolerance       1e-06;
         relTol          0;
     }
+    
+    T
+    {
+        solver          PBiCGStab;
+        preconditioner  DILU;
+        tolerance       1e-8;
+        relTol          0.01;
+    }
+    
+    TFinal
+    {
+    	$T;
+    	relTol		0.0;
+    }
 }
 
 PIMPLE

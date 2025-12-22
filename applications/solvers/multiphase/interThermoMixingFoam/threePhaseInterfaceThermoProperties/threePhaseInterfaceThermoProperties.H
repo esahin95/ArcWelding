@@ -40,6 +40,8 @@ SourceFiles
 #include "incompressibleThreePhaseThermoMixture.H"
 #include "surfaceFields.H"
 
+#include "surfaceTensionModel.H"
+
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
@@ -59,16 +61,20 @@ class threePhaseInterfaceThermoProperties
         scalar cAlpha_;
 
         //- Surface tension 1-2
-        dimensionedScalar sigma12_;
+        autoPtr<surfaceTensionModel> sigma12_;
+        //dimensionedScalar sigma12_;
 
         //- Surface tension 1-3
-        dimensionedScalar sigma13_;
+        autoPtr<surfaceTensionModel> sigma13_;
+        //dimensionedScalar sigma13_;
 
         //- Stabilisation for normalisation of the interface normal
         const dimensionedScalar deltaN_;
 
         surfaceScalarField nHatf_;
         volScalarField K_;
+
+        volScalarField sigma_;
 
 
     // Private Member Functions
@@ -130,7 +136,7 @@ public:
             volScalarField limitedAlpha3(max(mixture_.alpha3(), scalar(0)));
 
             return
-                (limitedAlpha2*sigma12_ + limitedAlpha3*sigma13_)
+                (limitedAlpha2*sigma12_->sigma() + limitedAlpha3*sigma13_->sigma())
                /(limitedAlpha2 + limitedAlpha3 + small);
         }
 
@@ -148,6 +154,8 @@ public:
         void correct()
         {
             calculateK();
+
+            sigma_ = sigma() * max(1.0 - mixture_.alpha1(), 0.0);
         }
 
 
