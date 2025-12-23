@@ -188,6 +188,7 @@ Foam::incompressibleThreePhaseThermoMixture::nuf() const
     );
 }
 
+/*
 Foam::tmp<Foam::volScalarField>
 Foam::incompressibleThreePhaseThermoMixture::Cp() const
 {
@@ -195,10 +196,23 @@ Foam::incompressibleThreePhaseThermoMixture::Cp() const
     (
         "Cp",
         (
-            alpha1_*rho1_*thermo1_->Cp()
-            + alpha2_*rho2_*thermo2_->Cp()
-            + alpha3_*rho3_*thermo3_->Cp()
+              alpha1_ * rho1_ * thermo1_->Cp()
+            + alpha2_ * rho2_ * thermo2_->Cp()
+            + alpha3_ * rho3_ * thermo3_->Cp()
         ) / (alpha1_*rho1_ + alpha2_*rho2_ + alpha3_*rho3_)
+    );
+}
+*/
+
+Foam::tmp<Foam::volScalarField>
+Foam::incompressibleThreePhaseThermoMixture::Cp() const
+{
+    return volScalarField::New
+    (
+        "Cp",
+          alpha1_  * thermo1_->Cp()
+        + alpha2_  * thermo2_->Cp()
+        + alpha3_  * thermo3_->Cp()
     );
 }
 
@@ -208,12 +222,13 @@ Foam::incompressibleThreePhaseThermoMixture::kappa() const
     return volScalarField::New
     (
         "kappa",
-        alpha1_*thermo1_->kappa()
-        + alpha2_*thermo2_->kappa()
-        + alpha3_*thermo3_->kappa()
+          alpha1_ * thermo1_->kappa()
+        + alpha2_ * thermo2_->kappa()
+        + alpha3_ * thermo3_->kappa()
     );
 }
 
+/*
 Foam::tmp<Foam::volScalarField>
 Foam::incompressibleThreePhaseThermoMixture::beta() const
 {
@@ -221,10 +236,23 @@ Foam::incompressibleThreePhaseThermoMixture::beta() const
     (
         "beta",
         (
-            alpha1_*rho1_*thermo1_->beta()
-            + alpha2_*rho2_*thermo2_->beta()
-            + alpha3_*rho3_*thermo3_->beta()
+              alpha1_ * rho1_ * thermo1_->beta()
+            + alpha2_ * rho2_ * thermo2_->beta()
+            + alpha3_ * rho3_ * thermo3_->beta()
         ) / (alpha1_*rho1_ + alpha2_*rho2_ + alpha3_*rho3_)
+    );
+}
+*/
+
+Foam::tmp<Foam::volScalarField>
+Foam::incompressibleThreePhaseThermoMixture::beta() const
+{
+    return volScalarField::New
+    (
+        "beta",
+          alpha1_  * thermo1_->beta()
+        + alpha2_  * thermo2_->beta()
+        + alpha3_  * thermo3_->beta()
     );
 }
 
@@ -244,9 +272,15 @@ Foam::incompressibleThreePhaseThermoMixture::alphaSolid() const
     return volScalarField::New
     (
         "alphaSolid",
+        min
         (
-            alpha2_*thermo2_->alphaSolid() 
-          + alpha3_*thermo3_->alphaSolid()
+            scalar(1), 
+            max(
+                  alpha1_ * thermo1_->alphaSolid()
+                + alpha2_ * thermo2_->alphaSolid() 
+                + alpha3_ * thermo3_->alphaSolid(),
+                scalar(0)
+            )
         )
     );
 }
@@ -257,9 +291,11 @@ Foam::incompressibleThreePhaseThermoMixture::L() const
     return volScalarField::New
     (
         "L",
-        (
-            alpha2_*thermo2_->L()*thermo2_->alphaSolid() 
-          + alpha3_*thermo3_->L()*thermo3_->alphaSolid()
+        max(
+              alpha1_ * thermo1_->L() * thermo1_->alphaSolid()
+            + alpha2_ * thermo2_->L() * thermo2_->alphaSolid() 
+            + alpha3_ * thermo3_->L() * thermo3_->alphaSolid(),
+            scalar(0.0)
         )
     );
 }

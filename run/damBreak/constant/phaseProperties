@@ -16,7 +16,25 @@ FoamFile
 
 phases (air other water);
 
-// Surface tension coefficients
+// original
+sigma12 0.05;
+sigma13 0.04;
+
+
+// constant surface tension
+/*
+sigma12
+{
+    sigma 0.05;
+}
+sigma13
+{
+    sigma 0.04;
+}
+*/
+
+// temperature dependent surface tension
+/*
 sigma12         
 {
     sigma
@@ -50,6 +68,7 @@ sigma13
       }
     }
 }
+*/
 
 // Diffusivity between miscible phases
 D23             3e-09;

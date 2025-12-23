@@ -48,9 +48,24 @@ Foam::simpleThermoModel::simpleThermoModel(const fvMesh& mesh, const word& group
         mesh,
         beta0_
     ),
-    L_("L", dimensionSet(0, 2, -2, 0, 0), *this),
-    alphaSolidPtr_(Function1<scalar>::New("alphaSolid", *this))
-{}
+    L_("L", dimensionSet(0, 2, -2, 0, 0), this->lookupOrDefault("L", 0.0)),
+    alphaSolidPtr_(Function1<scalar>::New("alphaSolid", *this)),
+    alphaSolid_ 
+    (
+        IOobject 
+        (
+            IOobject::groupName("alphaSolid", group),
+            mesh.time().timeName(),
+            mesh,
+            IOobject::NO_READ,
+            IOobject::NO_WRITE
+        ),
+        mesh,
+        dimensionedScalar(dimless, 0.0)
+    )
+{
+    correct();
+}
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
@@ -75,28 +90,27 @@ Foam::simpleThermoModel::beta() const
 Foam::tmp<Foam::volScalarField>
 Foam::simpleThermoModel::alphaSolid() const
 {
-    tmp<volScalarField> talphaSolid
-    (
-        volScalarField::New("alphaSolid", mesh_, dimless)
-    );
-    volScalarField& alphaSolid = talphaSolid.ref();
-
-    const volScalarField& T = mesh_.lookupObject<volScalarField>("T");
-
-    alphaSolid.field() = alphaSolidPtr_->value(T.field());
-
-    volScalarField::Boundary& alphaSolidBf = alphaSolid.boundaryFieldRef();
-    const volScalarField::Boundary& TBf = T.boundaryField();
-
-    forAll(alphaSolidBf, patchI)
-    {
-        alphaSolidBf[patchI] = alphaSolidPtr_->value(TBf[patchI]);
-    }
-
-    return talphaSolid;
+    return alphaSolid_;
 }
 
 bool Foam::simpleThermoModel::read()
 {
     return physicalProperties::read();
+}
+
+void Foam::simpleThermoModel::correct()
+{
+    // temperature reference
+    const volScalarField& T = mesh_.lookupObject<volScalarField>("T");
+    const volScalarField::Boundary& TBf = T.boundaryField();
+
+    // correct internal fields
+    alphaSolid_.field() = alphaSolidPtr_->value(T.field());
+
+    // correct boundary fields
+    volScalarField::Boundary& alphaSolidBf = alphaSolid_.boundaryFieldRef();
+    forAll(alphaSolidBf, patchI)
+    {
+        alphaSolidBf[patchI] = alphaSolidPtr_->value(TBf[patchI]);
+    }
 }

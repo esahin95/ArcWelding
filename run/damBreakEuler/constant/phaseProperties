@@ -20,7 +20,7 @@ phases (water air);
 
 water
 {
-    type            pureIsothermalPhaseModel;
+    type            purePhaseModel;
     diameterModel   none;
 
     residualAlpha 1e-3;
@@ -28,7 +28,7 @@ water
 
 air
 {
-    type            pureIsothermalPhaseModel;
+    type            purePhaseModel;
     diameterModel   none;
 
     residualAlpha 1e-3;

@@ -4,15 +4,12 @@
     
     T.storePrevIter();
     while (pimple.correctNonOrthogonal())
-    {        
-        Info<<"Check dimensions: "<< endl;
-        Info<<"kappa: " << mixture.kappa().ref().dimensions() << endl;
-        
+    {                
         fvScalarMatrix TEqn
         (
             fvm::ddt(rhoCp, T)
             + fvm::div(rhoPhiCp, T)
-            - fvm::Sp(fvc::ddt(rhoCp) + fvc::div(rhoPhiCp), T)
+            - fvm::SuSp(fvc::ddt(rhoCp) + fvc::div(rhoPhiCp), T)
             - fvm::laplacian(mixture.kappa(), T)
             ==
             fvModels.source(rhoCp, T)
@@ -31,4 +28,6 @@
             T.relax();
         }
     }
+
+    alphaSolid == mixture.alphaSolid();
 }

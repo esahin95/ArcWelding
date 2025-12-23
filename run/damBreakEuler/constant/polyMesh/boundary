@@ -7,47 +7,49 @@
 \*---------------------------------------------------------------------------*/
 FoamFile
 {
-    format      ascii;
-    class       volScalarField;
-    object      T;
+    format      binary;
+    class       polyBoundaryMesh;
+    location    "constant/polyMesh";
+    object      boundary;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [0 0 0 1 0 0 0];
-
-internalField   uniform 300;
-
-boundaryField
-{
+5
+(
     leftWall
     {
-        type            fixedValue;
-        value		    uniform 300;
+        type            wall;
+        inGroups        List<word> 1(wall);
+        nFaces          50;
+        startFace       4432;
     }
-
     rightWall
     {
-        type            fixedValue;
-        value		    uniform 300;
+        type            wall;
+        inGroups        List<word> 1(wall);
+        nFaces          50;
+        startFace       4482;
     }
-
     lowerWall
     {
-        type            fixedValue;
-        value		    uniform 300;
+        type            wall;
+        inGroups        List<word> 1(wall);
+        nFaces          62;
+        startFace       4532;
     }
-
     atmosphere
     {
-        type            inletOutlet;
-        value		    uniform 300;
-        inletValue	    uniform 300;
+        type            patch;
+        nFaces          46;
+        startFace       4594;
     }
-
     defaultFaces
     {
         type            empty;
+        inGroups        List<word> 1(empty);
+        nFaces          4536;
+        startFace       4640;
     }
-}
+)
 
 // ************************************************************************* //

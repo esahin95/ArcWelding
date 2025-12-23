@@ -156,6 +156,20 @@ Info<< "Set temperature reference to " << T0.value() << endl;
 const dimensionedScalar DC("DC", dimless, pimple.dict().lookupOrDefault<scalar>("DC", 0.0));
 Info<< "Set permeability to " << DC.value() << endl;
 
+Info<<"Create solid fraction field"<<endl;
+volScalarField alphaSolid
+(
+    IOobject 
+    (
+        "alphaSolid",
+        runTime.timeName(),
+        mesh,
+        IOobject::READ_IF_PRESENT,
+        IOobject::AUTO_WRITE
+    ),
+    mixture.alphaSolid()
+);
+
 surfaceScalarField rhoPhiCp
 (
     "rhoPhiCp",

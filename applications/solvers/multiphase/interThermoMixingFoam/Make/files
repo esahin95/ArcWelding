@@ -1,3 +1,4 @@
+ErrorFunction/ErrorFunction1.C
 simpleThermoModel/simpleThermoModel.C
 incompressibleThreePhaseThermoMixture/incompressibleThreePhaseThermoMixture.C
 threePhaseInterfaceThermoProperties/threePhaseInterfaceThermoProperties.C

@@ -32,6 +32,8 @@ class simpleThermoModel
 
     autoPtr<Function1<scalar>> alphaSolidPtr_;
 
+    volScalarField alphaSolid_;
+
 public:
 
     simpleThermoModel(const fvMesh& mesh, const word& group);
@@ -51,8 +53,7 @@ public:
 
     virtual bool read();
 
-    virtual void correct()
-    {};
+    virtual void correct();
 
     tmp<volScalarField> Cp() const;
 

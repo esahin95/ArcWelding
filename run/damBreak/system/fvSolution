@@ -24,41 +24,29 @@ solvers
 
         solver          smoothSolver;
         smoother        GaussSeidel;
-        tolerance       1e-06;
+        tolerance       1e-08;
         relTol          0;
         nSweeps         1;
-    }
-
-    "pcorr.*"
-    {
-        solver          PCG;
-        preconditioner  DIC;
-        tolerance       1e-10;
-        relTol          0;
     }
 
     p_rgh
     {
         solver          PCG;
         preconditioner  DIC;
-        tolerance       1e-07;
-        relTol          0.05;
+        tolerance       1e-08;
+        relTol          0.01;
     }
 
     p_rghFinal
     {
-        solver          PCG;
-        preconditioner  DIC;
-        tolerance       1e-07;
+        $p_rgh;
         relTol          0;
     }
-
-    U
+    
+    "pcorr.*"
     {
-        solver          smoothSolver;
-        smoother        symGaussSeidel;
-        tolerance       1e-06;
-        relTol          0;
+        $p_rghFinal;
+        tolerance       1e-10;
     }
     
     T
@@ -79,7 +67,7 @@ solvers
 PIMPLE
 {
     momentumPredictor no;
-    nCorrectors     3;
+    nCorrectors     4;
     nNonOrthogonalCorrectors 0;
 }
 

@@ -16,14 +16,14 @@ FoamFile
 
 viscosityModel  constant;
 
-nu              1.48e-05;
-rho             1;
+nu              1.5e-05;
+rho             1.204;
 
-Cp		    1;
-kappa		2;
-beta		3;
-L           0;
+Cp		        1005;//1005;
+kappa		    0.0257;//0.0257;
+beta		    0;//3.43e-3;
 
+L               0;
 alphaSolid
 {
     type constant;

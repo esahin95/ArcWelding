@@ -198,9 +198,7 @@ Foam::threePhaseInterfaceThermoProperties::threePhaseInterfaceThermoProperties
         (
             "interfaceThermoProperties:sigma",
             mixture.alpha1().time().timeName(),
-            mixture.alpha1().mesh(),
-            IOobject::NO_READ,
-            IOobject::AUTO_WRITE
+            mixture.alpha1().mesh()
         ),
         mixture.alpha1().mesh(),
         dimensionedScalar(dimensionSet(1,0,-2,0,0), 0)
@@ -216,6 +214,7 @@ Foam::tmp<Foam::surfaceScalarField>
 Foam::threePhaseInterfaceThermoProperties::surfaceTensionForce() const
 {
     //return fvc::interpolate(sigmaK())*fvc::snGrad(mixture_.alpha1());
+    
     const volScalarField& alpha1 = mixture_.alpha1();
     
     // cell gradient
