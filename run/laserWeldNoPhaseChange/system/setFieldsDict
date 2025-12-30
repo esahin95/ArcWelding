@@ -29,6 +29,8 @@ regions
     	    volScalarFieldValue alpha.steel 1
     	);
     }
+    
+    #include "powderBedDict"
 );
 
 

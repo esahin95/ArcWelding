@@ -20,15 +20,15 @@ startFrom       startTime;
 
 startTime       0;
 
-stopAt          endTime;
+stopAt          nextWrite;
 
-endTime         0.0001;
+endTime         0.001;
 
 deltaT          1e-5;
 
 writeControl    adjustableRunTime;
 
-writeInterval   0.0001;
+writeInterval   0.00001;
 
 purgeWrite      0;
 
