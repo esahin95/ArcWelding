@@ -14,7 +14,7 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-application     interThermoMixingFoam;
+application     interMixingFoam;
 
 startFrom       startTime;
 
@@ -22,9 +22,9 @@ startTime       0;
 
 stopAt          endTime;
 
-endTime         2;
+endTime         0.5;
 
-deltaT          0.001;
+deltaT          1e-3;
 
 writeControl    adjustableRunTime;
 
@@ -32,7 +32,7 @@ writeInterval   0.05;
 
 purgeWrite      0;
 
-writeFormat     binary;
+writeFormat     ascii;
 
 writePrecision  6;
 
@@ -48,8 +48,16 @@ adjustTimeStep  yes;
 
 maxCo           0.5;
 maxAlphaCo      0.5;
+maxDi           1.0;
 
-maxDeltaT       1;
+maxDeltaT       1e-3;
 
 
 // ************************************************************************* //
+
+OptimisationSwitches
+{
+    fileHandler collated;
+    maxThreadFileBufferSize 2e9;
+    maxMasterFileBufferSize 2e9;
+}

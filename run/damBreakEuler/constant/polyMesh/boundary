@@ -7,7 +7,7 @@
 \*---------------------------------------------------------------------------*/
 FoamFile
 {
-    format      ascii;
+    format      binary;
     class       polyBoundaryMesh;
     location    "constant/polyMesh";
     object      boundary;

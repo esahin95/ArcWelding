@@ -76,7 +76,7 @@ solvers
         minIter         1;
     }
 
-    "e.*"
+    "h.*"
     {
         solver          smoothSolver;
         smoother        symGaussSeidel;

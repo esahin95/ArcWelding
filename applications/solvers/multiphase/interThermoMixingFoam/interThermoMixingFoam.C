@@ -69,6 +69,8 @@ int main(int argc, char *argv[])
         #include "setInitialDeltaT.H"
     }
 
+    const scalar maxDi(runTime.controlDict().lookupOrDefault<scalar>("maxDi", 1.0));
+
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
     Info<< "\nStarting time loop\n" << endl;
@@ -138,7 +140,13 @@ int main(int argc, char *argv[])
             while (pimple.correct())
             {
                 #include "pEqn.H"
+
+                #include "TEqn.H"
+
+                mixture.correct();
             }
+
+            //#include "TEqn.H"
 
             if (pimple.turbCorr())
             {

@@ -8,30 +8,46 @@
 FoamFile
 {
     format      ascii;
-    class       dictionary;
-    location    "system";
-    object      setFieldsDict;
+    class       volScalarField;
+    object      T;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-defaultFieldValues
-(
-    volScalarFieldValue alpha.steel 0
-);
+dimensions      [0 0 0 1 0 0 0];
 
-regions
-(   
-    boxToCell
+internalField   uniform 300;
+
+boundaryField
+{
+    leftWall
     {
-    	box (-1 -1 -1) (1.0 1.0 0.0);
-    	fieldValues
-    	(
-    	    volScalarFieldValue alpha.steel 1
-    	);
+        type            fixedValue;
+        value		    uniform 300;
     }
-    
-    #include "powderBedDict"
-);
 
+    rightWall
+    {
+        type            fixedValue;
+        value		    uniform 300;
+    }
+
+    lowerWall
+    {
+        type            fixedValue;
+        value		    uniform 300;
+    }
+
+    atmosphere
+    {
+        type            inletOutlet;
+        value		    uniform 300;
+        inletValue	    uniform 300;
+    }
+
+    defaultFaces
+    {
+        type            empty;
+    }
+}
 
 // ************************************************************************* //

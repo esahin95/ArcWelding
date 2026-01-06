@@ -40,6 +40,8 @@ SourceFiles
 #include "dimensionedScalar.H"
 #include "volFields.H"
 
+#include "simpleThermoModel.H"
+
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
@@ -76,6 +78,10 @@ class incompressibleThreePhaseThermoMixture
         dimensionedScalar rho1_;
         dimensionedScalar rho2_;
         dimensionedScalar rho3_;
+
+        autoPtr<simpleThermoModel> thermo1_;
+        autoPtr<simpleThermoModel> thermo2_;
+        autoPtr<simpleThermoModel> thermo3_;
 
 
     // Private Member Functions
@@ -217,10 +223,33 @@ public:
         //- Return the face-interpolated dynamic laminar viscosity
         tmp<surfaceScalarField> nuf() const;
 
-        //- Correct the laminar viscosity
+        //- Return the mixture heat capacity
+        tmp<volScalarField> Cp() const;
+
+        //- Return the mixture heat conduction
+        tmp<volScalarField> kappa() const;
+
+        //- Return the mixture thermal expansion coefficient
+        tmp<volScalarField> beta() const;
+
+        //- Return the mixture density
+        tmp<volScalarField> rho() const;
+
+        //- Return the mixture solid fraction
+        tmp<volScalarField> alphaSolid() const;
+
+        //- Return the mixture latent heat
+        tmp<volScalarField> L() const;
+
+        //- Correct the laminar viscosity and thermo models
         void correct()
         {
             calcNu();
+            
+            // correct the thermo Models
+            thermo1_->correct();
+            thermo2_->correct();
+            thermo3_->correct();
         }
 
         //- Read base phaseProperties dictionary
