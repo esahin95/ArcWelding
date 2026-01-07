@@ -201,18 +201,13 @@ Foam::threePhaseInterfaceThermoProperties::threePhaseInterfaceThermoProperties
 Foam::tmp<Foam::surfaceScalarField>
 Foam::threePhaseInterfaceThermoProperties::surfaceTensionForce() const
 {
-    //return fvc::interpolate(sigmaK())*fvc::snGrad(mixture_.alpha1());
-    
+    // interface normal
     const volScalarField& alpha1 = mixture_.alpha1();
-    
-    // cell gradient
     volVectorField gradAlpha(fvc::grad(alpha1));
-
-    // unit normal
     volVectorField n(gradAlpha/(mag(gradAlpha) + deltaN_));
 
-    // buffer mixture surface tension
-    volScalarField tsigma = sigma();
+    // surface tension
+    volScalarField tsigma(sigma());
     
     // surface tension force
     return 
@@ -222,7 +217,6 @@ Foam::threePhaseInterfaceThermoProperties::surfaceTensionForce() const
         - fvc::interpolate(n & fvc::grad(tsigma)) * fvc::snGrad(alpha1)
     );
 }
-
 
 Foam::tmp<Foam::volScalarField>
 Foam::threePhaseInterfaceThermoProperties::nearInterface() const

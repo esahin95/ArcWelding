@@ -56,6 +56,7 @@ const dimensionedScalar& rho3 = mixture.rho3();
 
 dimensionedScalar D23("D23", dimViscosity, mixture);
 
+
 // Need to store rho for ddt(rho, U)
 volScalarField rho
 (
@@ -99,6 +100,20 @@ surfaceScalarField rhoPhi
         IOobject::NO_WRITE
     ),
     rho1*phi
+);
+
+// flux is reset before it is used in the T equation
+surfaceScalarField rhoPhiCp
+(
+    IOobject
+    (
+        "rhoPhiCp",
+        runTime.timeName(),
+        mesh,
+        IOobject::NO_READ,
+        IOobject::NO_WRITE
+    ),
+    rhoPhi * fvc::interpolate(mixture.Cp())
 );
 
 
@@ -160,24 +175,3 @@ const dimensionedScalar DC
     pimple.dict().lookupOrDefault<scalar>("DC", 0.0)
 );
 Info<< "Set permeability constant to " << DC.value() << endl;
-
-Info<<"Create solid fraction field"<<endl;
-volScalarField alphaSolid
-(
-    IOobject 
-    (
-        "alphaSolid",
-        runTime.timeName(),
-        mesh,
-        IOobject::READ_IF_PRESENT,
-        IOobject::AUTO_WRITE
-    ),
-    mixture.alphaSolid()
-);
-
-// reset in TEqn.H
-surfaceScalarField rhoPhiCp
-(
-    "rhoPhiCp",
-    rhoPhi * fvc::interpolate(mixture.Cp())
-);

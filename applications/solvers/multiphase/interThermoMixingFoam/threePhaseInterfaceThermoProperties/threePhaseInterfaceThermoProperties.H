@@ -62,11 +62,9 @@ class threePhaseInterfaceThermoProperties
 
         //- Surface tension 1-2
         autoPtr<surfaceTensionModel> sigma12_;
-        //dimensionedScalar sigma12_;
 
         //- Surface tension 1-3
         autoPtr<surfaceTensionModel> sigma13_;
-        //dimensionedScalar sigma13_;
 
         //- Stabilisation for normalisation of the interface normal
         const dimensionedScalar deltaN_;

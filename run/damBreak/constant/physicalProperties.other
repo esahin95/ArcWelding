@@ -17,7 +17,7 @@ FoamFile
 viscosityModel  constant;
 
 nu              5.9e-5;
-rho             850;//850;
+rho             995;//850;
 
 Cp		        2000;
 kappa		    0.13;
@@ -27,7 +27,7 @@ L               100;
 alphaSolid
 {
     type constant;
-    value 1;
+    value 0;
 }
 
 // ************************************************************************* //

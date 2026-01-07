@@ -2,16 +2,11 @@
 #define simpleThermoModel_H
 
 #include "physicalProperties.H"
-
 #include "volFields.H"
-
 #include "Function1.H"
 
 namespace Foam
 {
-
-//Forward declaration of classes
-//class FvMesh;
 
 class simpleThermoModel
 :
@@ -29,9 +24,7 @@ class simpleThermoModel
     volScalarField beta_;
 
     dimensionedScalar L_;
-
     autoPtr<Function1<scalar>> alphaSolidPtr_;
-
     volScalarField alphaSolid_;
 
 public:
@@ -55,13 +48,25 @@ public:
 
     virtual void correct();
 
-    tmp<volScalarField> Cp() const;
+    tmp<volScalarField> Cp() const
+    {
+        return Cp_;
+    };
 
-    tmp<volScalarField> kappa() const;
+    tmp<volScalarField> kappa() const
+    {
+        return kappa_;
+    };
 
-    tmp<volScalarField> beta() const;
+    tmp<volScalarField> beta() const
+    {
+        return beta_;
+    };
 
-    tmp<volScalarField> alphaSolid() const;
+    tmp<volScalarField> alphaSolid() const
+    {
+        return alphaSolid_;
+    };
 
     const dimensionedScalar& L() const
     {

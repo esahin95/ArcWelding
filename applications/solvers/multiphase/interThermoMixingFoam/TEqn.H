@@ -1,6 +1,8 @@
 {        
     rhoCp == rho * mixture.Cp();
     rhoPhiCp == rhoPhi * fvc::interpolate(mixture.Cp());
+
+    volScalarField L(mixture.L());
     
     T.storePrevIter();
     while (pimple.correctNonOrthogonal())
@@ -13,7 +15,7 @@
             - fvm::laplacian(mixture.kappa(), T)
             ==
             fvModels.source(rhoCp, T)
-            + fvc::ddt(rho, mixture.L()()) + fvc::div(rhoPhi, mixture.L(), "div(rhoPhiCp,T)")
+            + fvc::ddt(rho, L) + fvc::div(rhoPhi, L, "div(rhoPhiCp,T)")
         );
 
         TEqn.relax();
@@ -29,6 +31,4 @@
             T.relax();
         }
     }
-
-    alphaSolid == mixture.alphaSolid();
 }

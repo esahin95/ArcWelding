@@ -69,30 +69,6 @@ Foam::simpleThermoModel::simpleThermoModel(const fvMesh& mesh, const word& group
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-Foam::tmp<Foam::volScalarField>
-Foam::simpleThermoModel::Cp() const
-{
-    return Cp_;
-}
-
-Foam::tmp<Foam::volScalarField>
-Foam::simpleThermoModel::kappa() const
-{
-    return kappa_;
-}
-
-Foam::tmp<Foam::volScalarField>
-Foam::simpleThermoModel::beta() const
-{
-    return beta_;
-}
-
-Foam::tmp<Foam::volScalarField>
-Foam::simpleThermoModel::alphaSolid() const
-{
-    return alphaSolid_;
-}
-
 bool Foam::simpleThermoModel::read()
 {
     return physicalProperties::read();

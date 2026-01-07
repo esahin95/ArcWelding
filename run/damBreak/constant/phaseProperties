@@ -26,11 +26,11 @@ sigma13 0.04;
 
 sigma12
 {
-    sigma 0.5;
+    sigma 0.05;
 }
 sigma13
 {
-    sigma 0.4;
+    sigma 0.05;
 }
 
 

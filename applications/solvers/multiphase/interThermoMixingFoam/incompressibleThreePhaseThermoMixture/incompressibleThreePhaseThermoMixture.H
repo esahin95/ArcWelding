@@ -83,12 +83,20 @@ class incompressibleThreePhaseThermoMixture
         autoPtr<simpleThermoModel> thermo2_;
         autoPtr<simpleThermoModel> thermo3_;
 
+        volScalarField Cp_;
+        volScalarField kappa_;
+        volScalarField beta_;
+        volScalarField alphaSolid_;
+        volScalarField L_;
+
 
     // Private Member Functions
 
         //- Calculate and return the laminar viscosity
         void calcNu();
 
+        //- Calculate and return the thermophysical state variables
+        void calcThermo();
 
 public:
 
@@ -224,32 +232,40 @@ public:
         tmp<surfaceScalarField> nuf() const;
 
         //- Return the mixture heat capacity
-        tmp<volScalarField> Cp() const;
+        tmp<volScalarField> Cp() const
+        {
+            return Cp_;
+        }
 
         //- Return the mixture heat conduction
-        tmp<volScalarField> kappa() const;
+        tmp<volScalarField> kappa() const
+        {
+            return kappa_;
+        }
 
         //- Return the mixture thermal expansion coefficient
-        tmp<volScalarField> beta() const;
-
-        //- Return the mixture density
-        tmp<volScalarField> rho() const;
+        tmp<volScalarField> beta() const
+        {
+            return beta_;
+        }
 
         //- Return the mixture solid fraction
-        tmp<volScalarField> alphaSolid() const;
+        tmp<volScalarField> alphaSolid() const
+        {
+            return alphaSolid_;
+        }
 
         //- Return the mixture latent heat
-        tmp<volScalarField> L() const;
+        tmp<volScalarField> L() const
+        {
+            return L_;
+        }
 
-        //- Correct the laminar viscosity and thermo models
+        //- Correct the laminar viscosity
         void correct()
         {
             calcNu();
-            
-            // correct the thermo Models
-            thermo1_->correct();
-            thermo2_->correct();
-            thermo3_->correct();
+            calcThermo();
         }
 
         //- Read base phaseProperties dictionary

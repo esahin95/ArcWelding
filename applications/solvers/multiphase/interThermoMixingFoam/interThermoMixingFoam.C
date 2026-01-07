@@ -22,10 +22,10 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Application
-    interMixingFoam
+    interThermoMixingFoam
 
 Description
-    Solver for 3 incompressible fluids, two of which are miscible, using a VOF
+    Solver for 3 incompressible non-isothermal fluids, two of which are miscible, using a VOF
     method to capture the interface, with optional mesh motion and mesh topology
     changes including adaptive re-meshing.
 
@@ -69,6 +69,7 @@ int main(int argc, char *argv[])
         #include "setInitialDeltaT.H"
     }
 
+    // Read the maximum thermal diffusion number
     const scalar maxDi(runTime.controlDict().lookupOrDefault<scalar>("maxDi", 1.0));
 
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -142,7 +143,13 @@ int main(int argc, char *argv[])
                 #include "pEqn.H"
             }
 
-            #include "TEqn.H"
+            // --- Temperature corrector loop
+            while (pimple.correct())
+            {
+                #include "TEqn.H"
+
+                mixture.correct();
+            }
 
             if (pimple.turbCorr())
             {

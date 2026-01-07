@@ -4,6 +4,7 @@ if (adjustTimeStep)
     scalar meanDiNum = 0.0;
 
     {
+        // Energy transport over faces
         scalarField DiNumf
         (
             fvc::surfaceSum
@@ -14,6 +15,7 @@ if (adjustTimeStep)
             )().primitiveField()
         );
 
+        // Energy saved in volume
         scalarField DiNumv
         (
             mesh.V().field() * rho.field() * mixture.Cp()().field()
@@ -32,7 +34,7 @@ if (adjustTimeStep)
         (
             maxCo/(CoNum + small), 
             maxAlphaCo/(alphaCoNum + small)
-        ),
+        ), 
         maxDi/(DiNum + small)
     ) * runTime.deltaTValue();
     
