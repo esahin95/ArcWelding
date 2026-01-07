@@ -23,7 +23,7 @@ Cp		        2000;
 kappa		    0.13;
 beta		    7.0e-4;
 
-L               0;
+L               100;
 alphaSolid
 {
     type constant;

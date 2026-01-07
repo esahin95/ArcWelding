@@ -5,8 +5,10 @@
         fvm::ddt(rho, U) + fvm::div(rhoPhi, U)
       + MRF.DDt(rho, U)
       + turbulence->divDevTau(rho, U)
+      + fvm::Sp(DC * sqr(alphaSolid) / (pow3(1 - alphaSolid) + scalar(0.001)), U)
      ==
         fvModels.source(rho, U)
+      - mixture.beta() * (T - T0) * rho * g
     );
 
     UEqn.relax();

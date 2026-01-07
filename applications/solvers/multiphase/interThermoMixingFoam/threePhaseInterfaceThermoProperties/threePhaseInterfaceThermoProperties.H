@@ -74,9 +74,6 @@ class threePhaseInterfaceThermoProperties
         surfaceScalarField nHatf_;
         volScalarField K_;
 
-        volScalarField sigma_;
-
-
     // Private Member Functions
 
         //- Correction for the boundary condition on the unit normal nHat on
@@ -154,8 +151,6 @@ public:
         void correct()
         {
             calculateK();
-
-            sigma_ = sigma() * max(1.0 - mixture_.alpha1(), 0.0);
         }
 
 

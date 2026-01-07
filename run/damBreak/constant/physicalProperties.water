@@ -23,7 +23,7 @@ Cp		        4182;
 kappa	        0.598;
 beta	        1e-4;
 
-L               0;
+L               150;
 alphaSolid
 {
     type errorFunction;

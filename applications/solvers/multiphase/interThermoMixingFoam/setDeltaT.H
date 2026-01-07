@@ -1,16 +1,30 @@
 if (adjustTimeStep)
 {
-    const volScalarField::Internal DiNumfv
-    (
-        fvc::surfaceSum
+    scalar DiNum = 0.0;
+    scalar meanDiNum = 0.0;
+
+    {
+        scalarField DiNumf
         (
-            mesh.magSf()
-          * fvc::interpolate(mixture.kappa())
-          * mesh.surfaceInterpolation::deltaCoeffs()
-        )()() / (mesh.V() * rho * mixture.Cp().ref()) * runTime.deltaT()
-    );
-    scalar DiNum(gMax(DiNumfv));
-    Info<< "Diffusion number maximum: " << DiNum << endl;
+            fvc::surfaceSum
+            (
+                  mesh.magSf() 
+                * fvc::interpolate(mixture.kappa()) 
+                * mesh.surfaceInterpolation::deltaCoeffs()
+            )().primitiveField()
+        );
+
+        scalarField DiNumv
+        (
+            mesh.V().field() * rho.field() * mixture.Cp()().field()
+        );
+
+        DiNum = gMax(DiNumf / DiNumv) * runTime.deltaTValue();
+        meanDiNum = gSum(DiNumf) / gSum(DiNumv) * runTime.deltaTValue();
+    }
+
+    Info<< "Diffusion Number mean: " << meanDiNum
+        << " max: " << DiNum << endl;
     
     scalar deltaT = min
     (

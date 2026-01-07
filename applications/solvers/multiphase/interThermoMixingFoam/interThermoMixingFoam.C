@@ -140,13 +140,9 @@ int main(int argc, char *argv[])
             while (pimple.correct())
             {
                 #include "pEqn.H"
-
-                #include "TEqn.H"
-
-                mixture.correct();
             }
 
-            //#include "TEqn.H"
+            #include "TEqn.H"
 
             if (pimple.turbCorr())
             {

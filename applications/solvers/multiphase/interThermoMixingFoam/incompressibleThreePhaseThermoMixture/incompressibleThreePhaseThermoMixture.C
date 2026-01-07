@@ -285,13 +285,29 @@ Foam::incompressibleThreePhaseThermoMixture::alphaSolid() const
     );
 }
 
+/*
+Foam::tmp<Foam::volScalarField>
+Foam::incompressibleThreePhaseThermoMixture::alphaSolid() const
+{
+    return volScalarField::New
+    (
+        "alphaSolid", 
+          min(scalar(1), max(scalar(0), alpha1_)) * thermo1_->alphaSolid()
+        + min(scalar(1), max(scalar(0), alpha2_)) * thermo2_->alphaSolid()
+        + min(scalar(1), max(scalar(0), alpha3_)) * thermo3_->alphaSolid()
+    );
+}
+*/
+
+/*
 Foam::tmp<Foam::volScalarField>
 Foam::incompressibleThreePhaseThermoMixture::L() const
 {
     return volScalarField::New
     (
         "L",
-        max(
+        max
+        (
               alpha1_ * thermo1_->L() * thermo1_->alphaSolid()
             + alpha2_ * thermo2_->L() * thermo2_->alphaSolid() 
             + alpha3_ * thermo3_->L() * thermo3_->alphaSolid(),
@@ -299,6 +315,20 @@ Foam::incompressibleThreePhaseThermoMixture::L() const
         )
     );
 }
+*/
+
+Foam::tmp<Foam::volScalarField>
+Foam::incompressibleThreePhaseThermoMixture::L() const
+{
+    return volScalarField::New
+    (
+        "L", 
+          min(scalar(1), max(scalar(0), alpha1_)) * thermo1_->L() * thermo1_->alphaSolid()
+        + min(scalar(1), max(scalar(0), alpha2_)) * thermo1_->L() * thermo2_->alphaSolid()
+        + min(scalar(1), max(scalar(0), alpha3_)) * thermo1_->L() * thermo3_->alphaSolid()
+    );
+}
+
 
 bool Foam::incompressibleThreePhaseThermoMixture::read()
 {

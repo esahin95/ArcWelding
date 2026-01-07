@@ -14,7 +14,7 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-application     interMixingFoam;
+application     interThermoMixingFoam;
 
 startFrom       startTime;
 
@@ -22,13 +22,13 @@ startTime       0;
 
 stopAt          endTime;
 
-endTime         0.5;
+endTime         0.5e-0;
 
-deltaT          1e-3;
+deltaT          1e-4;
 
 writeControl    adjustableRunTime;
 
-writeInterval   0.05;
+writeInterval   0.5e-1;
 
 purgeWrite      0;
 
@@ -46,11 +46,11 @@ runTimeModifiable yes;
 
 adjustTimeStep  yes;
 
-maxCo           0.5;
-maxAlphaCo      0.5;
+maxCo           0.2;
+maxAlphaCo      0.2;
 maxDi           1.0;
 
-maxDeltaT       1e-3;
+maxDeltaT       1e-2;
 
 
 // ************************************************************************* //
@@ -60,4 +60,32 @@ OptimisationSwitches
     fileHandler collated;
     maxThreadFileBufferSize 2e9;
     maxMasterFileBufferSize 2e9;
+}
+
+functions
+{
+    divU
+    {
+        type            div;
+        libs            ("libfieldFunctionObjects.so");
+
+        writeControl    writeTime;
+        writeFields     true;
+        regionType      all;
+
+        field           phi;
+    }
+
+    maxValue
+    {
+        type            volFieldValue;
+        libs            ("libfieldFunctionObjects.so");
+        log             true;
+        writeControl    writeTime;
+        writeFields     false;
+        regionType      all;
+        operation       maxMag;
+
+        fields (p_rgh U T div(phi));
+    }
 }

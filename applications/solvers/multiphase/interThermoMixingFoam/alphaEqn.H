@@ -208,4 +208,10 @@
         << "  Min(" << alpha2.name() << ") = " << min(alpha2).value()
         << "  Max(" << alpha2.name() << ") = " << max(alpha2).value()
         << endl;
+
+    Info<< "Other phase volume fraction = "
+        << alpha3.weightedAverage(mesh.V()).value()
+        << "  Min(" << alpha3.name() << ") = " << min(alpha3).value()
+        << "  Max(" << alpha3.name() << ") = " << max(alpha3).value()
+        << endl;
 }

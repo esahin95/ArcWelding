@@ -190,18 +190,6 @@ Foam::threePhaseInterfaceThermoProperties::threePhaseInterfaceThermoProperties
         ),
         mixture.alpha1().mesh(),
         dimensionedScalar(dimless/dimLength, 0)
-    ),
-
-    sigma_
-    (
-        IOobject
-        (
-            "interfaceThermoProperties:sigma",
-            mixture.alpha1().time().timeName(),
-            mixture.alpha1().mesh()
-        ),
-        mixture.alpha1().mesh(),
-        dimensionedScalar(dimensionSet(1,0,-2,0,0), 0)
     )
 {
     calculateK();

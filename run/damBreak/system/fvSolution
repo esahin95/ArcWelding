@@ -26,14 +26,14 @@ solvers
         smoother        GaussSeidel;
         tolerance       1e-08;
         relTol          0;
-        nSweeps         1;
+        nSweeps         4;
     }
 
     p_rgh
     {
         solver          PCG;
         preconditioner  DIC;
-        tolerance       1e-08;
+        tolerance       1e-10;
         relTol          0.01;
     }
 
@@ -67,8 +67,10 @@ solvers
 PIMPLE
 {
     momentumPredictor no;
-    nCorrectors     4;
+    nCorrectors     3;
     nNonOrthogonalCorrectors 0;
+
+    DC 10000;
 }
 
 

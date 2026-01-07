@@ -16,8 +16,8 @@ FoamFile
 
 defaultFieldValues
 (
-    volScalarFieldValue alpha.air 0
-    volScalarFieldValue alpha.other 1
+    volScalarFieldValue alpha.air 1
+    volScalarFieldValue alpha.other 0
     volScalarFieldValue alpha.water 0
 );
 
@@ -25,7 +25,7 @@ regions
 (
     boxToCell
     {
-        box (0 0 -1) (0.1461 0.292 1);
+        box (0 0 -1) (0.1461 0.25 1);
         fieldValues
         (
             volScalarFieldValue alpha.air 0
@@ -35,11 +35,11 @@ regions
     }
     boxToCell
     {
-        box (0.1461 0.05 -1) (1 1 1);
+        box (0.1461 0 -1) (1 0.05 1);
         fieldValues
         (
-            volScalarFieldValue alpha.air 1
-            volScalarFieldValue alpha.other 0
+            volScalarFieldValue alpha.air 0
+            volScalarFieldValue alpha.other 1
             volScalarFieldValue alpha.water 0
         );
     }

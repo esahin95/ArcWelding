@@ -153,8 +153,13 @@ const dimensionedScalar T0("T0", dimTemperature, pimple.dict().lookupOrDefault<s
 Info<< "Set temperature reference to " << T0.value() << endl;
 
 // numerical parameter for solidification
-const dimensionedScalar DC("DC", dimless, pimple.dict().lookupOrDefault<scalar>("DC", 0.0));
-Info<< "Set permeability to " << DC.value() << endl;
+const dimensionedScalar DC
+(
+    "DC", 
+    dimensionSet(1,-3,-1,0,0), 
+    pimple.dict().lookupOrDefault<scalar>("DC", 0.0)
+);
+Info<< "Set permeability constant to " << DC.value() << endl;
 
 Info<<"Create solid fraction field"<<endl;
 volScalarField alphaSolid
@@ -170,8 +175,9 @@ volScalarField alphaSolid
     mixture.alphaSolid()
 );
 
+// reset in TEqn.H
 surfaceScalarField rhoPhiCp
 (
     "rhoPhiCp",
-    fvc::interpolate(rhoCp) * phi
+    rhoPhi * fvc::interpolate(mixture.Cp())
 );

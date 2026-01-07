@@ -1,12 +1,12 @@
 EXE_INC = \
+	-I./simpleThermoModel \
+    -I./incompressibleThreePhaseThermoMixture \
+    -I./threePhaseInterfaceThermoProperties \
+	-I./immiscibleIncompressibleThreePhaseThermoMixture \
     -I$(LIB_SRC)/physicalProperties/lnInclude \
     -I$(LIB_SRC)/twoPhaseModels/twoPhaseMixture/lnInclude \
     -I$(LIB_SRC)/twoPhaseModels/interfaceProperties/lnInclude \
     -I$(LIB_SRC)/twoPhaseModels/twoPhaseProperties/alphaContactAngle/alphaContactAngle \
-    -I./simpleThermoModel \
-    -I./immiscibleIncompressibleThreePhaseThermoMixture \
-    -I./incompressibleThreePhaseThermoMixture \
-    -I./threePhaseInterfaceThermoProperties \
     -I$(LIB_SRC)/MomentumTransportModels/momentumTransportModels/lnInclude \
     -I$(LIB_SRC)/MomentumTransportModels/incompressible/lnInclude \
     -I$(LIB_SRC)/finiteVolume/lnInclude \

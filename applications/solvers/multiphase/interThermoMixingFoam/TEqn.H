@@ -13,6 +13,7 @@
             - fvm::laplacian(mixture.kappa(), T)
             ==
             fvModels.source(rhoCp, T)
+            + fvc::ddt(rho, mixture.L()()) + fvc::div(rhoPhi, mixture.L(), "div(rhoPhiCp,T)")
         );
 
         TEqn.relax();

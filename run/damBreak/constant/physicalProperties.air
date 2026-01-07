@@ -19,8 +19,8 @@ viscosityModel  constant;
 nu              1.5e-05;
 rho             1.204;
 
-Cp		        1005;//1005;
-kappa		    0.0257;//0.0257;
+Cp		        1005;
+kappa		    0.0257;
 beta		    0;//3.43e-3;
 
 L               0;
