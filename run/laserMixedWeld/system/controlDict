@@ -1,0 +1,108 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  9
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      controlDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+application     interThermoMixingFoam;
+
+startFrom       latestTime;
+
+startTime       0;
+
+stopAt          endTime;
+
+endTime         5e-9;//1e-3;
+
+deltaT          1e-9;
+
+writeControl    adjustableRunTime;
+
+writeInterval   1e-9;//1e-5;
+
+purgeWrite      0;
+
+writeFormat     binary;
+
+writePrecision  6;
+
+writeCompression off;
+
+timeFormat      general;
+
+timePrecision   6;
+
+runTimeModifiable yes;
+
+adjustTimeStep  yes;
+
+maxCo           0.2;
+maxAlphaCo      0.2;
+maxDi           100.0;
+
+maxDeltaT       2e-8;
+
+libs
+(
+    "libspheresToCell.so"
+);
+
+
+// ************************************************************************* //
+
+OptimisationSwitches
+{
+    fileHandler collated;
+}
+
+functions
+{
+    divU
+    {
+        type            div;
+        libs            ("libfieldFunctionObjects.so");
+
+        writeControl    writeTime;
+        writeFields     true;
+        regionType      all;
+
+        field           phi;
+    }
+    
+    probes
+    {
+        type            probes;
+        libs            ("libsampling.so");
+        writeControl    timeStep;
+        writeInterval   1;
+        probeLocations
+        (
+            (100e-6 400e-6 -50e-6)
+        );
+        fixedLocations  true;
+        fields (T);
+    }
+
+    maxValue
+    {
+        type            volFieldValue;
+        libs            ("libfieldFunctionObjects.so");
+        log             true;
+        writeControl    timeStep;
+        writeFields     false;
+        regionType      all;
+        operation       maxMag;
+
+        fields (p_rgh U T div(phi));
+    }
+}

@@ -1,0 +1,36 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  10
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    location    "constant";
+    object      phaseProperties;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+phases          (argon steel copper);
+
+// surface tension between argon and steel
+sigma12
+{
+    type constant;
+    sigma 0.05;
+}
+
+// surface tension between argon and copper
+sigma13
+{
+    type constant;
+    sigma 0.04;
+}
+
+// Diffusivity between miscible phases
+D23 3e-05;
+
+// ************************************************************************* //

@@ -85,6 +85,7 @@ void Foam::fv::laserDTRM::update() const
     // populate cloud
     vector d;
     scalar r;
+    Cloud<laserParticle> cloud_(mesh(), "CloudDTRM", IDLList<laserParticle>());
     for (int i=0; i < nRays_; i++)
     {        
         // sample position
@@ -109,7 +110,7 @@ void Foam::fv::laserDTRM::update() const
             Info << "Cannot find owner cell for position " << d << endl;
         }
     }
-    const volScalarField& alpha1 = mesh().lookupObject<const volScalarField>("alpha.steel");
+    const volScalarField& alpha1 = mesh().lookupObject<const volScalarField>(phaseName_);
 
     interpolationCellPoint<scalar> alpha1Interp(alpha1);
     interpolationCellPoint<vector> nHatInterp(fvc::grad(alpha1));
@@ -150,11 +151,16 @@ void Foam::fv::laserDTRM::update() const
         
         if (Pstream::master())
         {           
-            fileName outputPath(mesh().time().globalPath()/mesh().time().timeName());
+            fileName outputPath
+            (
+                mesh().time().globalPath()/"postProcessing"/name()
+            );
+            mkDir(outputPath);
+
             formatterPtr_->write
             (
                 outputPath,
-                IOobject::groupName(name(), "rayTracer"),
+                IOobject::groupName("rayTracer", mesh().time().timeName()),
                 coordSet(allTracks, word::null, allPositions),
                 "Power",
                 allPowers
@@ -189,7 +195,8 @@ Foam::fv::laserDTRM::laserDTRM
     relax_(dict.lookupOrDefault("relax", 1.0)),
     a_(dict.lookupOrDefault("absorption", 1.0)),
     maxTrackLength_(dict.lookupOrDefault("maxTrackLength", mesh.time().deltaTValue())),
-    cloud_(mesh, "cloudDTRM", IDLList<laserParticle>()),
+    phaseName_(IOobject::groupName("alpha", dict.lookup("phase"))),
+    //cloud_(mesh, "cloudDTRM", IDLList<laserParticle>()),
     lPower_
     (
         IOobject

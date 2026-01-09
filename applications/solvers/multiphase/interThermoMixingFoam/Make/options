@@ -11,7 +11,8 @@ EXE_INC = \
     -I$(LIB_SRC)/MomentumTransportModels/incompressible/lnInclude \
     -I$(LIB_SRC)/finiteVolume/lnInclude \
     -I$(LIB_SRC)/meshTools/lnInclude \
-    -I$(LIB_SRC)/sampling/lnInclude
+    -I$(LIB_SRC)/sampling/lnInclude \
+	-I$(WM_PROJECT_USER_DIR)/src/fvModels/derived/laserDTRM/lnInclude
 
 EXE_LIBS = \
     -ltwoPhaseMixture \
@@ -23,4 +24,6 @@ EXE_LIBS = \
     -lmeshTools \
     -lfvModels \
     -lfvConstraints \
-    -lsampling
+    -lsampling \
+	-L$(FOAM_USER_LIBBIN) \
+	-llaserDTRM

@@ -23,6 +23,22 @@ defaultFieldValues
 
 regions
 (
+    /*
+    spheresToCell
+    {
+        data
+        (
+            0.0 0.0 0.0 0.1 -1
+            0.2 0.0 0.0 0.1 -1
+        );
+        fieldValues
+        (
+            volScalarFieldValue alpha.air 0
+            volScalarFieldValue alpha.other 0.5
+            volScalarFieldValue alpha.water 0.5
+        );
+    }
+    */
     boxToCell
     {
         box (0 0 -1) (0.1461 0.25 1);

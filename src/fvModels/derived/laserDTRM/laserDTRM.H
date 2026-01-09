@@ -84,9 +84,12 @@ class laserDTRM
         const scalar a_;
         const scalar maxTrackLength_;
 
+        //- Reference phase name
+        const word phaseName_;
+
 
         //- The lagrangian cloud
-        mutable Cloud<laserParticle> cloud_;
+        //mutable Cloud<laserParticle> cloud_;
 
         // volume heat source
         mutable volScalarField lPower_;

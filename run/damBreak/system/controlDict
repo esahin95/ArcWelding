@@ -20,7 +20,7 @@ startFrom       startTime;
 
 startTime       0;
 
-stopAt          endTime;
+stopAt          nextWrite;
 
 endTime         1.0e-0;
 
@@ -28,11 +28,11 @@ deltaT          1e-4;
 
 writeControl    adjustableRunTime;
 
-writeInterval   1e-2;
+writeInterval   1e-4;
 
 purgeWrite      0;
 
-writeFormat     binary;
+writeFormat     ascii;
 
 writePrecision  6;
 
@@ -51,6 +51,11 @@ maxAlphaCo      0.2;
 maxDi           1.0;
 
 maxDeltaT       1e-3;
+
+libs
+(
+    "libspheresToCell.so"
+);
 
 
 // ************************************************************************* //

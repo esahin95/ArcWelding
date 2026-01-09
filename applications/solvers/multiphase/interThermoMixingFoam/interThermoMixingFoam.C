@@ -144,7 +144,7 @@ int main(int argc, char *argv[])
             }
 
             // --- Temperature corrector loop
-            while (pimple.correct())
+            //while (pimple.correct())
             {
                 #include "TEqn.H"
 

@@ -66,12 +66,12 @@ bool Foam::laserParticle::move
         // crossed interface
         const tetIndices tetIs = this->currentTetIndices();
         scalar alpha1c = td.alpha1Interp().interpolate(this->coordinates(), tetIs);
-        if (alpha1c > 0.5)
+        if (alpha1c < 0.5)
         {            
             // check reflection
             vector nHatc = normalised(td.nHatInterp().interpolate(this->coordinates(), tetIs));
             scalar Un = U_ & nHatc;
-            if (Un > 0)
+            if (Un < 0)
             {
                 // reflection
                 td.lPower(cell()) += a_ * d();
