@@ -65,6 +65,9 @@ Foam::simpleThermoModel::simpleThermoModel(const fvMesh& mesh, const word& group
     )
 {
     correct();
+
+    // Need to store previous timestep for alphaSolid?
+    alphaSolid_.oldTime();
 }
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //

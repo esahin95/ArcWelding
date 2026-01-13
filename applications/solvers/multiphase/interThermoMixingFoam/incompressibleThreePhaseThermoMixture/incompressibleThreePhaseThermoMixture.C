@@ -76,6 +76,7 @@ void Foam::incompressibleThreePhaseThermoMixture::calcThermo()
     );
     alphaSolid_ == min(scalar(1.0), max(scalar(0.0), alphaSolid_));
 
+    /*
     L_ == 
     (
           alpha1_ * thermo1_->L() * thermo1_->alphaSolid() 
@@ -83,6 +84,13 @@ void Foam::incompressibleThreePhaseThermoMixture::calcThermo()
         + alpha3_ * thermo3_->L() * thermo3_->alphaSolid()
     );
     L_ == max(dimensionedScalar(L_.dimensions(), 0.0), L_);
+    */
+   qL_ ==
+   (
+          alpha1_ * thermo1_->L() * rho1_ * fvc::ddt(thermo1_->alphaSolid()())
+        + alpha2_ * thermo2_->L() * rho2_ * fvc::ddt(thermo2_->alphaSolid()())
+        + alpha3_ * thermo3_->L() * rho3_ * fvc::ddt(thermo3_->alphaSolid()())
+   );
 }
 
 
@@ -237,18 +245,18 @@ Foam::incompressibleThreePhaseThermoMixture::incompressibleThreePhaseThermoMixtu
         calculatedFvPatchScalarField::typeName
     ),
 
-    L_
+    qL_
     (
         IOobject
         (
-            "L",
+            "qL",
             U.time().timeName(),
             U.mesh(),
             IOobject::NO_READ,
-            IOobject::NO_WRITE
+            IOobject::AUTO_WRITE
         ),
         U.mesh(),
-        dimensionedScalar(thermo1_->L().dimensions(), 0.0),
+        dimensionedScalar(thermo1_->L().dimensions() * rho1_.dimensions() / dimTime, 0.0),
         calculatedFvPatchScalarField::typeName
     )
 

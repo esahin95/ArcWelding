@@ -201,6 +201,7 @@ Foam::threePhaseInterfaceThermoProperties::threePhaseInterfaceThermoProperties
 Foam::tmp<Foam::surfaceScalarField>
 Foam::threePhaseInterfaceThermoProperties::surfaceTensionForce() const
 {
+    /*
     // interface normal
     const volScalarField& alpha1 = mixture_.alpha1();
     volVectorField gradAlpha(fvc::grad(alpha1));
@@ -216,6 +217,48 @@ Foam::threePhaseInterfaceThermoProperties::surfaceTensionForce() const
         + fvc::interpolate(mag(fvc::grad(alpha1))) * fvc::snGrad(tsigma)
         - fvc::interpolate(n & fvc::grad(tsigma)) * fvc::snGrad(alpha1)
     );
+    */    
+    // bounded alphas
+    volScalarField alpha1b = max(scalar(0.0), min(scalar(1.0), mixture_.alpha1()));
+    volScalarField alpha2b = max(scalar(0.0), min(scalar(1.0), mixture_.alpha2()));
+    volScalarField alpha3b = max(scalar(0.0), min(scalar(1.0), mixture_.alpha3()));
+
+    // interface normals
+    surfaceVectorField nHatfv12 = fvc::interpolate(alpha2b * fvc::grad(alpha1b) - alpha1b * fvc::grad(alpha2b));
+    surfaceScalarField nHatfv12mag = mag(nHatfv12);
+    nHatfv12 /= (nHatfv12mag + deltaN_);
+    surfaceVectorField nHatfv13 = fvc::interpolate(alpha3b * fvc::grad(alpha1b) - alpha1b * fvc::grad(alpha3b));
+    surfaceScalarField nHatfv13mag = mag(nHatfv13);
+    nHatfv13 /= (nHatfv13mag + deltaN_);
+
+    const fvMesh& mesh = mixture_.alpha1().mesh();
+    return 
+    (
+        (
+              fvc::interpolate(- sigma12_->sigma() * fvc::div(nHatfv12 & mesh.Sf()))
+            - (fvc::interpolate(fvc::grad(sigma12_->sigma())) & nHatfv12)
+        ) * 
+        (
+              fvc::interpolate(alpha2b) * fvc::snGrad(alpha1b) 
+            - fvc::interpolate(alpha1b) * fvc::snGrad(alpha2b)
+        ) +
+        (
+            nHatfv12mag * fvc::snGrad(sigma12_->sigma())
+        )
+    ) * fvc::interpolate(scalar(2.0) * alpha2b) +
+    (
+        (
+              fvc::interpolate(- sigma13_->sigma() * fvc::div(nHatfv13 & mesh.Sf()))
+            - (fvc::interpolate(fvc::grad(sigma13_->sigma())) & nHatfv13)
+        ) * 
+        (
+              fvc::interpolate(alpha3b) * fvc::snGrad(alpha1b) 
+            - fvc::interpolate(alpha1b) * fvc::snGrad(alpha3b)
+        ) +
+        (
+            nHatfv13mag * fvc::snGrad(sigma13_->sigma())
+        )
+    ) * fvc::interpolate(scalar(2.0) * alpha3b);
 }
 
 Foam::tmp<Foam::volScalarField>

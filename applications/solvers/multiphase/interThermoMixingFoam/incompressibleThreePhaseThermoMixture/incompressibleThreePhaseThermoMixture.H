@@ -87,7 +87,7 @@ class incompressibleThreePhaseThermoMixture
         volScalarField kappa_;
         volScalarField beta_;
         volScalarField alphaSolid_;
-        volScalarField L_;
+        volScalarField qL_;
 
 
     // Private Member Functions
@@ -256,9 +256,9 @@ public:
         }
 
         //- Return the mixture latent heat
-        tmp<volScalarField> L() const
+        tmp<volScalarField> qL() const
         {
-            return L_;
+            return qL_;
         }
 
         //- Correct the laminar viscosity
