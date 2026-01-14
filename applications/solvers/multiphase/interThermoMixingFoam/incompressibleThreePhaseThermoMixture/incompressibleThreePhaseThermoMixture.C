@@ -40,7 +40,7 @@ void Foam::incompressibleThreePhaseThermoMixture::calcNu()
     nu_ = mu()/(alpha1_*rho1_ + alpha2_*rho2_ + alpha3_*rho3_);
 }
 
-void Foam::incompressibleThreePhaseThermoMixture::calcThermo()
+void Foam::incompressibleThreePhaseThermoMixture::calcThermo(scalar relax)
 {
     thermo1_->correct();
     thermo2_->correct();
@@ -68,6 +68,7 @@ void Foam::incompressibleThreePhaseThermoMixture::calcThermo()
         + alpha3_ * thermo3_->beta()
     );
 
+    alphaSolid_.storePrevIter();
     alphaSolid_ == 
     (
           alpha1_ * thermo1_->alphaSolid() 
@@ -75,6 +76,7 @@ void Foam::incompressibleThreePhaseThermoMixture::calcThermo()
         + alpha3_ * thermo3_->alphaSolid()
     );
     alphaSolid_ == min(scalar(1.0), max(scalar(0.0), alphaSolid_));
+    alphaSolid_.relax(relax);
 
     /*
     L_ == 
@@ -263,7 +265,7 @@ Foam::incompressibleThreePhaseThermoMixture::incompressibleThreePhaseThermoMixtu
 {
     alpha3_ == 1.0 - alpha1_ - alpha2_;
     calcNu();
-    calcThermo();
+    calcThermo(scalar(1.0));
 }
 
 

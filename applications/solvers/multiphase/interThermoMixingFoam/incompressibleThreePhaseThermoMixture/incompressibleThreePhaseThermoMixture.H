@@ -96,7 +96,7 @@ class incompressibleThreePhaseThermoMixture
         void calcNu();
 
         //- Calculate and return the thermophysical state variables
-        void calcThermo();
+        void calcThermo(scalar relax);
 
 public:
 
@@ -265,7 +265,7 @@ public:
         void correct()
         {
             calcNu();
-            calcThermo();
+            calcThermo(scalar(0.9));
         }
 
         //- Read base phaseProperties dictionary

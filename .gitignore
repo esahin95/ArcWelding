@@ -12,13 +12,12 @@ processor*/
 !0?orig/
 constant/polyMesh/
 
-# match unnecessary run folders
-pitzDaily/
-multiphaseEulerFoam/
+# remove some cases
 hopper/
-
-# match log files
-log.*
+damBreak/
+damBreakEuler/
+damBreakInter/
 
 # match output files
+log.*
 *.png

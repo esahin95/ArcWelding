@@ -1,0 +1,44 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  10
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    location    "constant";
+    object      fvModels;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+laser1
+{
+    type      laserDTRM;
+
+    phase     argon;
+
+    centre table 
+    (
+        (     0 (50e-6  40e-6 60e-6)) 
+        (100e-6 (50e-6 110e-6 60e-6))
+    );
+
+    radius    10e-6;
+
+    direction (0 0 -1);
+
+    Q         1.0;
+
+    nRays     100;
+
+    relax     0.8;
+
+    absorption 0.5;
+
+    maxTrackLength 1.0;
+}
+
+//************************************************************************* //

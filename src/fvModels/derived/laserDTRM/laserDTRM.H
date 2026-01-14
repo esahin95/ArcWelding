@@ -87,10 +87,6 @@ class laserDTRM
         //- Reference phase name
         const word phaseName_;
 
-
-        //- The lagrangian cloud
-        //mutable Cloud<laserParticle> cloud_;
-
         // volume heat source
         mutable volScalarField lPower_;
 

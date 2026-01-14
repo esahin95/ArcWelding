@@ -16,19 +16,19 @@ FoamFile
 
 application     interThermoMixingFoam;
 
-startFrom       latestTime;
+startFrom       startTime;
 
 startTime       0;
 
 stopAt          endTime;
 
-endTime         1e-8;//1e-3;
+endTime         2e-8;
 
 deltaT          1e-8;
 
 writeControl    adjustableRunTime;
 
-writeInterval   1e-5;//1e-5;
+writeInterval   1e-8;
 
 purgeWrite      0;
 
@@ -50,7 +50,12 @@ maxCo           0.2;
 maxAlphaCo      0.2;
 maxDi           100.0;
 
-maxDeltaT       5e-8;
+maxDeltaT       1e-6;
+
+libs
+(
+    "libspheresToCell.so"
+);
 
 
 // ************************************************************************* //

@@ -245,7 +245,7 @@ Foam::threePhaseInterfaceThermoProperties::surfaceTensionForce() const
         (
             nHatfv12mag * fvc::snGrad(sigma12_->sigma())
         )
-    ) * fvc::interpolate(scalar(2.0) * alpha2b) +
+    ) * fvc::interpolate(scalar(2.0) * (alpha1b * mixture_.rho1() + alpha3b * mixture_.rho2()) / (mixture_.rho1() + mixture_.rho2())) +
     (
         (
               fvc::interpolate(- sigma13_->sigma() * fvc::div(nHatfv13 & mesh.Sf()))
@@ -258,7 +258,7 @@ Foam::threePhaseInterfaceThermoProperties::surfaceTensionForce() const
         (
             nHatfv13mag * fvc::snGrad(sigma13_->sigma())
         )
-    ) * fvc::interpolate(scalar(2.0) * alpha3b);
+    ) * fvc::interpolate(scalar(2.0) * (alpha1b * mixture_.rho1() + alpha3b * mixture_.rho3()) / (mixture_.rho1() + mixture_.rho3()));
 }
 
 Foam::tmp<Foam::volScalarField>

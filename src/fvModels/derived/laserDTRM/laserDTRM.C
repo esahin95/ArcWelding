@@ -130,10 +130,10 @@ void Foam::fv::laserDTRM::update() const
     );
 
     // ray tracing
-    while (returnReduce(cloud_.size(), sumOp<label>()) > 0)
-    {
+    //while (returnReduce(cloud_.size(), sumOp<label>()) > 0)
+    //{
         cloud_.move(cloud_, td, maxTrackLength_);
-    }
+    //}
     
     // relax power deposition
     lPower_.relax(relax_);
