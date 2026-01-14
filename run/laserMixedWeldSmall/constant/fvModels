@@ -22,23 +22,25 @@ laser1
 
     centre table 
     (
-        (     0 (50e-6  40e-6 60e-6)) 
-        (100e-6 (50e-6 110e-6 60e-6))
+        (     0 (50e-6  20e-6 60e-6)) 
+        (100e-6 (50e-6 130e-6 60e-6))
     );
 
     radius    10e-6;
 
     direction (0 0 -1);
 
-    Q         1.0;
+    Q         50.0;
 
-    nRays     100;
+    nRays     300;
 
-    relax     0.8;
+    relax     0.2;
 
-    absorption 0.5;
+    absorption 0.6;
 
-    maxTrackLength 1.0;
+    powerDist constant 1;
+
+    maxReflections 1;
 }
 
 //************************************************************************* //

@@ -63,21 +63,21 @@ bool Foam::laserParticle::move
         {
             td.append(p0, index(), d());
         }
-        //trackToAndHitFace(U_, 0.0, cloud, td);
         trackToFace(U_, 0.0);
 
         // Check if interface was crossed
+        const scalar al(0.2);
         scalar a1 = td.alpha1Interp().interpolate(coordinates(), currentTetIndices());
-        if (a1 < 0.5 && a0 > 0.5)
+        if (a1 < al && a0 > al)
         {                        
             // Bisection search to backtrack interface position
             vector p1(position());
             scalar am(a1);
             vector di;
-            Info << a0 << " iterate alpha: " << am << ", ";
-            for (int it=0; it<10; it++)
+            int it;
+            for (it=0; it<0; it++)
             {
-                if (mag(am-0.5) < 1e-2) 
+                if (mag(am - al) < 1e-2) 
                 {
                     break;
                 }
@@ -88,10 +88,9 @@ bool Foam::laserParticle::move
                 // Track to midpoint
                 trackToFace(di, 0.0);
                 am = td.alpha1Interp().interpolate(coordinates(), currentTetIndices());
-                Info << am << ", ";
 
                 // Update brackets 
-                if (am > 0.5)
+                if (am > al)
                 {
                     p0 = position();
                 }
@@ -100,18 +99,18 @@ bool Foam::laserParticle::move
                     p1 = position();
                 }
             }
-            Info << am << endl;
 
             // Reflection of ray direction
             const vector nHatc = normalised(td.nHatInterp().interpolate(coordinates(), currentTetIndices()));
             td.lPower(cell()) += a_ * d();
             U_ -= 2.0 * (U_ & nHatc) * nHatc;
+            reflections_++;
             
             // Absorption of ray power
             d_ -= a_ * d();
 
             // Delete if out of power
-            if (d_ / d0_ < 0.02)
+            if (d_ / d0_ < 0.05 || reflections_ >= maxReflections_)
             {
                 td.lPower(cell()) += d();
                 td.keepParticle = false;                    
@@ -122,8 +121,10 @@ bool Foam::laserParticle::move
             {
                 td.append(position(), index(), d());
             }
-            trackToFace(U_, 0.0);
-            
+            if (it > 0)
+            {
+                trackToFace(U_, 0.0);
+            }
         }
 
         // Change owner or hit patch

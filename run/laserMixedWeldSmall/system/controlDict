@@ -22,13 +22,13 @@ startTime       0;
 
 stopAt          endTime;
 
-endTime         2e-8;
+endTime         100e-6;
 
 deltaT          1e-8;
 
 writeControl    adjustableRunTime;
 
-writeInterval   1e-8;
+writeInterval   1e-6;
 
 purgeWrite      0;
 
@@ -50,7 +50,7 @@ maxCo           0.2;
 maxAlphaCo      0.2;
 maxDi           100.0;
 
-maxDeltaT       1e-6;
+maxDeltaT       2e-08;
 
 libs
 (
@@ -76,7 +76,37 @@ functions
         writeFields     true;
         regionType      all;
 
+        result          divU;
+
         field           phi;
+    }
+
+    sum
+    {
+        type            add;
+        libs            ("libfieldFunctionObjects.so");
+
+        writeControl    writeTime;
+        writeFields     true;
+        regionType      all;
+
+        result          alphaMetal;
+
+        fields          (alpha.steel alpha.copper);
+    }
+
+    mult
+    {
+        type            multiply;
+        libs            ("libfieldFunctionObjects.so");
+
+        writeControl    writeTime;
+        writeFields     true;
+        regionType      all;
+
+        result          TalphaMetal;
+
+        fields          (T alphaMetal);
     }
 
     maxValue
@@ -84,11 +114,11 @@ functions
         type            volFieldValue;
         libs            ("libfieldFunctionObjects.so");
         log             true;
-        writeControl    timeStep;
+        writeControl    writeTime;//timeStep;
         writeFields     false;
         regionType      all;
         operation       maxMag;
 
-        fields (p_rgh U T div(phi));
+        fields (p_rgh U T TalphaMetal divU);
     }
 }

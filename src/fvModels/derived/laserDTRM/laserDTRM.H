@@ -70,19 +70,34 @@ class laserDTRM
 {
     // Private data
 
-        //- The heat source
+        //- Power
         const scalar Q_;
-        const scalar nRays_;
+
+        //- Number of Rays
+        const label  nRays_;
+
+        //- Radius of laser
         const scalar radius_;
-        const scalar sigma_;
+
+        //- Centre of laser
         const autoPtr<Function1<point>> centre_;
+        
+        //- Orthonormal basis
         const vector direction_;
         const vector t1_;
         const vector t2_;
-        const scalar q_;
+        
+        //- Radial power distribution
+        const autoPtr<Function1<scalar>> powerDist_;
+
+        //- Relaxation for power deposition
         const scalar relax_;
+
+        //- Absorptivity of materials;
         const scalar a_;
-        const scalar maxTrackLength_;
+
+        //- Maximum number of reflections
+        const scalar maxReflections_;
 
         //- Reference phase name
         const word phaseName_;

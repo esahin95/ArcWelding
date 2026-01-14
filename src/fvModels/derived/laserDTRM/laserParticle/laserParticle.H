@@ -83,8 +83,14 @@ class laserParticle
         //- Track index
         label trackIndex_;
 
-        //- absorptivity
+        //- Absorptivity
         scalar a_;
+
+        //- Max number of reflections
+        label maxReflections_;
+
+        //- Current number of reflections
+        label reflections_;
 
 public:
 
@@ -154,7 +160,8 @@ public:
             const scalar d,
             const vector& U,
             const label trackIndex,
-            const scalar a
+            const scalar a,
+            const label maxReflections
         );
 
         //- Construct from position
@@ -166,7 +173,8 @@ public:
             const vector& U,
             const label cellI,
             const label trackIndex,
-            const scalar a
+            const scalar a,
+            const label maxReflections
         );
 
         //- Construct from Istream

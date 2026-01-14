@@ -56,7 +56,8 @@ inline Foam::laserParticle::laserParticle
     const scalar d,
     const vector& U,
     const label trackIndex,
-    const scalar a
+    const scalar a,
+    const label maxReflections
 )
 :
     particle(mesh, coordinates, celli, tetFacei, tetPti),
@@ -64,7 +65,9 @@ inline Foam::laserParticle::laserParticle
     d0_(d),
     U_(U),
     trackIndex_(trackIndex),
-    a_(a)
+    a_(a),
+    maxReflections_(maxReflections),
+    reflections_(0)
 {}
 
 inline Foam::laserParticle::laserParticle
@@ -75,7 +78,8 @@ inline Foam::laserParticle::laserParticle
     const vector& U,
     const label cellI,
     const label trackIndex,
-    const scalar a
+    const scalar a,
+    const label maxReflections
 )
 :
     particle(mesh, position, cellI),
@@ -83,7 +87,9 @@ inline Foam::laserParticle::laserParticle
     d0_(d),
     U_(U),
     trackIndex_(trackIndex),
-    a_(a)
+    a_(a),
+    maxReflections_(maxReflections),
+    reflections_(0)
 {}
 
 

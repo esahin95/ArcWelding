@@ -85,6 +85,7 @@ void Foam::fv::laserDTRM::update() const
     // populate cloud
     vector d;
     scalar r;
+    scalar q = nRays_ > 0 ? Q_ / nRays_ : 0.0;
     Cloud<laserParticle> cloud_(mesh(), "CloudDTRM", IDLList<laserParticle>());
     for (int i=0; i < nRays_; i++)
     {        
@@ -94,14 +95,14 @@ void Foam::fv::laserDTRM::update() const
             d = t1_ * rng_.scalarAB(-radius_, radius_) + t2_ * rng_.scalarAB(-radius_, radius_);
             r = mag(d);
         } 
-        while ( r>radius_ || rng_.scalar01() > Foam::exp(-sqr(r / sigma_) / 2.0) );
+        while ( r > radius_ || rng_.scalar01() > powerDist_->value(r) );
 
         // add particle
         d += centre_->value(mesh().time().value());
         label cellI = mesh().findCell(d);
         if (cellI != -1)
         {
-            cloud_.addParticle(new laserParticle(mesh(), d, q_, direction_, cellI, i, a_));
+            cloud_.addParticle(new laserParticle(mesh(), d, q, direction_, cellI, i, a_, maxReflections_));
         }
         
         // warning if particles are outside mesh
@@ -130,10 +131,8 @@ void Foam::fv::laserDTRM::update() const
     );
 
     // ray tracing
-    //while (returnReduce(cloud_.size(), sumOp<label>()) > 0)
-    //{
-        cloud_.move(cloud_, td, maxTrackLength_);
-    //}
+    cloud_.move(cloud_, td, 1.0);
+    cloud_.clear();
     
     // relax power deposition
     lPower_.relax(relax_);
@@ -160,7 +159,7 @@ void Foam::fv::laserDTRM::update() const
             formatterPtr_->write
             (
                 outputPath,
-                IOobject::groupName("rayTracer", mesh().time().timeName()),
+                IOobject::groupName("rayTracer",mesh().time().userTimeName()),
                 coordSet(allTracks, word::null, allPositions),
                 "Power",
                 allPowers
@@ -183,20 +182,18 @@ Foam::fv::laserDTRM::laserDTRM
 )
 :
     fvModel(name, modelType, dict, mesh),
-    Q_(dict.lookupOrDefault("Q", 0.0)),
-    nRays_(dict.lookupOrDefault("nRays", 0)),
-    radius_(dict.lookupOrDefault("radius", 1.0)),
-    sigma_(dict.lookupOrDefault("sigma", radius_ * 10.0)),
+    Q_(dict.lookup<scalar>("Q")),
+    nRays_((Q_ > scalar(0)) ? dict.lookup<label>("nRays") : label(0)),
+    radius_(dict.lookup<scalar>("radius")),
     centre_(Function1<point>::New("centre", dict)),
-    direction_(dict.lookupOrDefault("direction", vector(0.0, -1.0, 0.0))),
+    direction_(dict.lookup("direction")),
     t1_(normalised(perpendicular(direction_))),
     t2_(normalised(t1_ ^ direction_)),
-    q_(Q_ / max(nRays_, 1)),
+    powerDist_(Function1<scalar>::New("powerDist", dict)),
     relax_(dict.lookupOrDefault("relax", 1.0)),
     a_(dict.lookupOrDefault("absorption", 1.0)),
-    maxTrackLength_(dict.lookupOrDefault("maxTrackLength", mesh.time().deltaTValue())),
+    maxReflections_(dict.lookupOrDefault("maxReflections", 3)),
     phaseName_(IOobject::groupName("alpha", dict.lookup("phase"))),
-    //cloud_(mesh, "cloudDTRM", IDLList<laserParticle>()),
     lPower_
     (
         IOobject
