@@ -61,7 +61,7 @@ bool Foam::laserParticle::move
         // Track to face, tends to overshoot
         if (mesh().time().writeTime())
         {
-            td.append(p0, index(), d());
+            td.append(p0, trackIndex_, d_);
         }
         trackToFace(U_, 0.0);
 
@@ -102,24 +102,24 @@ bool Foam::laserParticle::move
 
             // Reflection of ray direction
             const vector nHatc = normalised(td.nHatInterp().interpolate(coordinates(), currentTetIndices()));
-            td.lPower(cell()) += a_ * d();
+            td.lPower(a_*d_, cell());
             U_ -= 2.0 * (U_ & nHatc) * nHatc;
             reflections_++;
             
             // Absorption of ray power
-            d_ -= a_ * d();
+            d_ -= a_ * d_;
 
             // Delete if out of power
             if (d_ / d0_ < 0.05 || reflections_ >= maxReflections_)
             {
-                td.lPower(cell()) += d();
+                td.lPower(d_, cell());
                 td.keepParticle = false;                    
             }
 
             // Track back to face
             if (mesh().time().writeTime())
             {
-                td.append(position(), index(), d());
+                td.append(position(), trackIndex_, d_);
             }
             if (it > 0)
             {
@@ -131,7 +131,7 @@ bool Foam::laserParticle::move
         hitFace(vector::zero, 0.0, cloud, td);
         if (mesh().time().writeTime())
         {
-            td.append(position(), index(), d());
+            td.append(position(), trackIndex_, d_);
         }
 
     }

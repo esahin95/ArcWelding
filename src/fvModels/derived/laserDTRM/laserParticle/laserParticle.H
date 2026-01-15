@@ -137,7 +137,7 @@ public:
             inline const interpolationCellPoint<scalar>& alpha1Interp() const;
             inline const interpolationCellPoint<vector>& nHatInterp() const;
 
-            inline scalar& lPower(label cellI);
+            inline void lPower(scalar p, label cellI);
 
             inline void append(vector position, label trackIndex, scalar d);
     };
@@ -148,21 +148,6 @@ public:
 
 
     // Constructors
-
-        //- Construct from components
-        inline laserParticle
-        (
-            const polyMesh& mesh,
-            const barycentric& coordinates,
-            const label celli,
-            const label tetFacei,
-            const label tetPti,
-            const scalar d,
-            const vector& U,
-            const label trackIndex,
-            const scalar a,
-            const label maxReflections
-        );
 
         //- Construct from position
         inline laserParticle
@@ -216,18 +201,6 @@ public:
 
     // Member Functions
 
-        // Access
-
-            //- Return power
-            inline scalar d() const;
-
-            //- Return direction
-            inline const vector& U() const;
-
-            //- Return track index
-            inline label index() const;
-
-
         // Tracking
 
             //- Move
@@ -245,13 +218,6 @@ public:
 
 
     // I-O
-
-        static void readFields(Cloud<laserParticle>& c);
-
-        static void writeFields(const Cloud<laserParticle>& c);
-
-
-    // Ostream Operator
 
         friend Ostream& operator<<(Ostream&, const laserParticle&);
 };

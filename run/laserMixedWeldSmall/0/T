@@ -21,14 +21,17 @@ boundaryField
 {
     zmax
     {
-        type            inletOutlet;
+        //type            inletOutlet;
         inletValue      $internalField;
+        type            fixedValue;
         value           $internalField;
     }
 
     "(zmin|xmin|xmax|ymin|ymax)"
     {
-        type            zeroGradient;
+        //type            zeroGradient;
+        type            fixedValue;
+        value           $internalField;
     }
 }
 

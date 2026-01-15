@@ -87,6 +87,7 @@ class incompressibleThreePhaseThermoMixture
         volScalarField kappa_;
         volScalarField beta_;
         volScalarField alphaSolid_;
+        volScalarField L_;
         volScalarField qL_;
 
 
@@ -96,7 +97,7 @@ class incompressibleThreePhaseThermoMixture
         void calcNu();
 
         //- Calculate and return the thermophysical state variables
-        void calcThermo(scalar relax);
+        void calcThermo();
 
 public:
 
@@ -256,6 +257,11 @@ public:
         }
 
         //- Return the mixture latent heat
+        tmp<volScalarField> L() const
+        {
+            return L_;
+        }
+
         tmp<volScalarField> qL() const
         {
             return qL_;
@@ -265,7 +271,7 @@ public:
         void correct()
         {
             calcNu();
-            calcThermo(scalar(0.9));
+            calcThermo();
         }
 
         //- Read base phaseProperties dictionary

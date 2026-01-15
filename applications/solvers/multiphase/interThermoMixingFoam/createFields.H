@@ -116,6 +116,18 @@ surfaceScalarField rhoPhiCp
     rhoPhi * fvc::interpolate(mixture.Cp())
 );
 
+volScalarField ddtL
+(
+    IOobject
+    (
+        "ddtL",
+        runTime.timeName(),
+        mesh,
+        IOobject::NO_READ,
+        IOobject::AUTO_WRITE
+    ),
+    fvc::ddt(rho, mixture.L()())
+);
 
 // Construct incompressible turbulence model
 autoPtr<incompressible::momentumTransportModel> turbulence

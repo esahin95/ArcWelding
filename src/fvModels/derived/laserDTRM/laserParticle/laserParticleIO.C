@@ -26,8 +26,6 @@ License
 #include "laserParticle.H"
 #include "IOstreams.H"
 
-// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
-
 const std::size_t Foam::laserParticle::sizeofFields_
 (
     sizeof(laserParticle) - sizeof(particle)
@@ -50,7 +48,12 @@ Foam::laserParticle::laserParticle
         if (is.format() == IOstream::ASCII)
         {
             d_ = readScalar(is);
-            is >> U_;
+            is >> d0_ 
+               >> U_ 
+               >> trackIndex_ 
+               >> a_ 
+               >> maxReflections_ 
+               >> reflections_;
         }
         else
         {
@@ -62,64 +65,19 @@ Foam::laserParticle::laserParticle
     is.check("laserParticle::laserParticle(Istream&)");
 }
 
-
-void Foam::laserParticle::readFields(Cloud<laserParticle>& c)
-{
-    bool valid = c.size();
-
-    particle::readFields(c);
-
-    IOField<scalar> d(c.fieldIOobject("d", IOobject::MUST_READ), valid);
-    c.checkFieldIOobject(c, d);
-
-    IOField<vector> U(c.fieldIOobject("U", IOobject::MUST_READ), valid);
-    c.checkFieldIOobject(c, U);
-
-    label i = 0;
-    forAllIter(Cloud<laserParticle>, c, iter)
-    {
-        laserParticle& p = iter();
-
-        p.d_ = d[i];
-        p.U_ = U[i];
-        i++;
-    }
-}
-
-
-void Foam::laserParticle::writeFields(const Cloud<laserParticle>& c)
-{
-    particle::writeFields(c);
-
-    label np = c.size();
-
-    IOField<scalar> d(c.fieldIOobject("d", IOobject::NO_READ), np);
-    IOField<vector> U(c.fieldIOobject("U", IOobject::NO_READ), np);
-
-    label i = 0;
-    forAllConstIter(Cloud<laserParticle>, c, iter)
-    {
-        const laserParticle& p = iter();
-
-        d[i] = p.d_;
-        U[i] = p.U_;
-        i++;
-    }
-
-    d.write(np > 0);
-    U.write(np > 0);
-}
-
-
-// * * * * * * * * * * * * * * * IOstream Operators  * * * * * * * * * * * * //
-
 Foam::Ostream& Foam::operator<<(Ostream& os, const laserParticle& p)
 {
+    
     if (os.format() == IOstream::ASCII)
     {
         os  << static_cast<const particle&>(p)
             << token::SPACE << p.d_
-            << token::SPACE << p.U_;
+            << token::SPACE << p.d0_
+            << token::SPACE << p.U_
+            << token::SPACE << p.trackIndex_
+            << token::SPACE << p.a_
+            << token::SPACE << p.maxReflections_
+            << token::SPACE << p.reflections_;
     }
     else
     {
@@ -136,6 +94,5 @@ Foam::Ostream& Foam::operator<<(Ostream& os, const laserParticle& p)
 
     return os;
 }
-
 
 // ************************************************************************* //

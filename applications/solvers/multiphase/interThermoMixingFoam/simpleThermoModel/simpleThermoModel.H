@@ -26,6 +26,7 @@ class simpleThermoModel
     dimensionedScalar L_;
     autoPtr<Function1<scalar>> alphaSolidPtr_;
     volScalarField alphaSolid_;
+    scalar relax_;
 
 public:
 

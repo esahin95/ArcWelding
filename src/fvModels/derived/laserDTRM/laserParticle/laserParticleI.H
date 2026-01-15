@@ -45,31 +45,6 @@ inline Foam::laserParticle::trackingData::trackingData
     allPowers_(allPowers)
 {}
 
-
-inline Foam::laserParticle::laserParticle
-(
-    const polyMesh& mesh,
-    const barycentric& coordinates,
-    const label celli,
-    const label tetFacei,
-    const label tetPti,
-    const scalar d,
-    const vector& U,
-    const label trackIndex,
-    const scalar a,
-    const label maxReflections
-)
-:
-    particle(mesh, coordinates, celli, tetFacei, tetPti),
-    d_(d),
-    d0_(d),
-    U_(U),
-    trackIndex_(trackIndex),
-    a_(a),
-    maxReflections_(maxReflections),
-    reflections_(0)
-{}
-
 inline Foam::laserParticle::laserParticle
 (
     const polyMesh& mesh,
@@ -107,24 +82,9 @@ Foam::laserParticle::trackingData::nHatInterp() const
     return nHatInterp_;
 }
 
-inline Foam::scalar Foam::laserParticle::d() const
+inline void Foam::laserParticle::trackingData::lPower(scalar p, label cellI)
 {
-    return d_;
-}
-
-inline const Foam::vector& Foam::laserParticle::U() const
-{
-    return U_;
-}
-
-inline Foam::label Foam::laserParticle::index() const
-{
-    return trackIndex_;
-}
-
-inline Foam::scalar& Foam::laserParticle::trackingData::lPower(label cellI)
-{
-    return lPower_[cellI];
+    lPower_[cellI] += p;
 }
 
 inline void Foam::laserParticle::trackingData::append(vector position, label trackIndex, scalar d)

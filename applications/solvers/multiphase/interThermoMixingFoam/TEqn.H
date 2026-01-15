@@ -2,9 +2,11 @@
     rhoCp == rho * mixture.Cp();
     rhoPhiCp == rhoPhi * fvc::interpolate(mixture.Cp());
     
-    T.storePrevIter();
+    volScalarField L(mixture.L());
     while (pimple.correctNonOrthogonal())
     {                
+        ddtL == fvc::ddt(rho, L);
+        
         fvScalarMatrix TEqn
         (
             fvm::ddt(rhoCp, T)
@@ -13,7 +15,7 @@
             - fvm::laplacian(mixture.kappa(), T)
             ==
             fvModels.source(rhoCp, T)
-            + mixture.qL()//+ fvc::ddt(rho, L) + fvc::div(rhoPhi, L, "div(rhoPhiCp,T)")
+            + fvc::ddt(rho, L) + fvc::div(rhoPhi, L, "div(rhoPhiCp,T)") // mixture.qL()
         );
 
         TEqn.relax();
@@ -25,9 +27,7 @@
         fvConstraints.constrain(T);
 
         if (pimple.finalNonOrthogonalIter())
-        {
-            Info<< "max change in T before relaxation: " << gMax(mag(T.prevIter().field()-T.field())) << endl;
-    
+        {    
             T.relax();
         }
     }

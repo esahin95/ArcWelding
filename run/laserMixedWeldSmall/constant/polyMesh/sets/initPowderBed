@@ -7,7 +7,7 @@
 \*---------------------------------------------------------------------------*/
 FoamFile
 {
-    format      binary;
+    format      ascii;
     class       cellSet;
     location    "constant/polyMesh/sets";
     object      initPowderBed;

@@ -40,7 +40,7 @@ laser1
 
     powerDist constant 1;
 
-    maxReflections 1;
+    maxReflections 3;
 }
 
 //************************************************************************* //

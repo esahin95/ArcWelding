@@ -40,7 +40,7 @@ void Foam::incompressibleThreePhaseThermoMixture::calcNu()
     nu_ = mu()/(alpha1_*rho1_ + alpha2_*rho2_ + alpha3_*rho3_);
 }
 
-void Foam::incompressibleThreePhaseThermoMixture::calcThermo(scalar relax)
+void Foam::incompressibleThreePhaseThermoMixture::calcThermo()
 {
     thermo1_->correct();
     thermo2_->correct();
@@ -68,7 +68,6 @@ void Foam::incompressibleThreePhaseThermoMixture::calcThermo(scalar relax)
         + alpha3_ * thermo3_->beta()
     );
 
-    alphaSolid_.storePrevIter();
     alphaSolid_ == 
     (
           alpha1_ * thermo1_->alphaSolid() 
@@ -76,9 +75,8 @@ void Foam::incompressibleThreePhaseThermoMixture::calcThermo(scalar relax)
         + alpha3_ * thermo3_->alphaSolid()
     );
     alphaSolid_ == min(scalar(1.0), max(scalar(0.0), alphaSolid_));
-    alphaSolid_.relax(relax);
 
-    /*
+    
     L_ == 
     (
           alpha1_ * thermo1_->L() * thermo1_->alphaSolid() 
@@ -86,13 +84,23 @@ void Foam::incompressibleThreePhaseThermoMixture::calcThermo(scalar relax)
         + alpha3_ * thermo3_->L() * thermo3_->alphaSolid()
     );
     L_ == max(dimensionedScalar(L_.dimensions(), 0.0), L_);
+    
+    /*
+    rhoL_ ==
+    (
+          alpha1_ * rho1_ * thermo1_->L() * thermo1_->alphaSolid() 
+        + alpha2_ * rho2_ * thermo2_->L() * thermo2_->alphaSolid() 
+        + alpha3_ * rho3_ * thermo3_->L() * thermo3_->alphaSolid()
+    );
     */
-   qL_ ==
-   (
+    
+    qL_ ==
+    (
           alpha1_ * thermo1_->L() * rho1_ * fvc::ddt(thermo1_->alphaSolid()())
         + alpha2_ * thermo2_->L() * rho2_ * fvc::ddt(thermo2_->alphaSolid()())
         + alpha3_ * thermo3_->L() * rho3_ * fvc::ddt(thermo3_->alphaSolid()())
-   );
+    );
+    
 }
 
 
@@ -247,6 +255,21 @@ Foam::incompressibleThreePhaseThermoMixture::incompressibleThreePhaseThermoMixtu
         calculatedFvPatchScalarField::typeName
     ),
 
+    L_
+    (
+        IOobject
+        (
+            "L",
+            U.time().timeName(),
+            U.mesh(),
+            IOobject::NO_READ,
+            IOobject::AUTO_WRITE
+        ),
+        U.mesh(),
+        dimensionedScalar(thermo1_->L().dimensions(), 0.0),
+        calculatedFvPatchScalarField::typeName
+    ),
+
     qL_
     (
         IOobject
@@ -265,7 +288,7 @@ Foam::incompressibleThreePhaseThermoMixture::incompressibleThreePhaseThermoMixtu
 {
     alpha3_ == 1.0 - alpha1_ - alpha2_;
     calcNu();
-    calcThermo(scalar(1.0));
+    calcThermo();
 }
 
 

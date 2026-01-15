@@ -7,7 +7,7 @@
 \*---------------------------------------------------------------------------*/
 FoamFile
 {
-    format      binary;
+    format      ascii;
     class       regIOobject;
     location    "constant/polyMesh";
     object      cellZones;

@@ -72,6 +72,10 @@ int main(int argc, char *argv[])
     // Read the maximum thermal diffusion number
     const scalar maxDi(runTime.controlDict().lookupOrDefault<scalar>("maxDi", 1.0));
 
+    // Number of Thermo Correctors
+    const label nThermoCorr(pimple.dict().lookupOrDefault<scalar>("nThermoCorrectors", 1));
+    Info<< "Set nThermoCorrectors to " << nThermoCorr << endl;
+
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
     Info<< "\nStarting time loop\n" << endl;
@@ -144,11 +148,16 @@ int main(int argc, char *argv[])
             }
 
             // --- Temperature corrector loop
+            //for (label i=0; i<nThermoCorr; i++)
             while (pimple.correct())
             {
+                T.storePrevIter();
+                
                 #include "TEqn.H"
 
                 mixture.correct();
+
+                Info<< "max change in T: " << gMax(mag(T.prevIter().field()-T.field())) << endl;
             }
 
             if (pimple.turbCorr())
