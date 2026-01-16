@@ -49,22 +49,22 @@ public:
 
     virtual void correct(scalar relax = 0.9);
 
-    tmp<volScalarField> Cp() const
+    const volScalarField& Cp() const
     {
         return Cp_;
     };
 
-    tmp<volScalarField> kappa() const
+    const volScalarField& kappa() const
     {
         return kappa_;
     };
 
-    tmp<volScalarField> beta() const
+    const volScalarField& beta() const
     {
         return beta_;
     };
 
-    tmp<volScalarField> alphaSolid() const
+    const volScalarField& alphaSolid() const
     {
         return alphaSolid_;
     };

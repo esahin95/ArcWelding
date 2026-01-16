@@ -16,13 +16,13 @@ FoamFile
 
 application     interThermoMixingFoam;
 
-startFrom       startTime;
+startFrom       latestTime;
 
 startTime       0;
 
 stopAt          endTime;
 
-endTime         1e-6;
+endTime         10e-6;
 
 deltaT          1e-8;
 

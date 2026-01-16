@@ -30,7 +30,7 @@ laser1
 
     direction (0 0 -1);
 
-    Q         10.0;
+    Q         1.0;
 
     nRays     300;
 
