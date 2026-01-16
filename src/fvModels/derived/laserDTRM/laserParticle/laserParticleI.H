@@ -82,7 +82,7 @@ Foam::laserParticle::trackingData::nHatInterp() const
     return nHatInterp_;
 }
 
-inline void Foam::laserParticle::trackingData::lPower(scalar p, label cellI)
+inline void Foam::laserParticle::trackingData::addToPower(scalar p, label cellI)
 {
     lPower_[cellI] += p;
 }

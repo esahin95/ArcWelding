@@ -137,7 +137,7 @@ public:
             inline const interpolationCellPoint<scalar>& alpha1Interp() const;
             inline const interpolationCellPoint<vector>& nHatInterp() const;
 
-            inline void lPower(scalar p, label cellI);
+            inline void addToPower(scalar p, label cellI);
 
             inline void append(vector position, label trackIndex, scalar d);
     };

@@ -62,10 +62,9 @@ Foam::simpleThermoModel::simpleThermoModel(const fvMesh& mesh, const word& group
         ),
         mesh,
         dimensionedScalar(dimless, 0.0)
-    ),
-    relax_(1.0)
+    )
 {
-    correct();
+    correct(1.0);
 
     // Need to store previous timestep for alphaSolid?
     alphaSolid_.oldTime();
@@ -78,7 +77,7 @@ bool Foam::simpleThermoModel::read()
     return physicalProperties::read();
 }
 
-void Foam::simpleThermoModel::correct()
+void Foam::simpleThermoModel::correct(scalar relax)
 {
     // temperature reference
     const volScalarField& T = mesh_.lookupObject<volScalarField>("T");
@@ -86,16 +85,13 @@ void Foam::simpleThermoModel::correct()
 
     // correct internal fields
     alphaSolid_.storePrevIter();
-    alphaSolid_.field() = relax_ * alphaSolidPtr_->value(T.field()) + (1.0 - relax_) * alphaSolid_.field();
-    Info << "max change in solid fraction " << name() << " " << gMax(mag(alphaSolid_.prevIter().field() - alphaSolid_.field())) << endl;
+    alphaSolid_.field() = relax * alphaSolidPtr_->value(T.field()) + (1.0 - relax) * alphaSolid_.field();
+    //Info << "max change in solid fraction " << name() << " " << gMax(mag(alphaSolid_.prevIter().field() - alphaSolid_.field())) << endl;
 
     // correct boundary fields
     volScalarField::Boundary& alphaSolidBf = alphaSolid_.boundaryFieldRef();
     forAll(alphaSolidBf, patchI)
     {
-        alphaSolidBf[patchI] = 0.9 * alphaSolidPtr_->value(TBf[patchI]) + 0.1 * alphaSolidBf[patchI];
+        alphaSolidBf[patchI] = relax * alphaSolidPtr_->value(TBf[patchI]) + (1.0 - relax) * alphaSolidBf[patchI];
     }
-
-    // Set correct relaxation constant after initial compute
-    relax_ = 0.9;
 }

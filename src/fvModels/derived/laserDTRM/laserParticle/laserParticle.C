@@ -58,7 +58,7 @@ bool Foam::laserParticle::move
         vector p0(position());
         scalar a0 = td.alpha1Interp().interpolate(coordinates(), currentTetIndices());
 
-        // Track to face, tends to overshoot
+        // Track to face
         if (mesh().time().writeTime())
         {
             td.append(p0, trackIndex_, d_);
@@ -66,18 +66,18 @@ bool Foam::laserParticle::move
         trackToFace(U_, 0.0);
 
         // Check if interface was crossed
-        const scalar al(0.2);
+        const scalar alimit(0.5);
         scalar a1 = td.alpha1Interp().interpolate(coordinates(), currentTetIndices());
-        if (a1 < al && a0 > al)
+        if (a1 < alimit && a0 > alimit)
         {                        
             // Bisection search to backtrack interface position
             vector p1(position());
             scalar am(a1);
             vector di;
-            int it;
-            for (it=0; it<0; it++)
+            label it;
+            for (it=0; it<10; it++)
             {
-                if (mag(am - al) < 1e-2) 
+                if (mag(am - alimit) < 1e-2) 
                 {
                     break;
                 }
@@ -90,7 +90,7 @@ bool Foam::laserParticle::move
                 am = td.alpha1Interp().interpolate(coordinates(), currentTetIndices());
 
                 // Update brackets 
-                if (am > al)
+                if (am > alimit)
                 {
                     p0 = position();
                 }
@@ -102,38 +102,37 @@ bool Foam::laserParticle::move
 
             // Reflection of ray direction
             const vector nHatc = normalised(td.nHatInterp().interpolate(coordinates(), currentTetIndices()));
-            td.lPower(a_*d_, cell());
+            td.addToPower(a_*d_, cell());
             U_ -= 2.0 * (U_ & nHatc) * nHatc;
             reflections_++;
             
             // Absorption of ray power
             d_ -= a_ * d_;
 
-            // Delete if out of power
+            // Delete if out of power or maximum reflections reached
             if (d_ / d0_ < 0.05 || reflections_ >= maxReflections_)
             {
-                td.lPower(d_, cell());
+                td.addToPower(d_, cell());
                 td.keepParticle = false;                    
             }
 
             // Track back to face
-            if (mesh().time().writeTime())
-            {
-                td.append(position(), trackIndex_, d_);
-            }
             if (it > 0)
             {
+                if (mesh().time().writeTime())
+                {
+                    td.append(position(), trackIndex_, d_);
+                }
                 trackToFace(U_, 0.0);
             }
         }
 
         // Change owner or hit patch
-        hitFace(vector::zero, 0.0, cloud, td);
+        trackToAndHitFace(U_, 0.0, cloud, td);
         if (mesh().time().writeTime())
         {
             td.append(position(), trackIndex_, d_);
         }
-
     }
 
     return td.keepParticle;

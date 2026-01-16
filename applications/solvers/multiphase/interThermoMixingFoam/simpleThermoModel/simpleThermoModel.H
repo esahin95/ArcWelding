@@ -47,7 +47,7 @@ public:
 
     virtual bool read();
 
-    virtual void correct();
+    virtual void correct(scalar relax = 0.9);
 
     tmp<volScalarField> Cp() const
     {

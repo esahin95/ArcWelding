@@ -52,11 +52,6 @@ forAll(alpha1, cellI)
 }
 alpha1.correctBoundaryConditions();
 
-// define laser particles
-//Info<< "Adding cloud of laser particles" << endl;
-//laserParticleCloud cloud(mesh);
-//cloud.regenerate();
-
 surfaceScalarField phi("phi", fvc::interpolate(U) & mesh.Sf());
 
 Info<< "Reading diffusivity k\n" << endl;

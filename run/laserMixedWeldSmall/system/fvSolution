@@ -81,22 +81,12 @@ solvers
 PIMPLE
 {
     momentumPredictor no;
-    nCorrectors     5;
+    nCorrectors     3;
     nNonOrthogonalCorrectors 1;
     nOuterCorrectors 1;
     
     T0  300.0;
-    DC  1e+10;
+    DC  1e+9;
 }
-
-/*
-relaxationFactors
-{
-    fields 
-    {
-        "T*"   0.7;
-    }
-}
-*/
 
 // ************************************************************************* //

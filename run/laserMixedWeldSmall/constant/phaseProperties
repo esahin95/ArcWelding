@@ -28,7 +28,7 @@ sigma12
         type    table;
         values
         (
-            (1710 0.7)
+            (1710 1.7)
             (8510 0.0)
         );
         outOfBounds         clamp;
@@ -49,7 +49,7 @@ sigma13
         type    table;
         values
         (
-            (1357 0.3)
+            (1357 1.3)
             (5918 0.0)
         );
         outOfBounds         clamp;
