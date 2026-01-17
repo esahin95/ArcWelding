@@ -135,10 +135,11 @@ public:
         // Member Functions
 
             inline const interpolationCellPoint<scalar>& alpha1Interp() const;
+
             inline const interpolationCellPoint<vector>& nHatInterp() const;
 
             inline void addToPower(scalar p, label cellI);
-
+            
             inline void append(vector position, label trackIndex, scalar d);
     };
 
@@ -211,10 +212,6 @@ public:
 
             //- Overridable function to handle the particle hitting a wallPatch
             void hitWallPatch(Cloud<laserParticle>& cloud, trackingData& td);
-
-            //- Transform the physical properties of the particle
-            //  according to the given transformation
-            virtual void transformProperties(const transformer&);
 
 
     // I-O

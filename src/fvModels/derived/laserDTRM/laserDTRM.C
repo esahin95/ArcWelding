@@ -82,6 +82,9 @@ void Foam::fv::laserDTRM::update() const
     lPower_.storePrevIter();
     lPower_ == dimensionedScalar(lPower_.dimensions(), Zero);
     
+    // Scale increment by minimum step size
+    scalar stepSize(pow(gMin(mesh().V().field()), 1.0/3.0) * 0.5);
+
     // populate cloud
     vector d;
     scalar r;
@@ -131,7 +134,12 @@ void Foam::fv::laserDTRM::update() const
     );
 
     // ray tracing
-    cloud_.move(cloud_, td, 1.0);
+    while (returnReduce(cloud_.size(), sumOp<label>()) > 0)
+    {
+        cloud_.move(cloud_, td, 1.0);
+        Info<< "remaining particles: " << returnReduce(cloud_.size(), sumOp<label>()) << endl;
+    }
+    //cloud_.move(cloud_, td, 1.0);
     cloud_.clear();
     
     // relax power deposition
@@ -186,7 +194,7 @@ Foam::fv::laserDTRM::laserDTRM
     nRays_((Q_ > scalar(0)) ? dict.lookup<label>("nRays") : label(0)),
     radius_(dict.lookup<scalar>("radius")),
     centre_(Function1<point>::New("centre", dict)),
-    direction_(dict.lookup("direction")),
+    direction_(dict.lookup<vector>("direction")),
     t1_(normalised(perpendicular(direction_))),
     t2_(normalised(t1_ ^ direction_)),
     powerDist_(Function1<scalar>::New("powerDist", dict)),
